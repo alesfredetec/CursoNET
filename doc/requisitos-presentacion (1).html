@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Requisitos Funcionales vs No Funcionales</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow: hidden;
+        }
+
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+            padding: 60px;
+            position: relative;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .slide-header {
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 3.5em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 2.5em;
+            color: #667eea;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        h3 {
+            font-size: 1.8em;
+            color: #764ba2;
+            margin: 30px 0 20px;
+            font-weight: 500;
+        }
+
+        .subtitle {
+            font-size: 1.5em;
+            color: #a8a8b3;
+            font-weight: 300;
+        }
+
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .list li {
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .list li:last-child {
+            border-bottom: none;
+        }
+
+        .list li::before {
+            content: '▸';
+            color: #667eea;
+            font-size: 1.5em;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .code-block {
+            background: #1e1e2e;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.95em;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .keyword {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .string {
+            color: #98c379;
+        }
+
+        /* Enhanced Navigation */
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Instructor Info Styling */
+        .instructor-info {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            border-radius: 25px;
+            color: #a8a8b3;
+            font-size: 0.9rem;
+            z-index: 1000;
+            text-align: right;
+        }
+
+        .instructor-name {
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 2px;
+        }
+
+        .instructor-area {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        /* Slide counter */
+        .slide-counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            border-radius: 25px;
+            color: #a8a8b3;
+            font-size: 0.9rem;
+            z-index: 1000;
+        }
+
+        .slide-number {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            font-size: 1.2em;
+            color: #a8a8b3;
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+            z-index: 1001;
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+            margin: 20px 0;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .comparison-table th {
+            background: rgba(102, 126, 234, 0.2);
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .comparison-table tr:hover td {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px;
+            }
+            h1 {
+                font-size: 2.5em;
+            }
+            h2 {
+                font-size: 2em;
+            }
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <div class="progress-bar" id="progressBar"></div>
+        
+        <!-- Slide 1: Título -->
+        <div class="slide active">
+            <div class="slide-header">
+                <h1>Ingeniería de Requisitos</h1>
+                <p class="subtitle">De la Especificación Formal a la Colaboración Ágil</p>
+            </div>
+            <div class="content" style="justify-content: center; align-items: center;">
+                <div class="card" style="text-align: center; max-width: 800px;">
+                    <div class="icon">📋</div>
+                    <h3>Requisitos Funcionales vs No Funcionales</h3>
+                    <p style="font-size: 1.2em; color: #a8a8b3; margin-top: 20px;">
+                        Metodologías modernas para sistemas de alta concurrencia y disponibilidad
+                    </p>
+                </div>
+            </div>
+            <div class="slide-number">1 / 12</div>
+        </div>
+
+        <!-- Slide 2: Introducción -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>¿Por qué son importantes los requisitos?</h2>
+            </div>
+            <div class="content">
+                <div class="grid">
+                    <div class="card">
+                        <div class="icon">🎯</div>
+                        <h3>El Desafío</h3>
+                        <p>El 70% de los proyectos de software fallan por requisitos mal definidos o cambiantes.</p>
+                    </div>
+                    <div class="card">
+                        <div class="icon">💡</div>
+                        <h3>La Solución</h3>
+                        <p>Una ingeniería de requisitos robusta que combine claridad técnica con flexibilidad ágil.</p>
+                    </div>
+                </div>
+                <div class="highlight">
+                    <p><strong>En sistemas financieros y de pagos:</strong> Los requisitos mal definidos pueden resultar en pérdidas millonarias, brechas de seguridad o incumplimiento regulatorio (PCI DSS, OWASP).</p>
+                </div>
+            </div>
+            <div class="slide-number">2 / 12</div>
+        </div>
+
+        <!-- Slide 3: Requisitos Funcionales -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Requisitos Funcionales</h2>
+                <p class="subtitle">El "QUÉ" debe hacer el sistema</p>
+            </div>
+            <div class="content">
+                <div class="two-column">
+                    <div>
+                        <h3>Definición</h3>
+                        <p style="margin-bottom: 20px;">Describen las interacciones específicas entre el sistema y su entorno. Son las características que el usuario final percibe y utiliza directamente.</p>
+                        
+                        <h3>Características</h3>
+                        <ul class="list">
+                            <li>Definen comportamientos específicos</li>
+                            <li>Son observables por el usuario</li>
+                            <li>Pueden probarse directamente</li>
+                            <li>Responden a acciones del usuario</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Ejemplos en Sistemas de Pago</h3>
+                        <div class="card">
+                            <p><strong>🔐 Autenticación:</strong><br>
+                            "El sistema debe permitir autenticación mediante API key y JWT token"</p>
+                        </div>
+                        <div class="card">
+                            <p><strong>💳 Procesamiento:</strong><br>
+                            "El sistema debe procesar pagos con tarjeta Visa/Mastercard mediante integración con Coelsa"</p>
+                        </div>
+                        <div class="card">
+                            <p><strong>📱 QR:</strong><br>
+                            "El sistema debe generar códigos QR para pagos siguiendo el estándar EMVCo"</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">3 / 12</div>
+        </div>
+
+        <!-- Slide 4: Requisitos No Funcionales -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Requisitos No Funcionales (NFRs)</h2>
+                <p class="subtitle">El "CÓMO DE BIEN" debe funcionar el sistema</p>
+            </div>
+            <div class="content">
+                <div class="grid">
+                    <div class="card">
+                        <div class="icon">⚡</div>
+                        <h3>Rendimiento</h3>
+                        <p>"El API debe manejar 10,000 TPS con latencia < 100ms en el percentil 99"</p>
+                        <p style="margin-top: 10px; font-size: 0.9em; color: #a8a8b3;">Redis Cache + RabbitMQ con MassTransit</p>
+                    </div>
+                    <div class="card">
+                        <div class="icon">🔒</div>
+                        <h3>Seguridad</h3>
+                        <p>"Cumplimiento PCI DSS Level 1, OWASP Top 10, tokenización de datos sensibles"</p>
+                        <p style="margin-top: 10px; font-size: 0.9em; color: #a8a8b3;">Azure Key Vault + TLS 1.3</p>
+                    </div>
+                    <div class="card">
+                        <div class="icon">🚀</div>
+                        <h3>Disponibilidad</h3>
+                        <p>"99.99% uptime (52 minutos downtime/año), RTO < 5 min, RPO < 1 min"</p>
+                        <p style="margin-top: 10px; font-size: 0.9em; color: #a8a8b3;">Azure AKS + Multi-región</p>
+                    </div>
+                    <div class="card">
+                        <div class="icon">🔧</div>
+                        <h3>Mantenibilidad</h3>
+                        <p>"Código con cobertura > 80%, SOLID principles, documentación Swagger"</p>
+                        <p style="margin-top: 10px; font-size: 0.9em; color: #a8a8b3;">Clean Architecture + CQRS</p>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">4 / 12</div>
+        </div>
+
+        <!-- Slide 5: Comparación -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Funcionales vs No Funcionales</h2>
+            </div>
+            <div class="content">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Aspecto</th>
+                            <th>Requisitos Funcionales</th>
+                            <th>Requisitos No Funcionales</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Pregunta Clave</strong></td>
+                            <td>¿QUÉ hace el sistema?</td>
+                            <td>¿CÓMO DE BIEN lo hace?</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Visibilidad</strong></td>
+                            <td>Directamente observable por usuarios</td>
+                            <td>A menudo invisible pero crítico</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ejemplo Financiero</strong></td>
+                            <td>"Procesar pago con QR"</td>
+                            <td>"Procesar 10K pagos/segundo"</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Testing</strong></td>
+                            <td>Pruebas funcionales, E2E</td>
+                            <td>Pruebas de carga, seguridad, caos</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Impacto si Falla</strong></td>
+                            <td>Feature no disponible</td>
+                            <td>Sistema completo comprometido</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="highlight">
+                    <p><strong>💡 Insight Clave:</strong> En sistemas de alta concurrencia como medios de pago, los NFRs son tan críticos como los funcionales. Un sistema que procesa pagos correctamente pero tarda 30 segundos es inútil.</p>
+                </div>
+            </div>
+            <div class="slide-number">5 / 12</div>
+        </div>
+
+        <!-- Slide 6: Evolución Metodológica -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>De Waterfall a Ágil</h2>
+                <p class="subtitle">La evolución en la gestión de requisitos</p>
+            </div>
+            <div class="content">
+                <div class="two-column">
+                    <div class="card">
+                        <h3>📚 Enfoque Tradicional (SRS)</h3>
+                        <ul class="list">
+                            <li>Documento extenso y detallado</li>
+                            <li>Contrato rígido entre partes</li>
+                            <li>Cambios costosos y burocráticos</li>
+                            <li>Meses de documentación</li>
+                            <li>Desconexión con la realidad del desarrollo</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>🚀 Enfoque Ágil Moderno</h3>
+                        <ul class="list">
+                            <li>Artefactos vivos y evolutivos</li>
+                            <li>"Promesa de conversación"</li>
+                            <li>Adaptación continua</li>
+                            <li>Feedback loops cortos</li>
+                            <li>Colaboración constante</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="highlight">
+                    <p><strong>Para Microservicios:</strong> El enfoque ágil es especialmente crítico cuando trabajamos con arquitecturas distribuidas donde cada servicio puede evolucionar independientemente.</p>
+                </div>
+            </div>
+            <div class="slide-number">6 / 12</div>
+        </div>
+
+        <!-- Slide 7: Historias de Usuario -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Historias de Usuario</h2>
+                <p class="subtitle">Formato Connextra (2001)</p>
+            </div>
+            <div class="content">
+                <div class="code-block">
+<span class="keyword">Como</span> <span class="string">[tipo de usuario]</span>,
+<span class="keyword">quiero</span> <span class="string">[realizar una acción]</span>
+<span class="keyword">para</span> <span class="string">[obtener un beneficio]</span>.
+                </div>
+                
+                <h3>Ejemplos para Sistema de Pagos</h3>
+                <div class="grid">
+                    <div class="card">
+                        <p><strong>Historia 1:</strong><br>
+                        <span class="keyword">Como</span> comerciante,<br>
+                        <span class="keyword">quiero</span> generar códigos QR dinámicos<br>
+                        <span class="keyword">para</span> cobrar a mis clientes sin hardware adicional.</p>
+                    </div>
+                    <div class="card">
+                        <p><strong>Historia 2:</strong><br>
+                        <span class="keyword">Como</span> administrador de seguridad,<br>
+                        <span class="keyword">quiero</span> auditar todas las transacciones<br>
+                        <span class="keyword">para</span> cumplir con PCI DSS y detectar fraudes.</p>
+                    </div>
+                </div>
+                
+                <h3>Criterio INVEST</h3>
+                <ul class="list">
+                    <li><strong>I</strong>ndependiente - No depende de otras historias</li>
+                    <li><strong>N</strong>egociable - Flexible en implementación</li>
+                    <li><strong>V</strong>aliosa - Aporta valor de negocio claro</li>
+                    <li><strong>E</strong>stimable - Se puede estimar el esfuerzo</li>
+                    <li><strong>S</strong>mall - Completable en un sprint</li>
+                    <li><strong>T</strong>esteable - Criterios claros de aceptación</li>
+                </ul>
+            </div>
+            <div class="slide-number">7 / 12</div>
+        </div>
+
+        <!-- Slide 8: Criterios de Aceptación con Gherkin -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Criterios de Aceptación: Gherkin</h2>
+                <p class="subtitle">BDD (Behavior Driven Development)</p>
+            </div>
+            <div class="content">
+                <div class="code-block">
+<span class="keyword">Feature:</span> Procesamiento de Pago con QR
+
+<span class="keyword">Scenario:</span> Pago exitoso con código QR válido
+  <span class="keyword">Given</span> que soy un cliente con la wallet activa
+    <span class="keyword">And</span> tengo saldo suficiente de $5000
+    <span class="keyword">And</span> el comercio tiene un QR válido por $1000
+  <span class="keyword">When</span> escaneo el código QR
+    <span class="keyword">And</span> confirmo el pago
+  <span class="keyword">Then</span> el pago debe procesarse en menos de 2 segundos
+    <span class="keyword">And</span> debo recibir confirmación push inmediata
+    <span class="keyword">And</span> el saldo debe actualizarse a $4000
+    <span class="keyword">And</span> debe generarse log en Serilog con correlation ID
+
+<span class="keyword">Scenario:</span> Reintentos con Polly ante fallo temporal
+  <span class="keyword">Given</span> que el servicio de procesamiento está saturado
+  <span class="keyword">When</span> intento procesar un pago
+  <span class="keyword">Then</span> Polly debe reintentar hasta 3 veces
+    <span class="keyword">And</span> usar exponential backoff (2s, 4s, 8s)
+    <span class="keyword">And</span> si falla, encolar en RabbitMQ para proceso asíncrono
+                </div>
+                <div class="highlight">
+                    <p><strong>Automatización:</strong> Estos escenarios se convierten directamente en tests automatizados usando SpecFlow o similar, garantizando que el comportamiento esperado se mantenga.</p>
+                </div>
+            </div>
+            <div class="slide-number">8 / 12</div>
+        </div>
+
+        <!-- Slide 9: NFRs en Arquitecturas Modernas -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>NFRs en Microservicios</h2>
+                <p class="subtitle">Consideraciones para Azure AKS</p>
+            </div>
+            <div class="content">
+                <div class="grid">
+                    <div class="card">
+                        <h3>🔄 Resiliencia</h3>
+                        <ul class="list" style="font-size: 0.95em;">
+                            <li>Circuit Breakers con Polly</li>
+                            <li>Retry policies exponenciales</li>
+                            <li>Timeout policies por servicio</li>
+                            <li>Bulkhead isolation</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>📊 Observabilidad</h3>
+                        <ul class="list" style="font-size: 0.95em;">
+                            <li>Distributed tracing</li>
+                            <li>Correlation IDs end-to-end</li>
+                            <li>Métricas con Prometheus</li>
+                            <li>Logs estructurados Serilog</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>⚖️ Escalabilidad</h3>
+                        <ul class="list" style="font-size: 0.95em;">
+                            <li>HPA basado en métricas custom</li>
+                            <li>Pod disruption budgets</li>
+                            <li>Resource limits/requests</li>
+                            <li>Cache distribuido Redis</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>🔐 Seguridad Zero Trust</h3>
+                        <ul class="list" style="font-size: 0.95em;">
+                            <li>mTLS entre servicios</li>
+                            <li>Network policies estrictas</li>
+                            <li>Secret rotation automática</li>
+                            <li>Pod security standards</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">9 / 12</div>
+        </div>
+
+        <!-- Slide 10: Ejemplo Práctico Completo -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Caso Práctico: API de Pagos</h2>
+            </div>
+            <div class="content">
+                <div class="two-column">
+                    <div>
+                        <h3>Historia de Usuario</h3>
+                        <div class="card">
+                            <p><span class="keyword">Como</span> aplicación móvil,<br>
+                            <span class="keyword">quiero</span> procesar pagos con tokenización<br>
+                            <span class="keyword">para</span> cumplir PCI DSS sin almacenar datos de tarjeta.</p>
+                        </div>
+                        
+                        <h3>Requisitos Funcionales</h3>
+                        <ul class="list" style="font-size: 0.95em;">
+                            <li>Endpoint POST /api/v1/payments</li>
+                            <li>Validación de token JWT</li>
+                            <li>Integración con gateway Coelsa</li>
+                            <li>Respuesta con transaction ID</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Requisitos No Funcionales</h3>
+                        <div class="card">
+                            <p><strong>Performance:</strong><br>
+                            • Latencia P99 < 200ms<br>
+                            • Throughput > 5000 RPS<br><br>
+                            <strong>Seguridad:</strong><br>
+                            • TLS 1.3 obligatorio<br>
+                            • Rate limiting por API key<br>
+                            • WAF rules OWASP<br><br>
+                            <strong>Disponibilidad:</strong><br>
+                            • SLA 99.95%<br>
+                            • Failover automático < 30s<br>
+                            • Zero downtime deployments</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">10 / 12</div>
+        </div>
+
+        <!-- Slide 11: Mejores Prácticas -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Mejores Prácticas</h2>
+                <p class="subtitle">Para equipos de alta performance</p>
+            </div>
+            <div class="content">
+                <div class="grid">
+                    <div class="card">
+                        <h3>📝 Documentación Viva</h3>
+                        <p>• Swagger/OpenAPI autogenerado<br>
+                        • README.md por microservicio<br>
+                        • Diagramas C4 actualizados<br>
+                        • ADRs para decisiones clave</p>
+                    </div>
+                    <div class="card">
+                        <h3>🔄 Feedback Continuo</h3>
+                        <p>• Sprint reviews con stakeholders<br>
+                        • Métricas de uso en producción<br>
+                        • A/B testing para features<br>
+                        • Post-mortems sin culpa</p>
+                    </div>
+                    <div class="card">
+                        <h3>🎯 Definition of Done</h3>
+                        <p>• Tests unitarios > 80%<br>
+                        • Tests de integración<br>
+                        • Code review aprobado<br>
+                        • Documentación actualizada<br>
+                        • Deployed en staging</p>
+                    </div>
+                    <div class="card">
+                        <h3>🚀 NFRs como Código</h3>
+                        <p>• Performance tests en CI/CD<br>
+                        • Security scanning automático<br>
+                        • Chaos engineering tests<br>
+                        • SLO/SLI monitoring</p>
+                    </div>
+                </div>
+                <div class="highlight">
+                    <p><strong>Principio Clave:</strong> "Los NFRs no son ciudadanos de segunda clase. Deben ser tan visibles, medibles y prioritarios como los requisitos funcionales."</p>
+                </div>
+            </div>
+            <div class="slide-number">11 / 12</div>
+        </div>
+
+        <!-- Slide 12: Glosario -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Glosario de Términos</h2>
+                <p class="subtitle">Siglas y conceptos clave</p>
+            </div>
+            <div class="content">
+                <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));">
+                    <div class="card">
+                        <h3>📊 Métricas y Observabilidad</h3>
+                        <p style="margin-bottom: 15px;"><strong>SLI (Service Level Indicator):</strong><br>
+                        Métrica específica que mide el comportamiento del servicio. Ej: "Latencia del 95 percentil de requests HTTP"</p>
+                        
+                        <p style="margin-bottom: 15px;"><strong>SLO (Service Level Objective):</strong><br>
+                        Objetivo para un SLI. Ej: "El 95% de requests debe responder en menos de 200ms"</p>
+                        
+                        <p style="margin-bottom: 15px;"><strong>SLA (Service Level Agreement):</strong><br>
+                        Contrato con consecuencias. Ej: "99.9% uptime o penalización económica"</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>📐 Arquitectura y Diseño</h3>
+                        <p style="margin-bottom: 15px;"><strong>C4 Model:</strong><br>
+                        Framework de diagramación con 4 niveles: Context, Container, Component, Code</p>
+                        
+                        <p style="margin-bottom: 15px;"><strong>ADR (Architecture Decision Record):</strong><br>
+                        Documento que captura decisiones arquitectónicas importantes, su contexto y consecuencias</p>
+                        
+                        <p style="margin-bottom: 15px;"><strong>CQRS (Command Query Responsibility Segregation):</strong><br>
+                        Patrón que separa operaciones de lectura (Query) y escritura (Command)</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>🧪 Testing y Experimentación</h3>
+                        <p style="margin-bottom: 15px;"><strong>A/B Testing:</strong><br>
+                        Experimento controlado comparando dos versiones (A y B) para determinar cuál funciona mejor</p>
+                        
+                        <p style="margin-bottom: 15px;"><strong>BDD (Behavior Driven Development):</strong><br>
+                        Desarrollo guiado por comportamiento usando lenguaje natural (Gherkin)</p>
+                        
+                        <p style="margin-bottom: 15px;"><strong>E2E (End-to-End):</strong><br>
+                        Pruebas que validan el flujo completo del sistema desde la perspectiva del usuario</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>🔒 Seguridad y Compliance</h3>
+                        <p style="margin-bottom: 15px;"><strong>PCI DSS:</strong><br>
+                        Payment Card Industry Data Security Standard - Estándar de seguridad para manejo de tarjetas</p>
+                        
+                        <p style="margin-bottom: 15px;"><strong>OWASP Top 10:</strong><br>
+                        Las 10 vulnerabilidades de seguridad web más críticas según Open Web Application Security Project</p>
+                        
+                        <p style="margin-bottom: 15px;"><strong>mTLS (Mutual TLS):</strong><br>
+                        Autenticación bidireccional donde cliente y servidor verifican identidades mutuamente</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>⚡ Performance y Escalabilidad</h3>
+                        <p style="margin-bottom: 15px;"><strong>TPS (Transactions Per Second):</strong><br>
+                        Métrica de throughput que mide cuántas transacciones procesa el sistema por segundo</p>
+                        
+                        <p style="margin-bottom: 15px;"><strong>HPA (Horizontal Pod Autoscaler):</strong><br>
+                        Componente de Kubernetes que escala automáticamente pods basado en métricas</p>
+                        
+                        <p style="margin-bottom: 15px;"><strong>RTO/RPO:</strong><br>
+                        Recovery Time/Point Objective - Tiempo máximo de recuperación y pérdida de datos aceptable</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>🛠️ Herramientas y Patrones</h3>
+                        <p style="margin-bottom: 15px;"><strong>DI (Dependency Injection):</strong><br>
+                        Patrón para invertir el control de dependencias, facilitando testing y desacoplamiento</p>
+                        
+                        <p style="margin-bottom: 15px;"><strong>SOLID:</strong><br>
+                        5 principios de diseño OOP: Single Responsibility, Open/Closed, Liskov, Interface Segregation, Dependency Inversion</p>
+                        
+                        <p style="margin-bottom: 15px;"><strong>CI/CD:</strong><br>
+                        Continuous Integration/Deployment - Automatización de build, test y despliegue</p>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">12 / 14</div>
+        </div>
+
+        <!-- Slide 13: Preguntas de Revisión -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Preguntas de Revisión</h2>
+                <p class="subtitle">Para discusión en clase</p>
+            </div>
+            <div class="content" style="overflow-y: auto;">
+                <div class="card">
+                    <h3>❓ Pregunta 1: Identificación de Requisitos</h3>
+                    <p style="margin-bottom: 10px;"><strong>Dado el siguiente escenario:</strong> "Un sistema de pagos debe procesar transacciones, pero durante Black Friday el sistema se cae cuando hay más de 1000 usuarios simultáneos"</p>
+                    <p style="margin-bottom: 20px;"><em>¿Qué tipo de requisito falló? ¿Cómo lo documentarías correctamente?</em></p>
+                    
+                    <details style="margin-top: 10px;">
+                        <summary style="cursor: pointer; color: #667eea;">Ver Respuesta</summary>
+                        <div class="highlight" style="margin-top: 10px;">
+                            <p>Falló un <strong>Requisito No Funcional de Performance/Escalabilidad</strong>. Se documentaría como:<br>
+                            "El sistema debe soportar al menos 10,000 usuarios concurrentes con un tiempo de respuesta P99 < 500ms durante picos de demanda"</p>
+                        </div>
+                    </details>
+                </div>
+
+                <div class="card">
+                    <h3>❓ Pregunta 2: Historia de Usuario</h3>
+                    <p style="margin-bottom: 10px;"><strong>Evalúa esta historia:</strong> "Implementar integración con API de Visa"</p>
+                    <p style="margin-bottom: 20px;"><em>¿Qué está mal? Reescríbela correctamente usando formato Connextra.</em></p>
+                    
+                    <details style="margin-top: 10px;">
+                        <summary style="cursor: pointer; color: #667eea;">Ver Respuesta</summary>
+                        <div class="highlight" style="margin-top: 10px;">
+                            <p>Problemas: No tiene formato Connextra, es una tarea técnica, no expresa valor.<br><br>
+                            <strong>Corrección:</strong><br>
+                            "Como comerciante,<br>
+                            quiero aceptar pagos con tarjetas Visa,<br>
+                            para aumentar mis opciones de cobro y no perder ventas"</p>
+                        </div>
+                    </details>
+                </div>
+
+                <div class="card">
+                    <h3>❓ Pregunta 3: Criterios de Aceptación</h3>
+                    <p style="margin-bottom: 10px;"><strong>Escribe criterios de aceptación en Gherkin para:</strong><br>
+                    "Sistema de autenticación con límite de intentos fallidos"</p>
+                    <p style="margin-bottom: 20px;"><em>Incluye al menos 2 escenarios: uno exitoso y uno de bloqueo.</em></p>
+                    
+                    <details style="margin-top: 10px;">
+                        <summary style="cursor: pointer; color: #667eea;">Ver Respuesta</summary>
+                        <div class="highlight" style="margin-top: 10px;">
+                            <pre style="font-size: 0.9em;">Scenario: Login exitoso
+  Given que soy un usuario registrado
+  And mi cuenta está activa
+  When ingreso credenciales correctas
+  Then debo acceder al sistema
+  And el contador de intentos debe resetearse
+
+Scenario: Bloqueo por intentos fallidos
+  Given que soy un usuario registrado
+  And he fallado 2 intentos de login
+  When ingreso credenciales incorrectas por 3ra vez
+  Then mi cuenta debe bloquearse por 30 minutos
+  And debo ver mensaje "Cuenta bloqueada temporalmente"
+  And debe enviarse alerta al equipo de seguridad</pre>
+                        </div>
+                    </details>
+                </div>
+
+                <div class="card">
+                    <h3>❓ Pregunta 4: NFRs en Microservicios</h3>
+                    <p style="margin-bottom: 10px;"><strong>Tu equipo está diseñando un servicio de wallet digital.</strong></p>
+                    <p style="margin-bottom: 20px;"><em>Lista 5 NFRs críticos y cómo los implementarías en Azure AKS.</em></p>
+                    
+                    <details style="margin-top: 10px;">
+                        <summary style="cursor: pointer; color: #667eea;">Ver Respuesta</summary>
+                        <div class="highlight" style="margin-top: 10px;">
+                            <p><strong>1. Disponibilidad 99.99%:</strong> Multi-region deployment, pod disruption budgets<br>
+                            <strong>2. Seguridad PCI:</strong> Network policies, mTLS con Istio, secret rotation<br>
+                            <strong>3. Performance < 100ms:</strong> Redis cache, HPA basado en latencia<br>
+                            <strong>4. Resiliencia:</strong> Circuit breakers con Polly, retry policies<br>
+                            <strong>5. Auditabilidad:</strong> Serilog centralizado, correlation IDs, inmutabilidad de logs</p>
+                        </div>
+                    </details>
+                </div>
+
+                <div class="card">
+                    <h3>❓ Pregunta 5: Caso Práctico</h3>
+                    <p style="margin-bottom: 10px;"><strong>Situación:</strong> El PO pide "El sistema debe ser rápido"</p>
+                    <p style="margin-bottom: 20px;"><em>¿Cómo convertirías esto en requisitos medibles y testeables?</em></p>
+                    
+                    <details style="margin-top: 10px;">
+                        <summary style="cursor: pointer; color: #667eea;">Ver Respuesta</summary>
+                        <div class="highlight" style="margin-top: 10px;">
+                            <p>Descomponer en métricas específicas:<br>
+                            • <strong>Latencia:</strong> P50 < 50ms, P95 < 200ms, P99 < 500ms<br>
+                            • <strong>Throughput:</strong> Mínimo 5000 RPS sostenidos<br>
+                            • <strong>Time to First Byte:</strong> < 100ms<br>
+                            • <strong>UI Rendering:</strong> First Contentful Paint < 1.5s<br>
+                            • <strong>Definir SLOs:</strong> "99% de requests deben completarse en < 200ms"</p>
+                        </div>
+                    </details>
+                </div>
+
+                <div class="card">
+                    <h3>🎯 Ejercicio Grupal</h3>
+                    <p><strong>Diseñen en equipos:</strong></p>
+                    <ol style="margin-left: 20px; margin-top: 10px;">
+                        <li>3 historias de usuario para un sistema de QR payments</li>
+                        <li>5 NFRs críticos con métricas específicas</li>
+                        <li>Criterios de aceptación para la historia más importante</li>
+                        <li>Estrategia de testing para validar los NFRs</li>
+                    </ol>
+                    <p style="margin-top: 15px;"><em>Tiempo: 15 minutos. Presentación: 5 minutos por equipo.</em></p>
+                </div>
+            </div>
+            <div class="slide-number">13 / 14</div>
+        </div>
+
+        <!-- Slide 14: Conclusiones -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Conclusiones Clave</h2>
+            </div>
+            <div class="content">
+                <div class="card" style="text-align: center; max-width: 800px; margin: 0 auto;">
+                    <h3>🎯 Takeaways Principales</h3>
+                    <div style="text-align: left; margin-top: 30px;">
+                        <p style="margin-bottom: 20px;">✅ <strong>Balance es clave:</strong> Los requisitos funcionales definen el valor, los NFRs garantizan la viabilidad.</p>
+                        <p style="margin-bottom: 20px;">✅ <strong>Agilidad con disciplina:</strong> Flexibilidad no significa caos. Historias de usuario + Gherkin = Precisión ágil.</p>
+                        <p style="margin-bottom: 20px;">✅ <strong>NFRs desde el día 1:</strong> En sistemas críticos (pagos, finanzas), los NFRs deben definirse junto con los funcionales.</p>
+                        <p style="margin-bottom: 20px;">✅ <strong>Automatización total:</strong> Desde criterios de aceptación hasta tests de performance, todo debe ser código.</p>
+                        <p style="margin-bottom: 20px;">✅ <strong>Métricas, no opiniones:</strong> SLIs/SLOs concretos para cada NFR crítico.</p>
+                    </div>
+                </div>
+                <div class="highlight" style="margin-top: 40px;">
+                    <p style="text-align: center; font-size: 1.2em;">
+                        <strong>"El software excelente no solo hace lo correcto, sino que lo hace de manera correcta, segura, rápida y confiable."</strong>
+                    </p>
+                </div>
+            </div>
+            <div class="slide-number">14 / 14</div>
+        </div>
+
+        <!-- Instructor Info -->
+        <div class="instructor-info">
+            <div class="instructor-name">Alejandro Sfrede</div>
+            <div class="instructor-area">Área de Arquitectura</div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="navigation">
+            <button class="nav-btn" onclick="previousSlide()" id="prevBtn">← Anterior</button>
+            <button class="nav-btn" onclick="nextSlide()" id="nextBtn">Siguiente →</button>
+            <button class="nav-btn" onclick="goHome()" style="background: rgba(102, 126, 234, 0.3);">🏠 Portal</button>
+        </div>
+
+        <div class="slide-counter">
+            <span id="currentSlide">1</span> / <span id="totalSlides">14</span>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            
+            document.getElementById('slideIndicator').textContent = `${currentSlide + 1} / ${totalSlides}`;
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+            
+            // Update progress bar
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        function goHome() {
+            window.location.href = '../index.html';
+        }
+
+        // Enhanced keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                previousSlide();
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                goHome();
+            }
+        });
+
+        // Touch/swipe support
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) changeSlide(1);
+            if (touchEndX > touchStartX + 50) changeSlide(-1);
+        }
+
+        // Initialize
+        document.getElementById('totalSlides').textContent = totalSlides;
+        showSlide(0);
+    </script>
+</body>
+</html>

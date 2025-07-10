@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CursoNET - Mapa Mental Interactivo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #0f0c29;
+            --text-color: #f0f0f0;
+            --primary-glow: #6a11cb;
+            --secondary-glow: #2575fc;
+        }
+
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #16213e);
+            background-size: 400% 400%;
+            animation: gradient-animation 15s ease infinite;
+            color: var(--text-color);
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            text-align: center;
+            padding: 20px;
+            width: 100%;
+            background: rgba(0,0,0,0.2);
+            backdrop-filter: blur(5px);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            font-weight: 600;
+            background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px rgba(106, 17, 203, 0.3);
+        }
+
+        #mind-map-container {
+            width: 100%;
+            height: calc(100vh - 90px);
+            position: relative;
+        }
+
+        svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .node circle {
+            stroke: rgba(255, 255, 255, 0.5);
+            stroke-width: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .node text {
+            fill: var(--text-color);
+            font-size: 14px;
+            font-weight: 400;
+            text-anchor: middle;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .node.root text {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .node.level-1 text {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .link {
+            stroke: rgba(255, 255, 255, 0.2);
+            stroke-width: 1.5px;
+            transition: stroke 0.3s ease;
+        }
+
+        .node:hover circle {
+            stroke: var(--secondary-glow);
+            stroke-width: 4px;
+        }
+
+        .node:hover text {
+            font-weight: 600;
+            fill: var(--secondary-glow);
+        }
+        
+        .home-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        
+        .home-button:hover {
+            background: rgba(102, 126, 234, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+
+    </style>
+</head>
+<body>
+    <a href="index.html" class="home-button">🏠 Volver al Portal</a>
+    <div class="header">
+        <h1>Mapa Mental Interactivo del Curso</h1>
+    </div>
+    <div id="mind-map-container"></div>
+
+    <script>
+        const mindMapData = {
+            "name": "🚀 CursoNET: Jr → Semi-Sr", "level": 0,
+            "children": [
+                {
+                    "name": "🔍 1. Calidad y Análisis Estático", "level": 1,
+                    "children": [
+                        { "name": "Introducción al Análisis Estático", "level": 2 },
+                        { "name": "Métricas (Complejidad Ciclomática)", "level": 2 },
+                        { "name": "Refactoring (Guard Clauses, Extract Method)", "level": 2 }
+                    ]
+                },
+                {
+                    "name": "📋 2. Requisitos y Metodologías", "level": 1,
+                    "children": [
+                        { "name": "FR vs. NFR", "level": 2 },
+                        { "name": "Historias de Usuario", "level": 2 },
+                        { "name": "Gherkin/BDD", "level": 2 }
+                    ]
+                },
+                {
+                    "name": "🚫 3. Técnicas \"No If\"", "level": 1,
+                    "children": [
+                        { "name": "Reemplazo con Diccionarios", "level": 2 },
+                        { "name": "Patrón Strategy", "level": 2 },
+                        { "name": "Patrón State", "level": 2 },
+                        { "name": "Polimorfismo", "level": 2 }
+                    ]
+                },
+                {
+                    "name": "🔧 4. Refactoring y SOLID", "level": 1,
+                    "children": [
+                        { "name": "Principios SOLID", "level": 2 },
+                        { "name": "Patrones (Factory, Builder)", "level": 2 }
+                    ]
+                },
+                {
+                    "name": "🗑️ 5. Gestión de Memoria (GC)", "level": 1,
+                    "children": [
+                        { "name": "Fundamentos del GC", "level": 2 },
+                        { "name": "IDisposable y using", "level": 2 },
+                        { "name": "Prevención de Memory Leaks", "level": 2 }
+                    ]
+                },
+                {
+                    "name": "⚡ 6. Optimización de BD", "level": 1,
+                    "children": [
+                        { "name": "Indexación", "level": 2 },
+                        { "name": "Índices Avanzados", "level": 2 },
+                        { "name": "Planes de Ejecución", "level": 2 }
+                    ]
+                },
+                {
+                    "name": "🏗️ 7. Diseño Avanzado de BD", "level": 1,
+                    "children": [
+                        { "name": "Diseño por Metadatos", "level": 2 },
+                        { "name": "Modelo Híbrido con JSON", "level": 2 },
+                        { "name": "Meta-Modelos", "level": 2 }
+                    ]
+                }
+            ]
+        };
+
+        const container = document.getElementById('mind-map-container');
+        const width = container.clientWidth;
+        const height = container.clientHeight;
+
+        const svg = d3.select(container).append("svg").attr("viewBox", [-width / 2, -height / 2, width, height]);
+
+        const root = d3.hierarchy(mindMapData);
+        const links = root.links();
+        const nodes = root.descendants();
+
+        const simulation = d3.forceSimulation(nodes)
+            .force("link", d3.forceLink(links).id(d => d.id).distance(d => (d.source.data.level === 0 ? 150 : 80)).strength(1))
+            .force("charge", d3.forceManyBody().strength(-400))
+            .force("center", d3.forceCenter());
+
+        const link = svg.append("g")
+            .attr("class", "links")
+            .selectAll("line")
+            .data(links)
+            .join("line")
+            .attr("class", "link");
+
+        const node = svg.append("g")
+            .attr("class", "nodes")
+            .selectAll("g")
+            .data(nodes)
+            .join("g")
+            .attr("class", d => `node ${d.data.level === 0 ? 'root' : 'level-' + d.data.level}`)
+            .call(drag(simulation));
+
+        const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+
+        node.append("circle")
+            .attr("r", d => d.data.level === 0 ? 40 : (d.data.level === 1 ? 25 : 15))
+            .attr("fill", d => d.children ? colorScale(d.data.name) : '#302b63')
+            .style("filter", d => `drop-shadow(0 0 10px ${colorScale(d.data.name)})`);
+
+        node.append("text")
+            .text(d => d.data.name)
+            .attr("dy", d => d.data.level === 0 ? 60 : (d.data.level === 1 ? 40 : 25));
+
+        simulation.on("tick", () => {
+            link
+                .attr("x1", d => d.source.x)
+                .attr("y1", d => d.source.y)
+                .attr("x2", d => d.target.x)
+                .attr("y2", d => d.target.y);
+
+            node.attr("transform", d => `translate(${d.x}, ${d.y})`);
+        });
+
+        function drag(simulation) {
+            function dragstarted(event, d) {
+                if (!event.active) simulation.alphaTarget(0.3).restart();
+                d.fx = d.x;
+                d.fy = d.y;
+            }
+
+            function dragged(event, d) {
+                d.fx = event.x;
+                d.fy = event.y;
+            }
+
+            function dragended(event, d) {
+                if (!event.active) simulation.alphaTarget(0);
+                d.fx = null;
+                d.fy = null;
+            }
+
+            return d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended);
+        }
+
+    </script>
+</body>
+</html>

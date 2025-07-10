@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indexación SQL y EF Core - De Cero a Héroe del Rendimiento</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow: hidden;
+        }
+
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+            padding: 60px;
+            position: relative;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .slide-header {
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 3.5em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 2.5em;
+            color: #667eea;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        h3 {
+            font-size: 1.8em;
+            color: #764ba2;
+            margin: 30px 0 20px;
+            font-weight: 500;
+        }
+
+        .subtitle {
+            font-size: 1.5em;
+            color: #a8a8b3;
+            font-weight: 300;
+        }
+
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.1);
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .three-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 25px;
+        }
+
+        .code-block {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            font-family: 'JetBrains Mono', 'Monaco', 'Menlo', monospace;
+            font-size: 0.95em;
+            line-height: 1.6;
+            margin: 20px 0;
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .code-block::before {
+            content: 'SQL';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: rgba(102, 126, 234, 0.2);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            color: #667eea;
+        }
+
+        .code-block.csharp::before {
+            content: 'C#';
+        }
+
+        .code-block.no-tag::before {
+            display: none;
+        }
+
+        .keyword { color: #569cd6; }
+        .string { color: #ce9178; }
+        .comment { color: #6a9955; font-style: italic; }
+        .operator { color: #d4d4d4; }
+        .number { color: #b5cea8; }
+
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 152, 0, 0.1) 100%);
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .success-box {
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.1) 0%, rgba(25, 135, 84, 0.1) 100%);
+            border-left: 4px solid #28a745;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .nav-btn:hover {
+            background: rgba(102, 126, 234, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .slide-counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 15px;
+            border-radius: 6px;
+            backdrop-filter: blur(10px);
+            font-size: 14px;
+            z-index: 1000;
+        }
+
+        ul, ol {
+            padding-left: 30px;
+            line-height: 1.8;
+        }
+
+        li {
+            margin-bottom: 10px;
+            color: #e0e0e0;
+        }
+
+        .performance-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .bad-practice {
+            background: rgba(220, 53, 69, 0.1);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .good-practice {
+            background: rgba(40, 167, 69, 0.1);
+            border: 1px solid rgba(40, 167, 69, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .analogy-box {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.05) 0%, rgba(255, 152, 0, 0.05) 100%);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .analogy-box::before {
+            content: "💡";
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.5em;
+        }
+
+        .tip-box {
+            background: linear-gradient(135deg, rgba(23, 162, 184, 0.1) 0%, rgba(13, 110, 139, 0.1) 100%);
+            border-left: 4px solid #17a2b8;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .acronym-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .acronym-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .acronym-term {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .acronym-definition {
+            font-size: 0.9em;
+            color: #a8a8b3;
+        }
+
+        .exercise-box {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+            border: 2px dashed rgba(102, 126, 234, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .exercise-title {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px;
+            }
+            
+            h1 {
+                font-size: 2.5em;
+            }
+            
+            h2 {
+                font-size: 2em;
+            }
+            
+            .two-column,
+            .three-column {
+                grid-template-columns: 1fr;
+            }
+            
+            .navigation {
+                bottom: 20px;
+                right: 20px;
+            }
+            
+            .slide-counter {
+                bottom: 20px;
+                left: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <!-- Slide 1: Título -->
+        <div class="slide active">
+            <div class="slide-header">
+                <h1>Indexación SQL y EF Core</h1>
+                <p class="subtitle">De Cero a Héroe del Rendimiento</p>
+            </div>
+            <div class="content">
+                <div class="card">
+                    <h3>🎯 Objetivos del Curso</h3>
+                    <ul>
+                        <li>Dominar la creación y optimización de índices en SQL Server</li>
+                        <li>Implementar índices eficientes con Entity Framework Core</li>
+                        <li>Analizar planes de ejecución para detectar problemas de rendimiento</li>
+                        <li>Aplicar mejores prácticas de mantenimiento de índices</li>
+                    </ul>
+                </div>
+                
+                <div class="analogy-box">
+                    <h3>💡 La Analogía del Libro</h3>
+                    <p>Un índice en base de datos es como el índice de un libro:</p>
+                    <div class="performance-comparison">
+                        <div class="bad-practice">
+                            <strong>❌ Sin Índice (Table Scan):</strong><br>
+                            Leer página por página hasta encontrar "Revolución Francesa" - Lento y tedioso
+                        </div>
+                        <div class="good-practice">
+                            <strong>✅ Con Índice (Index Seek):</strong><br>
+                            Ir al índice, encontrar "página 210" e ir directamente - Rápido y preciso
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Fundamentos - Clustered vs Non-Clustered -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Clase 1: Fundamentos - Clustered vs Non-Clustered</h2>
+            </div>
+            <div class="content">
+                <div class="two-column">
+                    <div class="card">
+                        <h3>📚 Índice Clustered</h3>
+                        <ul>
+                            <li><strong>Solo UNO por tabla</strong></li>
+                            <li>Define el orden físico de los datos</li>
+                            <li>La PRIMARY KEY crea automáticamente un Clustered Index</li>
+                            <li>Es la tabla misma, ordenada</li>
+                        </ul>
+                        
+                        <div class="analogy-box">
+                            <strong>Analogía:</strong> Una guía telefónica ordenada alfabéticamente por apellido
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>📖 Índice Non-Clustered</h3>
+                        <ul>
+                            <li><strong>Hasta 999 por tabla</strong></li>
+                            <li>Estructura separada con punteros</li>
+                            <li>Contiene solo las columnas indexadas</li>
+                            <li>Apunta al Clustered Index</li>
+                        </ul>
+                        
+                        <div class="analogy-box">
+                            <strong>Analogía:</strong> Índice temático al final del libro
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>🎯 Ejemplo Práctico: Tabla de Productos</h3>
+                    <p>Escenario: Millones de productos, búsquedas frecuentes por SKU</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Creación de Índices - SQL -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Creación de Índices en SQL Server</h2>
+            </div>
+            <div class="content">
+                <div class="code-block">
+<span class="keyword">CREATE TABLE</span> Products (
+    ProductID <span class="keyword">INT</span> <span class="keyword">PRIMARY KEY</span>, <span class="comment">-- Índice Clustered automático</span>
+    ProductName <span class="keyword">NVARCHAR</span>(<span class="number">200</span>),
+    SKU <span class="keyword">NVARCHAR</span>(<span class="number">50</span>) <span class="keyword">NOT NULL</span>,
+    Price <span class="keyword">DECIMAL</span>(<span class="number">10</span>, <span class="number">2</span>)
+);
+
+<span class="comment">-- Consulta LENTA sin índice</span>
+<span class="keyword">SELECT</span> ProductName, Price 
+<span class="keyword">FROM</span> Products 
+<span class="keyword">WHERE</span> SKU = <span class="string">'ABC-12345'</span>;
+
+<span class="comment">-- Crear índice Non-Clustered</span>
+<span class="keyword">CREATE NONCLUSTERED INDEX</span> IX_Products_SKU 
+<span class="keyword">ON</span> Products(SKU);
+
+<span class="comment">-- ¡Ahora la misma consulta es RÁPIDA!</span>
+                </div>
+
+                <div class="performance-comparison">
+                    <div class="bad-practice">
+                        <h4>❌ Sin Índice</h4>
+                        <p><strong>Clustered Index Scan</strong><br>
+                        Lee toda la tabla secuencialmente</p>
+                    </div>
+                    <div class="good-practice">
+                        <h4>✅ Con Índice</h4>
+                        <p><strong>Index Seek</strong><br>
+                        Búsqueda directa y precisa</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Entity Framework Core -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Índices con Entity Framework Core</h2>
+            </div>
+            <div class="content">
+                <div class="code-block csharp">
+<span class="comment">// En tu DbContext, dentro de OnModelCreating</span>
+<span class="keyword">protected override void</span> OnModelCreating(ModelBuilder modelBuilder)
+{
+    modelBuilder.Entity&lt;Product&gt;(entity =>
+    {
+        <span class="comment">// EF Core sabe que esto será el índice Clustered</span>
+        entity.HasKey(p => p.ProductId);
+
+        <span class="comment">// Definir índice Non-Clustered</span>
+        entity.HasIndex(p => p.Sku, <span class="string">"IX_Products_SKU"</span>);
+    });
+}
+
+<span class="comment">// Consulta LINQ que se beneficia del índice</span>
+<span class="keyword">var</span> product = <span class="keyword">await</span> context.Products
+    .FirstOrDefaultAsync(p => p.Sku == <span class="string">"ABC-12345"</span>);
+                </div>
+
+                <div class="tip-box">
+                    <h3>💡 Tip Pro</h3>
+                    <p>EF Core traduce automáticamente tu consulta LINQ a SQL con WHERE. 
+                    Gracias al índice IX_Products_SKU, se convierte en un Index Seek ultra rápido.</p>
+                </div>
+
+                <div class="exercise-box">
+                    <div class="exercise-title">🏋️ Ejercicio 1</div>
+                    <p><strong>Escenario:</strong> Tabla Users con millones de usuarios. Operación más común: login por email.</p>
+                    <ol>
+                        <li>Diseña la tabla Users (UserID PK, Email, PasswordHash, CreatedAt)</li>
+                        <li>Escribe la consulta SELECT para buscar por email</li>
+                        <li>Crea el índice óptimo para esta consulta</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Índices Compuestos -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Clase 2: El Arte del Orden - Índices Compuestos</h2>
+            </div>
+            <div class="content">
+                <div class="highlight-box">
+                    <h3>🥇 Regla de Oro del Orden</h3>
+                    <p>Un índice en (ColA, ColB, ColC) puede usarse eficientemente por consultas que filtran por:</p>
+                    <ul>
+                        <li>✅ ColA</li>
+                        <li>✅ ColA y ColB</li>
+                        <li>✅ ColA, ColB y ColC</li>
+                        <li>❌ Solo ColB o solo ColC</li>
+                    </ul>
+                </div>
+
+                <div class="analogy-box">
+                    <h3>📞 Analogía: Guía Telefónica Nacional</h3>
+                    <div class="performance-comparison">
+                        <div class="bad-practice">
+                            <h4>❌ Mal Orden: (Nombre, Apellido, Provincia)</h4>
+                            <p>Para buscar "Juan Pérez" en "Mendoza", debes revisar todos los "Juan" del país</p>
+                        </div>
+                        <div class="good-practice">
+                            <h4>✅ Buen Orden: (Provincia, Apellido, Nombre)</h4>
+                            <p>Vas directo a "Mendoza" → "Pérez" → "Juan"</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Selectividad -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Selectividad: El Arte de Filtrar Mejor</h2>
+            </div>
+            <div class="content">
+                <div class="card">
+                    <h3>🎯 ¿Qué es Selectividad?</h3>
+                    <div class="two-column">
+                        <div>
+                            <h4>📈 Alta Selectividad (BUENA)</h4>
+                            <ul>
+                                <li>Email (único por usuario)</li>
+                                <li>DNI/ID (único)</li>
+                                <li>CustomerID (pocos valores repetidos)</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>📉 Baja Selectividad (CUIDADO)</h4>
+                            <ul>
+                                <li>Status ('Activo'/'Inactivo')</li>
+                                <li>Género ('M'/'F'/'Otro')</li>
+                                <li>Categoría (pocas opciones)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>⚡ Principio de Diseño</h3>
+                    <p><strong>Coloca PRIMERO la columna con MAYOR selectividad</strong></p>
+                    
+                    <div class="code-block">
+<span class="comment">-- Consulta frecuente: facturas pendientes de un cliente</span>
+<span class="keyword">SELECT</span> InvoiceID, Amount 
+<span class="keyword">FROM</span> Invoices 
+<span class="keyword">WHERE</span> CustomerID = @customer <span class="keyword">AND</span> Status = <span class="string">'Pendiente'</span>;
+
+<span class="comment">-- ❌ MALO: Baja selectividad primero</span>
+<span class="keyword">CREATE INDEX</span> IX_Invoices_Status_Customer 
+<span class="keyword">ON</span> Invoices(Status, CustomerID);
+
+<span class="comment">-- ✅ BUENO: Alta selectividad primero</span>
+<span class="keyword">CREATE INDEX</span> IX_Invoices_Customer_Status 
+<span class="keyword">ON</span> Invoices(CustomerID, Status);
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Optimizando ORDER BY -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Clase 3: Optimizando ORDER BY</h2>
+            </div>
+            <div class="content">
+                <div class="warning-box">
+                    <h3>⚠️ El Problema del "Costly Sort"</h3>
+                    <p>Si tu consulta pide datos en un orden diferente al del índice, SQL debe hacer una operación SORT costosa en memoria o disco.</p>
+                </div>
+
+                <div class="card">
+                    <h3>📅 Ejemplo: Últimas órdenes de un cliente</h3>
+                    <div class="code-block">
+<span class="keyword">SELECT</span> OrderID, OrderDate, Amount 
+<span class="keyword">FROM</span> Orders 
+<span class="keyword">WHERE</span> CustomerID = @customer 
+<span class="keyword">ORDER BY</span> OrderDate <span class="keyword">DESC</span>;
+
+<span class="comment">-- ⚠️ Índice aceptable pero no óptimo</span>
+<span class="keyword">CREATE INDEX</span> IX_Orders_Customer <span class="keyword">ON</span> Orders(CustomerID);
+<span class="comment">-- Acelera el WHERE pero aún necesita SORT</span>
+
+<span class="comment">-- ✅ Índice ÓPTIMO</span>
+<span class="keyword">CREATE INDEX</span> IX_Orders_Customer_Date 
+<span class="keyword">ON</span> Orders(CustomerID, OrderDate <span class="keyword">DESC</span>);
+<span class="comment">-- Elimina completamente la operación SORT</span>
+                    </div>
+                </div>
+
+                <div class="success-box">
+                    <h3>🎯 Resultado</h3>
+                    <p>SQL encuentra al cliente y lee las órdenes en el orden que ya están almacenadas. ¡La operación Sort desaparece del plan de ejecución!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Covering Indexes -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>El Santo Grial: Covering Indexes</h2>
+            </div>
+            <div class="content">
+                <div class="highlight-box">
+                    <h3>🏆 ¿Qué es un Covering Index?</h3>
+                    <p>Un índice que contiene <strong>TODAS</strong> las columnas que la consulta necesita. SQL puede responder usando solo el índice, sin tocar la tabla principal.</p>
+                </div>
+
+                <div class="card">
+                    <h3>📝 Ejemplo: Dashboard de Blog</h3>
+                    <div class="code-block">
+<span class="keyword">SELECT</span> Title, CreatedAt 
+<span class="keyword">FROM</span> BlogPosts 
+<span class="keyword">WHERE</span> Status = <span class="string">'Published'</span> 
+<span class="keyword">ORDER BY</span> CreatedAt <span class="keyword">DESC</span>;
+
+<span class="comment">-- ⚠️ Índice bueno pero incompleto</span>
+<span class="keyword">CREATE INDEX</span> IX_Blog_Status_Date 
+<span class="keyword">ON</span> BlogPosts(Status, CreatedAt <span class="keyword">DESC</span>);
+<span class="comment">-- Aún necesita "Key Lookup" para obtener Title</span>
+
+<span class="comment">-- 🏆 COVERING INDEX (ÓPTIMO)</span>
+<span class="keyword">CREATE NONCLUSTERED INDEX</span> IX_Blog_Covering_Dashboard
+<span class="keyword">ON</span> BlogPosts(Status, CreatedAt <span class="keyword">DESC</span>)
+<span class="keyword">INCLUDE</span> (Title); <span class="comment">-- ¡La magia está aquí!</span>
+                    </div>
+                </div>
+
+                <div class="code-block csharp">
+<span class="comment">// En EF Core</span>
+modelBuilder.Entity&lt;BlogPost&gt;()
+    .HasIndex(p => <span class="keyword">new</span> { p.Status, p.CreatedAt })
+    .IncludeProperties(p => p.Title) <span class="comment">// INCLUDE en EF Core</span>
+    .HasDatabaseName(<span class="string">"IX_Blog_Covering_Dashboard"</span>);
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Detección de Problemas -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Clase 4: Detección y Mantenimiento</h2>
+            </div>
+            <div class="content">
+                <div class="card">
+                    <h3>🕵️ El Plan de Ejecución - Tu Detective</h3>
+                    <ul>
+                        <li><strong>Table Scan / Clustered Index Scan</strong> con costo > 90% = 🚨 ALARMA</li>
+                        <li><strong>Index Seek</strong> = ✅ Todo bien</li>
+                        <li><strong>Missing Index (texto verde)</strong> = 💡 Sugerencia de SQL</li>
+                    </ul>
+                </div>
+
+                <div class="tip-box">
+                    <h3>💡 Tip Pro: Missing Index DMV</h3>
+                    <p>SQL Server registra internamente qué índices echa en falta. ¡Puedes consultarlo!</p>
+                </div>
+
+                <div class="code-block">
+<span class="comment">-- Consulta para encontrar los índices más necesitados</span>
+<span class="keyword">SELECT</span>
+    migs.avg_total_user_cost * (migs.avg_user_impact / <span class="number">100.0</span>) * 
+    (migs.user_seeks + migs.user_scans) <span class="keyword">AS</span> improvement_measure,
+    <span class="string">'CREATE INDEX [missing_index_'</span> + <span class="keyword">CONVERT</span>(<span class="keyword">varchar</span>, mig.index_group_handle) + 
+    <span class="string">'_'</span> + <span class="keyword">CONVERT</span>(<span class="keyword">varchar</span>, mid.index_handle) + <span class="string">'] ON '</span> + 
+    mid.statement + <span class="string">' ('</span> + <span class="keyword">ISNULL</span>(mid.equality_columns,<span class="string">''</span>) +
+    <span class="keyword">CASE WHEN</span> mid.equality_columns <span class="keyword">IS NOT NULL AND</span> 
+         mid.inequality_columns <span class="keyword">IS NOT NULL THEN</span> <span class="string">','</span> <span class="keyword">ELSE</span> <span class="string">''</span> <span class="keyword">END</span> +
+    <span class="keyword">ISNULL</span>(mid.inequality_columns, <span class="string">''</span>) + <span class="string">')'</span> + 
+    <span class="keyword">ISNULL</span>(<span class="string">' INCLUDE ('</span> + mid.included_columns + <span class="string">')'</span>, <span class="string">''</span>) 
+    <span class="keyword">AS</span> create_index_statement
+<span class="keyword">FROM</span> sys.dm_db_missing_index_groups mig
+<span class="keyword">INNER JOIN</span> sys.dm_db_missing_index_group_stats migs 
+    <span class="keyword">ON</span> migs.group_handle = mig.index_group_handle
+<span class="keyword">INNER JOIN</span> sys.dm_db_missing_index_details mid 
+    <span class="keyword">ON</span> mig.index_handle = mid.index_handle
+<span class="keyword">ORDER BY</span> improvement_measure <span class="keyword">DESC</span>;
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Mantenimiento -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Mantenimiento: La Higiene de los Índices</h2>
+            </div>
+            <div class="content">
+                <div class="warning-box">
+                    <h3>⚠️ Fragmentación</h3>
+                    <p>Con el tiempo, después de muchos INSERT, UPDATE y DELETE, los índices se fragmentan. 
+                    El orden físico ya no es secuencial, ralentizando las lecturas.</p>
+                </div>
+
+                <div class="three-column">
+                    <div class="card">
+                        <h4>🟢 < 5% Fragmentación</h4>
+                        <p><strong>Acción:</strong> Ninguna<br>
+                        <strong>Estado:</strong> Óptimo</p>
+                    </div>
+                    <div class="card">
+                        <h4>🟡 5-30% Fragmentación</h4>
+                        <p><strong>Acción:</strong> REORGANIZE<br>
+                        <strong>Operación:</strong> En línea</p>
+                    </div>
+                    <div class="card">
+                        <h4>🔴 > 30% Fragmentación</h4>
+                        <p><strong>Acción:</strong> REBUILD<br>
+                        <strong>Operación:</strong> Puede bloquear</p>
+                    </div>
+                </div>
+
+                <div class="code-block">
+<span class="comment">-- Revisar fragmentación</span>
+<span class="keyword">SELECT</span> 
+    OBJECT_NAME(ips.object_id) <span class="keyword">AS</span> TableName,
+    i.name <span class="keyword">AS</span> IndexName,
+    ips.avg_fragmentation_in_percent <span class="keyword">AS</span> FragmentationPercent
+<span class="keyword">FROM</span> sys.dm_db_index_physical_stats(<span class="keyword">DB_ID</span>(), <span class="keyword">NULL</span>, <span class="keyword">NULL</span>, <span class="keyword">NULL</span>, <span class="string">'LIMITED'</span>) ips
+<span class="keyword">INNER JOIN</span> sys.indexes i <span class="keyword">ON</span> ips.object_id = i.object_id 
+    <span class="keyword">AND</span> ips.index_id = i.index_id
+<span class="keyword">WHERE</span> ips.avg_fragmentation_in_percent > <span class="number">5</span>
+<span class="keyword">ORDER BY</span> ips.avg_fragmentation_in_percent <span class="keyword">DESC</span>;
+
+<span class="comment">-- Mantenimiento</span>
+<span class="keyword">ALTER INDEX</span> IX_Products_SKU <span class="keyword">ON</span> Products <span class="keyword">REORGANIZE</span>; <span class="comment">-- Para 5-30%</span>
+<span class="keyword">ALTER INDEX</span> IX_Products_SKU <span class="keyword">ON</span> Products <span class="keyword">REBUILD</span>;    <span class="comment">-- Para >30%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Mejores Prácticas -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Mejores Prácticas del Experto</h2>
+            </div>
+            <div class="content">
+                <div class="two-column">
+                    <div class="card">
+                        <h3>✅ SÍ Hacer</h3>
+                        <ul>
+                            <li><strong>Índices en Foreign Keys</strong> - Casi siempre beneficiosos para JOINs</li>
+                            <li><strong>Estadísticas actualizadas</strong> - UPDATE STATISTICS regularmente</li>
+                            <li><strong>Monitorear planes de ejecución</strong> - Tu herramienta principal</li>
+                            <li><strong>Usar DMVs</strong> - Déjate guiar por los datos</li>
+                            <li><strong>Covering indexes para consultas críticas</strong></li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>❌ NO Hacer</h3>
+                        <ul>
+                            <li><strong>Sobre-indexar</strong> - Cada índice ralentiza escrituras</li>
+                            <li><strong>Crear índices "por si acaso"</strong> - Solo los que necesitas</li>
+                            <li><strong>Ignorar el orden en índices compuestos</strong></li>
+                            <li><strong>INCLUDE columnas gigantes</strong> - Usa con moderación</li>
+                            <li><strong>Olvidar el mantenimiento</strong> - Fragmentación mata rendimiento</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>🎯 Regla de Oro</h3>
+                    <p><strong>Mide, no adivines.</strong> Usa planes de ejecución, DMVs y herramientas de monitoreo para tomar decisiones basadas en datos reales, no en suposiciones.</p>
+                </div>
+
+                <div class="tip-box">
+                    <h3>💡 Tips del Arquitecto</h3>
+                    <ul>
+                        <li><strong>Entorno de Staging:</strong> Prueba índices en datos reales antes de producción</li>
+                        <li><strong>Mantenimiento automatizado:</strong> Scripts de REORGANIZE/REBUILD programados</li>
+                        <li><strong>Monitoreo proactivo:</strong> Alertas por fragmentación alta o missing indexes</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Casos de Uso Empresariales -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Casos de Uso Empresariales</h2>
+            </div>
+            <div class="content">
+                <div class="card">
+                    <h3>🏦 Sistema Bancario: Transacciones</h3>
+                    <div class="code-block">
+<span class="comment">-- Consulta crítica: Movimientos de cuenta en rango de fechas</span>
+<span class="keyword">SELECT</span> TransactionID, Amount, Description, TransactionDate
+<span class="keyword">FROM</span> Transactions 
+<span class="keyword">WHERE</span> AccountID = @accountId 
+    <span class="keyword">AND</span> TransactionDate <span class="keyword">BETWEEN</span> @startDate <span class="keyword">AND</span> @endDate
+<span class="keyword">ORDER BY</span> TransactionDate <span class="keyword">DESC</span>;
+
+<span class="comment">-- Índice óptimo</span>
+<span class="keyword">CREATE NONCLUSTERED INDEX</span> IX_Transactions_Account_Date_Covering
+<span class="keyword">ON</span> Transactions(AccountID, TransactionDate <span class="keyword">DESC</span>)
+<span class="keyword">INCLUDE</span> (Amount, Description);
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🛒 E-Commerce: Catálogo de Productos</h3>
+                    <div class="code-block">
+<span class="comment">-- Búsqueda por categoría, marca y precio</span>
+<span class="keyword">SELECT</span> ProductName, Price, ImageUrl
+<span class="keyword">FROM</span> Products 
+<span class="keyword">WHERE</span> CategoryID = @category 
+    <span class="keyword">AND</span> BrandID = @brand 
+    <span class="keyword">AND</span> Price <span class="keyword">BETWEEN</span> @minPrice <span class="keyword">AND</span> @maxPrice
+    <span class="keyword">AND</span> IsActive = <span class="number">1</span>
+<span class="keyword">ORDER BY</span> Price <span class="keyword">ASC</span>;
+
+<span class="comment">-- Estrategia: Múltiples índices especializados</span>
+<span class="keyword">CREATE INDEX</span> IX_Products_Category_Brand_Price 
+<span class="keyword">ON</span> Products(CategoryID, BrandID, Price) 
+<span class="keyword">WHERE</span> IsActive = <span class="number">1</span>; <span class="comment">-- Filtered Index</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Performance Tuning Avanzado -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Performance Tuning Avanzado</h2>
+            </div>
+            <div class="content">
+                <div class="card">
+                    <h3>🎯 Filtered Indexes</h3>
+                    <p>Índices que solo incluyen filas que cumplen una condición específica</p>
+                    <div class="code-block">
+<span class="comment">-- Solo indexar productos activos (más eficiente)</span>
+<span class="keyword">CREATE INDEX</span> IX_Products_Category_Active 
+<span class="keyword">ON</span> Products(CategoryID) 
+<span class="keyword">WHERE</span> IsActive = <span class="number">1</span>;
+
+<span class="comment">-- Solo indexar órdenes del último año</span>
+<span class="keyword">CREATE INDEX</span> IX_Orders_Customer_Recent 
+<span class="keyword">ON</span> Orders(CustomerID, OrderDate) 
+<span class="keyword">WHERE</span> OrderDate >= <span class="string">'2024-01-01'</span>;
+                    </div>
+                </div>
+
+                <div class="two-column">
+                    <div class="card">
+                        <h3>📊 Columnstore Indexes</h3>
+                        <ul>
+                            <li>Para queries analíticos y reportes</li>
+                            <li>Compresión extrema de datos</li>
+                            <li>Ideal para Data Warehouses</li>
+                        </ul>
+                        <div class="code-block">
+<span class="keyword">CREATE CLUSTERED COLUMNSTORE INDEX</span> 
+CCI_SalesHistory <span class="keyword">ON</span> SalesHistory;
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>🔍 Full-Text Indexes</h3>
+                        <ul>
+                            <li>Para búsquedas de texto completo</li>
+                            <li>Soporte para sinónimos</li>
+                            <li>Búsquedas fuzzy y ranking</li>
+                        </ul>
+                        <div class="code-block">
+<span class="keyword">CREATE FULLTEXT INDEX</span> <span class="keyword">ON</span> Articles
+(Title, Content) 
+<span class="keyword">KEY INDEX</span> PK_Articles;
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 14: Tools y Monitoreo -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Herramientas de Monitoreo y Análisis</h2>
+            </div>
+            <div class="content">
+                <div class="three-column">
+                    <div class="card">
+                        <h3>🔧 SQL Server Management Studio</h3>
+                        <ul>
+                            <li>Execution Plans gráficos</li>
+                            <li>Index Usage Statistics</li>
+                            <li>Database Engine Tuning Advisor</li>
+                            <li>Activity Monitor</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>📊 Azure Data Studio</h3>
+                        <ul>
+                            <li>Query Performance Insights</li>
+                            <li>Extensions de performance</li>
+                            <li>Notebooks para análisis</li>
+                            <li>Cross-platform</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>⚡ Herramientas Enterprise</h3>
+                        <ul>
+                            <li>SQL Server Profiler/Extended Events</li>
+                            <li>SentryOne Plan Explorer</li>
+                            <li>Redgate SQL Monitor</li>
+                            <li>ApexSQL Monitor</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>🎯 Métricas Clave a Monitorear</h3>
+                    <ul>
+                        <li><strong>Page Life Expectancy:</strong> Tiempo que las páginas permanecen en buffer pool</li>
+                        <li><strong>Buffer Cache Hit Ratio:</strong> % de páginas encontradas en memoria</li>
+                        <li><strong>Index Usage Stats:</strong> Seeks vs Scans ratio</li>
+                        <li><strong>Wait Statistics:</strong> Identificar cuellos de botella</li>
+                        <li><strong>Fragmentation Levels:</strong> Salud de los índices</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 15: Ejercicio Integral -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>🏋️ Ejercicio Integral: E-Commerce Optimization</h2>
+            </div>
+            <div class="content">
+                <div class="exercise-box">
+                    <div class="exercise-title">🎯 Escenario Real</div>
+                    <p><strong>Tu misión:</strong> Optimizar las consultas más críticas de un e-commerce con 10M de productos</p>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Consultas a Optimizar</h3>
+                    <div class="code-block">
+<span class="comment">-- 1. Búsqueda de productos con filtros múltiples</span>
+<span class="keyword">SELECT</span> ProductID, Name, Price, Rating
+<span class="keyword">FROM</span> Products 
+<span class="keyword">WHERE</span> CategoryID = @categoryId 
+    <span class="keyword">AND</span> BrandID = @brandId 
+    <span class="keyword">AND</span> Price <span class="keyword">BETWEEN</span> @minPrice <span class="keyword">AND</span> @maxPrice
+    <span class="keyword">AND</span> IsActive = <span class="number">1</span>
+    <span class="keyword">AND</span> StockQuantity > <span class="number">0</span>
+<span class="keyword">ORDER BY</span> Rating <span class="keyword">DESC</span>, Price <span class="keyword">ASC</span>;
+
+<span class="comment">-- 2. Historial de órdenes del usuario</span>
+<span class="keyword">SELECT</span> o.OrderID, o.OrderDate, o.TotalAmount, 
+       oi.ProductName, oi.Quantity, oi.UnitPrice
+<span class="keyword">FROM</span> Orders o
+<span class="keyword">INNER JOIN</span> OrderItems oi <span class="keyword">ON</span> o.OrderID = oi.OrderID
+<span class="keyword">WHERE</span> o.CustomerID = @customerId
+<span class="keyword">ORDER BY</span> o.OrderDate <span class="keyword">DESC</span>;
+
+<span class="comment">-- 3. Productos relacionados/recomendados</span>
+<span class="keyword">SELECT</span> <span class="keyword">TOP</span> <span class="number">10</span> p.ProductID, p.Name, p.Price
+<span class="keyword">FROM</span> Products p
+<span class="keyword">INNER JOIN</span> ProductRecommendations pr <span class="keyword">ON</span> p.ProductID = pr.RecommendedProductID
+<span class="keyword">WHERE</span> pr.SourceProductID = @productId
+    <span class="keyword">AND</span> p.IsActive = <span class="number">1</span>
+<span class="keyword">ORDER BY</span> pr.Score <span class="keyword">DESC</span>;
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <h3>💡 Pasos del Ejercicio</h3>
+                    <ol>
+                        <li>Analiza cada consulta y identifica las columnas de filtrado</li>
+                        <li>Determina la selectividad de cada columna</li>
+                        <li>Diseña el índice óptimo considerando WHERE, ORDER BY y JOINs</li>
+                        <li>Decide si necesitas índices de cobertura</li>
+                        <li>Considera filtered indexes para datos activos</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 16: Anexo de Siglas y Términos -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>📚 Anexo: Siglas y Términos del Mercado</h2>
+            </div>
+            <div class="content">
+                <div class="acronym-grid">
+                    <div class="acronym-item">
+                        <div class="acronym-term">OLTP</div>
+                        <div class="acronym-definition">Online Transaction Processing - Sistemas transaccionales en tiempo real</div>
+                    </div>
+                    <div class="acronym-item">
+                        <div class="acronym-term">OLAP</div>
+                        <div class="acronym-definition">Online Analytical Processing - Sistemas de análisis y reportes</div>
+                    </div>
+                    <div class="acronym-item">
+                        <div class="acronym-term">DMV</div>
+                        <div class="acronym-definition">Dynamic Management Views - Vistas del sistema SQL Server</div>
+                    </div>
+                    <div class="acronym-item">
+                        <div class="acronym-term">DTA</div>
+                        <div class="acronym-definition">Database Engine Tuning Advisor - Herramienta de optimización</div>
+                    </div>
+                    <div class="acronym-item">
+                        <div class="acronym-term">PLE</div>
+                        <div class="acronym-definition">Page Life Expectancy - Métrica de memoria buffer</div>
+                    </div>
+                    <div class="acronym-item">
+                        <div class="acronym-term">RID</div>
+                        <div class="acronym-definition">Row Identifier - Identificador físico de fila</div>
+                    </div>
+                    <div class="acronym-item">
+                        <div class="acronym-term">IAM</div>
+                        <div class="acronym-definition">Index Allocation Map - Mapa de asignación de índices</div>
+                    </div>
+                    <div class="acronym-item">
+                        <div class="acronym-term">GAM</div>
+                        <div class="acronym-definition">Global Allocation Map - Mapa global de asignación</div>
+                    </div>
+                    <div class="acronym-item">
+                        <div class="acronym-term">SGAM</div>
+                        <div class="acronym-definition">Shared Global Allocation Map - Mapa de asignación compartida</div>
+                    </div>
+                    <div class="acronym-item">
+                        <div class="acronym-term">BCR</div>
+                        <div class="acronym-definition">Buffer Cache Ratio - Ratio de cache de buffer</div>
+                    </div>
+                    <div class="acronym-item">
+                        <div class="acronym-term">SARGable</div>
+                        <div class="acronym-definition">Search ARGument able - Predicados optimizables por índices</div>
+                    </div>
+                    <div class="acronym-item">
+                        <div class="acronym-term">CTE</div>
+                        <div class="acronym-definition">Common Table Expression - Expresión de tabla común</div>
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <h3>🎯 Términos Clave para Entrevistas</h3>
+                    <ul>
+                        <li><strong>Selectivity:</strong> Capacidad de un índice para reducir filas candidatas</li>
+                        <li><strong>Cardinality:</strong> Número de valores únicos en una columna</li>
+                        <li><strong>Clustered Index Scan vs Seek:</strong> Diferencia entre leer todo vs buscar directo</li>
+                        <li><strong>Key Lookup:</strong> Operación costosa de búsqueda adicional después del índice</li>
+                        <li><strong>Index Intersection:</strong> Uso de múltiples índices para una consulta</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 17: Checklist del Desarrollador -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>✅ Checklist del Desarrollador SQL</h2>
+            </div>
+            <div class="content">
+                <div class="two-column">
+                    <div class="card">
+                        <h3>🔍 Antes de Escribir la Consulta</h3>
+                        <ul>
+                            <li>✅ ¿Qué columnas necesito en SELECT?</li>
+                            <li>✅ ¿Qué filtros tendré en WHERE?</li>
+                            <li>✅ ¿Necesito ORDER BY? ¿En qué orden?</li>
+                            <li>✅ ¿Habrá JOINs? ¿En qué columnas?</li>
+                            <li>✅ ¿Es una consulta frecuente o esporádica?</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>⚡ Después de Escribir la Consulta</h3>
+                        <ul>
+                            <li>✅ ¿Revisé el plan de ejecución?</li>
+                            <li>✅ ¿Hay Table Scans costosos?</li>
+                            <li>✅ ¿Hay operaciones Sort innecesarias?</li>
+                            <li>✅ ¿Existe "Missing Index" sugerido?</li>
+                            <li>✅ ¿Probé con volumen de datos real?</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🎯 Al Diseñar un Índice</h3>
+                    <div class="three-column">
+                        <div>
+                            <h4>🏗️ Estructura</h4>
+                            <ul>
+                                <li>Columnas de alta selectividad primero</li>
+                                <li>Coincide con ORDER BY</li>
+                                <li>Considera INCLUDE para covering</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>📊 Impacto</h4>
+                            <ul>
+                                <li>¿Cuántas consultas beneficia?</li>
+                                <li>¿Ralentiza INSERTs/UPDATEs?</li>
+                                <li>¿Cuánto espacio consume?</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>🔧 Mantenimiento</h4>
+                            <ul>
+                                <li>Plan de monitoreo fragmentación</li>
+                                <li>Estadísticas actualizadas</li>
+                                <li>Revisión periódica de uso</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>🏆 El Mantra del Experto</h3>
+                    <p><em>"Un índice bien diseñado puede convertir una consulta de 30 segundos en 30 milisegundos. 
+                    Un índice mal diseñado puede ser peor que no tener índice."</em></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 18: Conclusión y Recursos -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>🎯 Conclusiones y Próximos Pasos</h2>
+            </div>
+            <div class="content">
+                <div class="card">
+                    <h3>🏆 Lo que Hemos Aprendido</h3>
+                    <ul>
+                        <li>✅ Diferencias fundamentales entre Clustered y Non-Clustered indexes</li>
+                        <li>✅ Importancia del orden en índices compuestos</li>
+                        <li>✅ Estrategias de Covering Indexes para máximo rendimiento</li>
+                        <li>✅ Herramientas de detección y mantenimiento</li>
+                        <li>✅ Mejores prácticas enterprise</li>
+                    </ul>
+                </div>
+
+                <div class="two-column">
+                    <div class="card">
+                        <h3>📚 Recursos para Profundizar</h3>
+                        <ul>
+                            <li><strong>Libros:</strong> "SQL Server Query Performance Tuning" - Grant Fritchey</li>
+                            <li><strong>Blogs:</strong> SQLServerCentral, Brent Ozar</li>
+                            <li><strong>Herramientas:</strong> SentryOne Plan Explorer (gratuito)</li>
+                            <li><strong>Certificaciones:</strong> Microsoft SQL Server Performance</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>🎯 Tu Camino al Siguiente Nivel</h3>
+                        <ul>
+                            <li>🔬 Practica con datasets grandes (>1M filas)</li>
+                            <li>📊 Domina los planes de ejecución</li>
+                            <li>⚡ Aprende Query Store y Extended Events</li>
+                            <li>🏗️ Estudia Columnstore para Analytics</li>
+                            <li>☁️ Explora Azure SQL optimizations</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="success-box">
+                    <h3>🚀 Mensaje Final</h3>
+                    <p>La optimización de bases de datos es tanto ciencia como arte. Los principios que hemos visto te dan la base científica. 
+                    La experiencia y la práctica continua desarrollarán tu intuición artística. 
+                    <strong>¡Cada milisegundo cuenta en el mundo real!</strong></p>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>💼 Para el Mundo Laboral</h3>
+                    <p>Estos conocimientos te diferenciarán como desarrollador. Un developer que entiende de índices puede:</p>
+                    <ul>
+                        <li>🎯 Resolver problemas de performance que otros no pueden</li>
+                        <li>💰 Reducir costos de infraestructura cloud significativamente</li>
+                        <li>⚡ Mejorar la experiencia del usuario final</li>
+                        <li>🏗️ Diseñar sistemas escalables desde el inicio</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" onclick="previousSlide()">← Anterior</button>
+        <button class="nav-btn" onclick="nextSlide()">Siguiente →</button>
+    </div>
+
+    <div class="slide-counter">
+        <span id="currentSlide">1</span> / <span id="totalSlides">18</span>
+    </div>
+
+    <script>
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        document.getElementById('totalSlides').textContent = totalSlides;
+
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[index].classList.add('active');
+            document.getElementById('currentSlide').textContent = index + 1;
+            
+            // Update navigation buttons
+            const prevBtn = document.querySelector('.nav-btn:first-child');
+            const nextBtn = document.querySelector('.nav-btn:last-child');
+            
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = index === totalSlides - 1;
+        }
+
+        function nextSlide() {
+            if (currentSlideIndex < totalSlides - 1) {
+                currentSlideIndex++;
+                showSlide(currentSlideIndex);
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlideIndex > 0) {
+                currentSlideIndex--;
+                showSlide(currentSlideIndex);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                previousSlide();
+            }
+        });
+
+        // Touch navigation for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    nextSlide(); // Swipe left - next slide
+                } else {
+                    previousSlide(); // Swipe right - previous slide
+                }
+            }
+        }
+
+        // Initialize
+        document.getElementById('totalSlides').textContent = totalSlides;
+        showSlide(0);
+    </script>
+</body>
+</html>

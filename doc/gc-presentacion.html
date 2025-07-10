@@ -1,0 +1,1616 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garbage Collection en .NET - Curso Práctico</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow: hidden;
+        }
+
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+            padding: 60px;
+            position: relative;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .slide-header {
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 3.5em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 2.5em;
+            color: #667eea;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        h3 {
+            font-size: 1.8em;
+            color: #764ba2;
+            margin: 30px 0 20px;
+            font-weight: 500;
+        }
+
+        .subtitle {
+            font-size: 1.5em;
+            color: #a8a8b3;
+            font-weight: 300;
+        }
+
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .list li {
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .list li:last-child {
+            border-bottom: none;
+        }
+
+        .list li::before {
+            content: '▸';
+            color: #667eea;
+            font-size: 1.5em;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .code-block {
+            background: #1e1e2e;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+            white-space: pre;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        .code-block.bad {
+            border-color: rgba(239, 68, 68, 0.5);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .code-block.good {
+            border-color: rgba(34, 197, 94, 0.5);
+            background: rgba(34, 197, 94, 0.05);
+        }
+
+        .code-label {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .code-label.bad {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .code-label.good {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .keyword {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .string {
+            color: #98c379;
+        }
+
+        .comment {
+            color: #7c8a9c;
+            font-style: italic;
+        }
+
+        .type {
+            color: #e06c75;
+        }
+
+        .method {
+            color: #61afef;
+        }
+
+        /* Enhanced Navigation */
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Instructor Info Styling */
+        .instructor-info {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            border-radius: 25px;
+            color: #a8a8b3;
+            font-size: 0.9rem;
+            z-index: 1000;
+            text-align: right;
+        }
+
+        .instructor-name {
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 2px;
+        }
+
+        .instructor-area {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        /* Slide counter */
+        .slide-counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            border-radius: 25px;
+            color: #a8a8b3;
+            font-size: 0.9rem;
+            z-index: 1000;
+        }
+
+        .slide-number {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            font-size: 1.2em;
+            color: #a8a8b3;
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+            z-index: 1001;
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+            margin: 20px 0;
+        }
+
+        .icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .memory-diagram {
+            background: linear-gradient(45deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            margin: 20px 0;
+        }
+
+        .generation {
+            display: inline-block;
+            padding: 8px 16px;
+            margin: 5px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .gen0 {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.5);
+        }
+
+        .gen1 {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.5);
+        }
+
+        .gen2 {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.5);
+        }
+
+        .warning-box {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .danger-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .flow-step {
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            position: relative;
+        }
+
+        .flow-step::before {
+            content: attr(data-step);
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: #667eea;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px;
+            }
+            h1 {
+                font-size: 2.5em;
+            }
+            h2 {
+                font-size: 2em;
+            }
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+            .code-block {
+                font-size: 0.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <div class="progress-bar" id="progressBar"></div>
+        
+        <!-- Slide 1: Título -->
+        <div class="slide active">
+            <div class="slide-header">
+                <h1>Garbage Collection</h1>
+                <p class="subtitle">Curso Práctico de GC en .NET</p>
+            </div>
+            <div class="content" style="justify-content: center; align-items: center;">
+                <div class="card" style="text-align: center; max-width: 800px;">
+                    <div class="icon">🗑️</div>
+                    <h3>Memoria Gestionada en .NET</h3>
+                    <p style="font-size: 1.2em; color: #a8a8b3; margin-top: 20px;">
+                        Heap • Generaciones • IDisposable • OutOfMemoryException
+                    </p>
+                </div>
+            </div>
+            <div class="slide-number">1 / 18</div>
+        </div>
+
+        <!-- Slide 2: ¿Por qué necesitamos GC? -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>¿Por qué necesitamos un "Recolector de Basura"?</h2>
+            </div>
+            <div class="content">
+                <div class="two-column">
+                    <div>
+                        <div class="card">
+                            <h3>🔧 Lenguajes Tradicionales (C/C++)</h3>
+                            <ul class="list">
+                                <li>Programador maneja memoria manualmente</li>
+                                <li><code>malloc()</code> para asignar</li>
+                                <li><code>free()</code> para liberar</li>
+                                <li>Olvidar liberar = Memory Leak</li>
+                                <li>Liberar dos veces = Crash</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="danger-box">
+                            <p><strong>⚠️ Problema:</strong> Olvidar liberar memoria causa fugas que eventualmente agotan la memoria del sistema.</p>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="card">
+                            <h3>⚡ .NET y Memoria Gestionada</h3>
+                            <ul class="list">
+                                <li>Programador crea objetos (<code>new MyClass()</code>)</li>
+                                <li>GC encuentra objetos no utilizados</li>
+                                <li>GC elimina automáticamente</li>
+                                <li>Previene mayoría de memory leaks</li>
+                                <li>Simplifica enormemente el desarrollo</li>
+                            </ul>
+                        </div>
+
+                        <div class="highlight">
+                            <p><strong>🎯 Objetivo:</strong> Entender cómo funciona este proceso automático y qué responsabilidades aún tenemos como desarrolladores.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">2 / 18</div>
+        </div>
+
+        <!-- Slide 3: Clase 1 - Fundamentos del GC -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Clase 1: Fundamentos del GC</h2>
+                <p class="subtitle">¿Cómo funciona la magia?</p>
+            </div>
+            <div class="content">
+                <div class="card">
+                    <h3>🎯 Objetivos de esta Clase</h3>
+                    <ul class="list">
+                        <li>Entender qué es el Heap y las Generaciones</li>
+                        <li>Visualizar el proceso de "Marcar y Compactar"</li>
+                        <li>Identificar cuándo un objeto es elegible para recolección</li>
+                    </ul>
+                </div>
+
+                <h3>El Managed Heap</h3>
+                <div class="memory-diagram">
+                    <p style="margin-bottom: 15px;"><strong>Cuando creas un objeto con <code>new</code>, .NET le asigna espacio en el Managed Heap:</strong></p>
+                    <div style="text-align: center; font-family: monospace; font-size: 1.1em;">
+                        <div style="background: rgba(102, 126, 234, 0.2); padding: 10px; border-radius: 8px; margin: 10px 0;">
+                            [Objeto A] [Objeto B] [Objeto C] [Espacio Libre...]
+                        </div>
+                        <p style="color: #a8a8b3; font-size: 0.9em;">↑ Managed Heap - Un gran bloque de memoria reservado para tu aplicación</p>
+                    </div>
+                </div>
+
+                <div class="highlight">
+                    <p><strong>💡 Concepto Clave:</strong> El Heap es como un estacionamiento gigante donde .NET "estaciona" todos los objetos que creates.</p>
+                </div>
+            </div>
+            <div class="slide-number">3 / 18</div>
+        </div>
+
+        <!-- Slide 4: El Principio Clave - Alcanzabilidad -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>El Principio Clave: Alcanzabilidad (Reachability)</h2>
+            </div>
+            <div class="content">
+                <div class="card">
+                    <h3>🕵️ El GC es como un Detective</h3>
+                    <p style="margin-bottom: 20px;">Para decidir si un objeto sigue vivo, intenta "alcanzarlo" desde puntos de partida seguros llamados <strong>GC Roots</strong>.</p>
+                </div>
+
+                <div class="grid">
+                    <div class="card">
+                        <h3>🌳 GC Roots (Puntos de Partida)</h3>
+                        <ul class="list">
+                            <li><strong>Variables locales:</strong> En el stack de métodos en ejecución</li>
+                            <li><strong>Variables estáticas:</strong> Globales de la aplicación</li>
+                            <li><strong>Referencias en cola de finalización:</strong> Objetos esperando cleanup</li>
+                            <li><strong>Handles de interop:</strong> Referencias a código no gestionado</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>⚖️ Regla de Oro</h3>
+                        <div style="background: rgba(34, 197, 94, 0.1); padding: 15px; border-radius: 8px; margin: 15px 0;">
+                            <p><strong>✅ VIVO:</strong> Si el GC puede seguir una cadena de referencias desde una raíz y llegar a tu objeto.</p>
+                        </div>
+                        <div style="background: rgba(239, 68, 68, 0.1); padding: 15px; border-radius: 8px;">
+                            <p><strong>💀 MUERTO:</strong> Si no hay ningún camino para llegar a él desde las raíces.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Ejemplo Práctico</h3>
+                <div class="code-block">
+<span class="keyword">public void</span> <span class="method">MyMethod</span>()
+{
+    <span class="type">Customer</span> customerA = <span class="keyword">new</span> <span class="type">Customer</span>(); <span class="comment">// customerA es una raíz. Objeto VIVO</span>
+    <span class="type">Customer</span> customerB = <span class="keyword">new</span> <span class="type">Customer</span>(); <span class="comment">// customerB es una raíz. Objeto VIVO</span>
+
+    customerA.BestFriend = customerB; <span class="comment">// Ahora customerA referencia a customerB</span>
+
+} <span class="comment">// ← Fin del método: variables locales desaparecen del stack</span>
+
+<span class="comment">// Cuando MyMethod termina, customerA y customerB ya no son raíces.
+// Si ningún otro objeto los referencia, se vuelven inalcanzables.
+// En la próxima recolección, el GC los eliminará.</span>
+                </div>
+            </div>
+            <div class="slide-number">4 / 18</div>
+        </div>
+
+        <!-- Slide 5: Sistema de Generaciones -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Sistema de Generaciones</h2>
+                <p class="subtitle">Una optimización inteligente</p>
+            </div>
+            <div class="content">
+                <div class="card">
+                    <h3>🧠 Observación Clave</h3>
+                    <p style="font-size: 1.2em; margin-bottom: 20px;">"La mayoría de los objetos mueren jóvenes"</p>
+                    <p>Los objetos que creas dentro de un método suelen tener una vida muy corta. El GC aprovecha esto dividiendo el Heap en generaciones.</p>
+                </div>
+
+                <div class="memory-diagram">
+                    <h3 style="text-align: center;">Las Tres Generaciones</h3>
+                    <div style="display: flex; justify-content: space-between; margin: 20px 0;">
+                        <div style="flex: 1; text-align: center;">
+                            <div class="generation gen0">Gen 0 - La Guardería</div>
+                            <p style="font-size: 0.9em; margin-top: 10px;">Objetos nuevos<br>Pequeña y frecuente<br>>90% mueren aquí</p>
+                        </div>
+                        <div style="flex: 1; text-align: center;">
+                            <div class="generation gen1">Gen 1 - Los Supervivientes</div>
+                            <p style="font-size: 0.9em; margin-top: 10px;">Sobrevivieron Gen 0<br>Búfer intermedio<br>Menos frecuente</p>
+                        </div>
+                        <div style="flex: 1; text-align: center;">
+                            <div class="generation gen2">Gen 2 - Los Veteranos</div>
+                            <p style="font-size: 0.9em; margin-top: 10px;">Larga duración<br>Estáticos, singletons<br>Más "cara" y rara</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid" style="margin-top: 30px;">
+                    <div class="card">
+                        <h3>📊 Estadísticas Típicas</h3>
+                        <ul class="list" style="font-size: 0.95em;">
+                            <li><strong>Gen 0:</strong> Recolección cada pocos MB</li>
+                            <li><strong>Gen 1:</strong> Recolección cada ~10 de Gen 0</li>
+                            <li><strong>Gen 2:</strong> Recolección cada ~100 de Gen 0</li>
+                            <li><strong>Supervivencia:</strong> <5% pasa de Gen 0 a Gen 1</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>⚡ Optimización Automática</h3>
+                        <ul class="list" style="font-size: 0.95em;">
+                            <li>Objetos jóvenes se limpian frecuentemente</li>
+                            <li>Objetos viejos se revisan raramente</li>
+                            <li>Menos trabajo general para el GC</li>
+                            <li>Mejor rendimiento de la aplicación</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">5 / 18</div>
+        </div>
+
+        <!-- Slide 6: Proceso de Mark and Compact -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>El Proceso de "Marcar y Compactar"</h2>
+            </div>
+            <div class="content">
+                <div class="card">
+                    <h3>🔄 Cuando el GC se Ejecuta</h3>
+                    <p>Ejemplo: Recolección en Gen 0 cuando se llena</p>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <div class="flow-step" data-step="1">
+                        <h3>Fase de Marcado (Mark)</h3>
+                        <p>El GC recorre el grafo de objetos desde las raíces y "marca" todos los objetos alcanzables como VIVOS.</p>
+                        <div class="code-block" style="margin-top: 15px; font-size: 0.8em;">
+Stack → Variable Local → Objeto A → Objeto B
+                        ↓              ↓
+                    [MARCADO]      [MARCADO]
+
+Objeto C (no referenciado) → [SIN MARCAR] → Basura
+                        </div>
+                    </div>
+
+                    <div class="flow-step" data-step="2">
+                        <h3>Fase de Barrido (Sweep)</h3>
+                        <p>Todos los objetos que no fueron marcados son considerados basura y el GC los elimina de memoria.</p>
+                        <div style="background: rgba(239, 68, 68, 0.1); padding: 10px; border-radius: 8px; margin-top: 15px;">
+                            <p><strong>🗑️ Eliminados:</strong> Objeto C y cualquier otro sin marca</p>
+                        </div>
+                    </div>
+
+                    <div class="flow-step" data-step="3">
+                        <h3>Fase de Compactación (Compact)</h3>
+                        <p>Para evitar fragmentación, el GC mueve todos los objetos vivos juntos al principio del segmento.</p>
+                        <div class="code-block" style="margin-top: 15px; font-size: 0.8em;">
+<span class="comment">// ANTES (fragmentado)</span>
+[Obj A] [HUECO] [Obj B] [HUECO] [Espacio Libre...]
+
+<span class="comment">// DESPUÉS (compactado)</span>
+[Obj A] [Obj B] [Espacio Libre.................]
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight">
+                    <p><strong>🚀 Beneficio:</strong> La compactación hace que las futuras asignaciones sean extremadamente rápidas - solo incrementar un puntero!</p>
+                </div>
+            </div>
+            <div class="slide-number">6 / 18</div>
+        </div>
+
+        <!-- Slide 7: Clase 2 - IDisposable -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Clase 2: Recursos No Gestionados</h2>
+                <p class="subtitle">El Patrón IDisposable</p>
+            </div>
+            <div class="content">
+                <div class="card">
+                    <h3>🎯 Objetivos de esta Clase</h3>
+                    <ul class="list">
+                        <li>Entender qué son los recursos no gestionados</li>
+                        <li>Implementar correctamente IDisposable</li>
+                        <li>Usar la declaración <code>using</code> correctamente</li>
+                    </ul>
+                </div>
+
+                <div class="two-column">
+                    <div>
+                        <div class="card">
+                            <h3>🚧 El Límite del GC</h3>
+                            <p style="margin-bottom: 15px;">El GC es fantástico para memoria .NET, pero no sabe nada sobre recursos del sistema operativo.</p>
+                            
+                            <h4>Recursos No Gestionados:</h4>
+                            <ul class="list" style="font-size: 0.9em;">
+                                <li>Conexiones a bases de datos</li>
+                                <li>Archivos abiertos (File handles)</li>
+                                <li>Conexiones de red (Sockets)</li>
+                                <li>Objetos gráficos (Brushes, Fonts)</li>
+                                <li>Memoria no gestionada (IntPtr)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="danger-box">
+                            <h4>⚠️ El Problema</h4>
+                            <p>Si abres un archivo pero no le dices explícitamente al SO que lo cierre, el archivo puede permanecer bloqueado, consumiendo recursos valiosos.</p>
+                            <p style="margin-top: 15px;"><strong>El GC NO cerrará el archivo por ti.</strong></p>
+                        </div>
+
+                        <div class="highlight">
+                            <h4>💡 La Solución</h4>
+                            <p>La interfaz <strong>IDisposable</strong> - un contrato simple con un solo método: <code>void Dispose();</code></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">7 / 18</div>
+        </div>
+
+        <!-- Slide 8: Using Statement -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>La Declaración Using</h2>
+                <p class="subtitle">La forma segura de manejar recursos</p>
+            </div>
+            <div class="content">
+                <div class="card">
+                    <h3>⚖️ Regla de Oro</h3>
+                    <p style="font-size: 1.2em;">Si una clase implementa <code>IDisposable</code>, tú eres responsable de llamar a <code>Dispose()</code> cuando termines de usarla.</p>
+                </div>
+
+                <div class="two-column">
+                    <div>
+                        <h3>✅ Forma CORRECTA</h3>
+                        <div class="code-block good">
+                            <span class="code-label good">SEGURO</span>
+<span class="keyword">public void</span> <span class="method">ReadFile</span>()
+{
+    <span class="comment">// 'using' garantiza que Dispose() se llama automáticamente</span>
+    <span class="comment">// al final del bloque, INCLUSO si ocurre una excepción</span>
+    <span class="keyword">using</span> (<span class="type">StreamReader</span> reader = <span class="keyword">new</span> <span class="type">StreamReader</span>(<span class="string">"C:\\archivo.txt"</span>))
+    {
+        <span class="type">string</span> content = reader.<span class="method">ReadToEnd</span>();
+        <span class="type">Console</span>.<span class="method">WriteLine</span>(content);
+    } <span class="comment">// ← reader.Dispose() se llama aquí automáticamente</span>
+}
+
+<span class="comment">// Sintaxis moderna (C# 8+)</span>
+<span class="keyword">public void</span> <span class="method">ReadFileModern</span>()
+{
+    <span class="keyword">using var</span> reader = <span class="keyword">new</span> <span class="type">StreamReader</span>(<span class="string">"C:\\archivo.txt"</span>);
+    <span class="type">string</span> content = reader.<span class="method">ReadToEnd</span>();
+    <span class="type">Console</span>.<span class="method">WriteLine</span>(content);
+    <span class="comment">// Dispose() automático al final del método</span>
+}
+                        </div>
+                    </div>
+                    <div>
+                        <h3>❌ Forma INCORRECTA</h3>
+                        <div class="code-block bad">
+                            <span class="code-label bad">PELIGROSO</span>
+<span class="keyword">public void</span> <span class="method">ReadFileBad</span>()
+{
+    <span class="type">StreamReader</span> reader = <span class="keyword">new</span> <span class="type">StreamReader</span>(<span class="string">"C:\\archivo.txt"</span>);
+    <span class="type">string</span> content = reader.<span class="method">ReadToEnd</span>();
+    <span class="type">Console</span>.<span class="method">WriteLine</span>(content);
+    
+    <span class="comment">// ¿Qué pasa si aquí ocurre una excepción?</span>
+    <span class="comment">// reader.Dispose() NUNCA se llama!</span>
+    <span class="comment">// ¡Tenemos una fuga de recursos!</span>
+    
+    reader.<span class="method">Dispose</span>(); <span class="comment">// Esta línea podría no ejecutarse</span>
+}
+                        </div>
+
+                        <div class="danger-box">
+                            <h4>🚨 Problemas del Código Malo</h4>
+                            <ul class="list" style="font-size: 0.9em;">
+                                <li>Si hay excepción, Dispose() no se llama</li>
+                                <li>Archivo queda bloqueado</li>
+                                <li>Resources leak acumulativo</li>
+                                <li>Eventual agotamiento de handles</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight">
+                    <p><strong>💡 Using = Try-Finally Automático:</strong> El compilador convierte <code>using</code> en un bloque try-finally que garantiza la llamada a Dispose().</p>
+                </div>
+            </div>
+            <div class="slide-number">8 / 18</div>
+        </div>
+
+        <!-- Slide 9: Implementando IDisposable -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Implementando IDisposable</h2>
+                <p class="subtitle">En tus propias clases</p>
+            </div>
+            <div class="content">
+                <div class="card">
+                    <h3>🎯 Cuándo Implementar IDisposable</h3>
+                    <p>Si tu clase contiene un campo que es IDisposable, tu clase también debería ser IDisposable para permitir que sus usuarios la limpien correctamente.</p>
+                </div>
+
+                <div class="code-block good">
+                    <span class="code-label good">PATRÓN CORRECTO</span>
+<span class="comment">// Clase que envuelve una conexión a BD</span>
+<span class="keyword">public class</span> <span class="type">DatabaseConnector</span> : <span class="type">IDisposable</span>
+{
+    <span class="keyword">private</span> <span class="type">SqlConnection</span> _connection;
+    <span class="keyword">private bool</span> _disposed = <span class="keyword">false</span>; <span class="comment">// Evita llamadas múltiples</span>
+
+    <span class="keyword">public</span> <span class="method">DatabaseConnector</span>(<span class="type">string</span> connectionString)
+    {
+        _connection = <span class="keyword">new</span> <span class="type">SqlConnection</span>(connectionString);
+        _connection.<span class="method">Open</span>();
+        <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Conexión a BD abierta."</span>);
+    }
+
+    <span class="comment">// Método público Dispose - parte de IDisposable</span>
+    <span class="keyword">public void</span> <span class="method">Dispose</span>()
+    {
+        <span class="method">Dispose</span>(<span class="keyword">true</span>);
+        <span class="type">GC</span>.<span class="method">SuppressFinalize</span>(<span class="keyword">this</span>); <span class="comment">// Optimización: evita finalizer</span>
+    }
+
+    <span class="comment">// Método de limpieza protegido y virtual</span>
+    <span class="keyword">protected virtual void</span> <span class="method">Dispose</span>(<span class="type">bool</span> disposing)
+    {
+        <span class="keyword">if</span> (_disposed) <span class="keyword">return</span>; <span class="comment">// Ya se limpió</span>
+
+        <span class="keyword">if</span> (disposing)
+        {
+            <span class="comment">// Liberar recursos gestionados</span>
+            <span class="keyword">if</span> (_connection != <span class="keyword">null</span>)
+            {
+                _connection.<span class="method">Dispose</span>();
+                <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Recursos gestionados liberados."</span>);
+            }
+        }
+
+        <span class="comment">// Aquí se liberarían recursos no gestionados directos
+        // (poco común en C# moderno)</span>
+
+        _disposed = <span class="keyword">true</span>;
+        <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"DatabaseConnector disposed."</span>);
+    }
+}
+                </div>
+
+                <div class="grid" style="margin-top: 20px;">
+                    <div class="card">
+                        <h3>✅ Uso Correcto</h3>
+                        <div class="code-block" style="font-size: 0.85em;">
+<span class="keyword">using var</span> connector = <span class="keyword">new</span> <span class="type">DatabaseConnector</span>(connString);
+<span class="comment">// Usar el connector...</span>
+<span class="comment">// Dispose() automático al final</span>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>🔑 Puntos Clave</h3>
+                        <ul class="list" style="font-size: 0.9em;">
+                            <li><code>_disposed</code> evita double-dispose</li>
+                            <li><code>GC.SuppressFinalize()</code> optimiza GC</li>
+                            <li>Virtual permite herencia limpia</li>
+                            <li>Solo recursos gestionados en parámetro true</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">9 / 18</div>
+        </div>
+
+        <!-- Slide 10: Clase 3 - OutOfMemoryException -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Clase 3: OutOfMemoryException</h2>
+                <p class="subtitle">Cuando la memoria se agota</p>
+            </div>
+            <div class="content">
+                <div class="card">
+                    <h3>🎯 Objetivos de esta Clase</h3>
+                    <ul class="list">
+                        <li>Entender las causas comunes de OOM</li>
+                        <li>Simular un OOM por objeto gigante</li>
+                        <li>Simular un OOM por fuga de memoria gestionada</li>
+                    </ul>
+                </div>
+
+                <div class="two-column">
+                    <div>
+                        <div class="card">
+                            <h3>🚨 ¿Por qué ocurre OOM?</h3>
+                            <div class="flow-step" data-step="1">
+                                <h4>Objeto Demasiado Grande</h4>
+                                <p>Intentas crear un objeto (generalmente array) tan grande que el SO no puede encontrar un bloque contiguo de memoria libre.</p>
+                            </div>
+                            <div class="flow-step" data-step="2">
+                                <h4>Agotamiento Total</h4>
+                                <p>Tu aplicación ha consumido toda la memoria virtual disponible. Resultado de fuga de memoria gestionada.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="warning-box">
+                            <h4>⚠️ Memoria Gestionada vs No Gestionada</h4>
+                            <p><strong>Fuga Gestionada:</strong> Objetos .NET que el GC no puede recolectar porque siguen siendo alcanzables (pero no deberían).</p>
+                            <p style="margin-top: 10px;"><strong>Fuga No Gestionada:</strong> Recursos del SO no liberados (archivos, sockets, etc.).</p>
+                        </div>
+
+                        <div class="highlight">
+                            <h4>🔍 Escenario Típico</h4>
+                            <p>Un objeto de larga duración (lista estática) mantiene referencias a objetos de corta duración, impidiendo que el GC los recolecte.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">10 / 18</div>
+        </div>
+
+        <!-- Slide 11: Simulación OOM - Objeto Grande -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Simulación: OOM por Objeto Grande</h2>
+            </div>
+            <div class="content">
+                <div class="card">
+                    <h3>📊 El Caso Más Simple</h3>
+                    <p>Intentaremos crear un array de bytes que es demasiado grande para la memoria disponible.</p>
+                </div>
+
+                <div class="danger-box">
+                    <h4>⚠️ ADVERTENCIA</h4>
+                    <p>Este código está diseñado para fallar. Úsalo solo en entornos de desarrollo controlados.</p>
+                </div>
+
+                <div class="code-block bad">
+                    <span class="code-label bad">CRASH INTENCIONADO</span>
+<span class="keyword">public class</span> <span class="type">OomSimulator</span>
+{
+    <span class="keyword">public static void</span> <span class="method">SimulateBigObjectOom</span>()
+    {
+        <span class="keyword">try</span>
+        {
+            <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Intentando asignar un array gigante..."</span>);
+            
+            <span class="comment">// Intentamos crear un array de 2 GB (int.MaxValue bytes)</span>
+            <span class="comment">// En máquinas con memoria limitada, esto fallará</span>
+            <span class="type">byte</span>[] bigArray = <span class="keyword">new</span> <span class="type">byte</span>[<span class="type">int</span>.MaxValue];
+            
+            <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"¡Asignación exitosa! (Esto es poco probable)"</span>);
+        }
+        <span class="keyword">catch</span> (<span class="type">OutOfMemoryException</span> ex)
+        {
+            <span class="type">Console</span>.<span class="method">ForegroundColor</span> = <span class="type">ConsoleColor</span>.Red;
+            <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"---------------------------------------"</span>);
+            <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"¡EXCEPCIÓN OutOfMemoryException CAPTURADA!"</span>);
+            <span class="type">Console</span>.<span class="method">WriteLine</span>(ex.Message);
+            <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"---------------------------------------"</span>);
+            <span class="type">Console</span>.<span class="method">ResetColor</span>();
+        }
+    }
+}
+                </div>
+
+                <div class="grid" style="margin-top: 30px;">
+                    <div class="card">
+                        <h3>🔍 Análisis del Código</h3>
+                        <ul class="list" style="font-size: 0.9em;">
+                            <li><code>int.MaxValue</code> = ~2.1 GB</li>
+                            <li>Requiere bloque contiguo de memoria</li>
+                            <li>Falla inmediatamente en la mayoría de sistemas</li>
+                            <li>Exception manejada correctamente</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>💡 Cómo Ejecutarlo</h3>
+                        <div class="code-block" style="font-size: 0.85em;">
+<span class="keyword">static void</span> <span class="method">Main</span>(<span class="type">string</span>[] args)
+{
+    <span class="type">OomSimulator</span>.<span class="method">SimulateBigObjectOom</span>();
+}
+                        </div>
+                        <p style="margin-top: 15px; font-size: 0.9em;">Probablemente verás la excepción inmediatamente.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">11 / 18</div>
+        </div>
+
+        <!-- Slide 12: Simulación OOM - Memory Leak -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Simulación: OOM por Fuga de Memoria</h2>
+            </div>
+            <div class="content">
+                <div class="card">
+                    <h3>💣 Escenario Más Realista y Peligroso</h3>
+                    <p>No fallará inmediatamente, sino que consumirá memoria lentamente hasta que el sistema colapse.</p>
+                </div>
+
+                <div class="danger-box">
+                    <h4>⚠️ PELIGRO MÁXIMO</h4>
+                    <p>Este código consumirá TODA la memoria disponible. Cierra otras aplicaciones antes de ejecutar y ten el Task Manager abierto.</p>
+                </div>
+
+                <div class="code-block bad">
+                    <span class="code-label bad">MEMORY LEAK</span>
+<span class="keyword">public class</span> <span class="type">OomSimulator</span>
+{
+    <span class="comment">// ¡LA TRAMPA! Una lista estática es una raíz del GC y vivirá para siempre</span>
+    <span class="keyword">private static</span> <span class="type">List</span>&lt;<span class="type">byte</span>[]&gt; _leakyList = <span class="keyword">new</span> <span class="type">List</span>&lt;<span class="type">byte</span>[]&gt;();
+
+    <span class="keyword">public static void</span> <span class="method">SimulateMemoryLeakOom</span>()
+    {
+        <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Iniciando simulación de fuga de memoria."</span>);
+        <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Presiona Enter para detener."</span>);
+        <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Observa el Task Manager..."</span>);
+
+        <span class="type">int</span> i = 0;
+        <span class="keyword">while</span> (!<span class="type">Console</span>.<span class="method">KeyAvailable</span>)
+        {
+            <span class="comment">// En cada iteración, creamos un objeto de 1 MB</span>
+            <span class="type">byte</span>[] memoryChunk = <span class="keyword">new</span> <span class="type">byte</span>[1024 * 1024]; <span class="comment">// 1 MB</span>
+            
+            <span class="comment">// ¡LA FUGA ESTÁ AQUÍ!</span>
+            <span class="comment">// Añadimos el objeto a nuestra lista estática</span>
+            <span class="comment">// Ahora es alcanzable desde una raíz y NUNCA será recolectado</span>
+            _leakyList.<span class="method">Add</span>(memoryChunk);
+            
+            i++;
+            <span class="keyword">if</span> (i % 50 == 0) <span class="comment">// Mostrar cada 50 MB</span>
+                <span class="type">Console</span>.<span class="method">WriteLine</span>($<span class="string">"Memoria 'leaked': {i} MB"</span>);
+            
+            <span class="type">Thread</span>.<span class="method">Sleep</span>(50); <span class="comment">// Pausa para no colapsar instantáneamente</span>
+        }
+
+        <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Simulación detenida."</span>);
+        <span class="comment">// Nota: La memoria NO se libera automáticamente aquí</span>
+    }
+}
+                </div>
+
+                <div class="highlight">
+                    <p><strong>🔍 Análisis de la Fuga:</strong> Cada objeto de 1MB se añade a <code>_leakyList</code> (estática). Como la lista es una raíz del GC, todos los objetos permanecen alcanzables y nunca son recolectados. La memoria crece sin límite hasta OOM.</p>
+                </div>
+            </div>
+            <div class="slide-number">12 / 18</div>
+        </div>
+
+        <!-- Slide 13: Ejercicio Práctico -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Ejercicio Práctico</h2>
+                <p class="subtitle">Identifica y corrige la fuga</p>
+            </div>
+            <div class="content">
+                <div class="card">
+                    <h3>🎯 Tu Misión</h3>
+                    <p>Toma el código del "SimulateMemoryLeakOom" y:</p>
+                    <ol style="margin-left: 20px; margin-top: 15px; font-size: 1.1em;">
+                        <li>Identifica la línea exacta que causa la fuga</li>
+                        <li>Corrige el código para que la memoria pueda ser recolectada</li>
+                        <li>Ejecuta la versión corregida y observa el comportamiento</li>
+                    </ol>
+                </div>
+
+                <div class="two-column">
+                    <div>
+                        <h3>❓ Preguntas Guía</h3>
+                        <div class="card">
+                            <ul class="list" style="font-size: 0.95em;">
+                                <li>¿Qué hace que los objetos sean "alcanzables"?</li>
+                                <li>¿Por qué <code>_leakyList</code> es problemática?</li>
+                                <li>¿Qué pasaría si NO añadimos a la lista?</li>
+                                <li>¿Cómo observar que el GC está trabajando?</li>
+                            </ul>
+                        </div>
+
+                        <div class="highlight">
+                            <h4>💡 Pista</h4>
+                            <p>Si no mantienes referencia al objeto <code>memoryChunk</code>, ¿qué le pasará en la próxima recolección de Gen 0?</p>
+                        </div>
+                    </div>
+                    <div>
+                        <h3>🔍 Versión Corregida</h3>
+                        <details style="margin-top: 10px;">
+                            <summary style="cursor: pointer; color: #667eea; font-size: 1.1em;">Ver Solución</summary>
+                            <div class="code-block good" style="margin-top: 15px; font-size: 0.8em;">
+                                <span class="code-label good">CORREGIDO</span>
+<span class="keyword">public static void</span> <span class="method">SimulateMemoryOkay</span>()
+{
+    <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Memoria que PUEDE ser recolectada:"</span>);
+    
+    <span class="type">int</span> i = 0;
+    <span class="keyword">while</span> (!<span class="type">Console</span>.<span class="method">KeyAvailable</span>)
+    {
+        <span class="type">byte</span>[] memoryChunk = <span class="keyword">new</span> <span class="type">byte</span>[1024 * 1024];
+        
+        <span class="comment">// ¡NO añadimos a lista estática!</span>
+        <span class="comment">// El objeto se vuelve inalcanzable al final del loop</span>
+        <span class="comment">// El GC lo recolectará en Gen 0</span>
+        
+        i++;
+        <span class="keyword">if</span> (i % 100 == 0)
+        {
+            <span class="type">Console</span>.<span class="method">WriteLine</span>($<span class="string">"Iteración: {i}"</span>);
+            <span class="type">GC</span>.<span class="method">Collect</span>(); <span class="comment">// Forzar GC para demostración</span>
+            <span class="type">Console</span>.<span class="method">WriteLine</span>($<span class="string">"Memoria después GC: {GC.GetTotalMemory(false)} bytes"</span>);
+        }
+        
+        <span class="type">Thread</span>.<span class="method">Sleep</span>(10);
+    }
+}
+                            </div>
+                            <p style="margin-top: 15px; font-size: 0.9em;">
+                                <strong>Resultado:</strong> La memoria sube y baja (trabajo del GC), pero no crece indefinidamente.
+                            </p>
+                        </details>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">13 / 18</div>
+        </div>
+
+        <!-- Slide 14: Mejores Prácticas -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Mejores Prácticas</h2>
+                <p class="subtitle">Para desarrolladores profesionales</p>
+            </div>
+            <div class="content">
+                <div class="grid">
+                    <div class="card">
+                        <h3>🧠 Gestión de Memoria</h3>
+                        <ul class="list" style="font-size: 0.95em;">
+                            <li><strong>No fuerces GC:</strong> <code>GC.Collect()</code> solo para debugging</li>
+                            <li><strong>Usa using:</strong> Siempre con IDisposable</li>
+                            <li><strong>Evita objetos grandes:</strong> >85KB van al Large Object Heap</li>
+                            <li><strong>Cuidado con eventos:</strong> Unsub para evitar memory leaks</li>
+                            <li><strong>Weak references:</strong> Para caches opcionales</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>🚨 Señales de Problemas</h3>
+                        <ul class="list" style="font-size: 0.95em;">
+                            <li><strong>Gen 2 frecuente:</strong> Objetos viven demasiado</li>
+                            <li><strong>Memoria creciente:</strong> Posible memory leak</li>
+                            <li><strong>OutOfMemory intermitente:</strong> Fragmentación del LOH</li>
+                            <li><strong>GC pressure alto:</strong> Demasiados objetos temporales</li>
+                            <li><strong>Finalizers lentos:</strong> Recursos no liberados</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>🔧 Herramientas de Diagnóstico</h3>
+                        <ul class="list" style="font-size: 0.95em;">
+                            <li><strong>Visual Studio Diagnostic Tools:</strong> Memory usage</li>
+                            <li><strong>dotMemory:</strong> JetBrains profiler</li>
+                            <li><strong>PerfView:</strong> Microsoft, gratis y potente</li>
+                            <li><strong>Application Insights:</strong> Para producción</li>
+                            <li><strong>DebugDiag:</strong> Para memory dumps</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>⚡ Optimizaciones</h3>
+                        <ul class="list" style="font-size: 0.95em;">
+                            <li><strong>Object pooling:</strong> Para objetos costosos</li>
+                            <li><strong>StringBuilder:</strong> Para concatenación masiva</li>
+                            <li><strong>ArrayPool:</strong> Reutilizar arrays grandes</li>
+                            <li><strong>Span&lt;T&gt;/Memory&lt;T&gt;:</strong> Para high-performance</li>
+                            <li><strong>ValueTask:</strong> Para async sin allocations</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="highlight">
+                    <h3>🎯 Para Sistemas de Producción</h3>
+                    <p><strong>Fintech/Banking:</strong> Memory leaks pueden causar downtime en sistemas críticos. Monitorea métricas de GC: Gen 2 collections/sec, % time in GC, allocated bytes/sec.</p>
+                </div>
+            </div>
+            <div class="slide-number">14 / 18</div>
+        </div>
+
+        <!-- Slide 15: Casos Reales en Fintech -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Casos Reales en Fintech</h2>
+                <p class="subtitle">Memory leaks que cuestan millones</p>
+            </div>
+            <div class="content">
+                <div class="grid">
+                    <div class="card">
+                        <h3>💸 Caso 1: Event Handler Leak</h3>
+                        <div class="code-block bad" style="font-size: 0.8em; margin-top: 15px;">
+<span class="comment">// PROBLEMA: Payment service que se suscribe pero nunca se desuscribe</span>
+<span class="keyword">public class</span> <span class="type">PaymentProcessor</span>
+{
+    <span class="keyword">public</span> <span class="method">PaymentProcessor</span>()
+    {
+        <span class="comment">// Se suscribe al evento global</span>
+        <span class="type">GlobalEventBus</span>.PaymentRequested += <span class="method">ProcessPayment</span>;
+        <span class="comment">// NUNCA se desuscribe! Cada instancia queda en memoria</span>
+    }
+    
+    <span class="keyword">private void</span> <span class="method">ProcessPayment</span>(<span class="type">object</span> sender, <span class="type">PaymentEventArgs</span> e) { }
+}
+
+<span class="comment">// Cada request HTTP crea nuevo PaymentProcessor
+// Después de 24 horas: 50,000+ instancias en memoria
+// OOM en servidor de producción = downtime</span>
+                        </div>
+                        <div class="code-block good" style="font-size: 0.8em; margin-top: 15px;">
+                            <span class="code-label good">SOLUCIÓN</span>
+<span class="keyword">public class</span> <span class="type">PaymentProcessor</span> : <span class="type">IDisposable</span>
+{
+    <span class="keyword">public</span> <span class="method">PaymentProcessor</span>()
+    {
+        <span class="type">GlobalEventBus</span>.PaymentRequested += <span class="method">ProcessPayment</span>;
+    }
+    
+    <span class="keyword">public void</span> <span class="method">Dispose</span>()
+    {
+        <span class="type">GlobalEventBus</span>.PaymentRequested -= <span class="method">ProcessPayment</span>; <span class="comment">// ¡Crítico!</span>
+    }
+}
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>📊 Caso 2: Cache Sin Límites</h3>
+                        <div class="code-block bad" style="font-size: 0.8em; margin-top: 15px;">
+<span class="comment">// PROBLEMA: Cache que nunca expira</span>
+<span class="keyword">public class</span> <span class="type">UserSessionCache</span>
+{
+    <span class="keyword">private static readonly</span> <span class="type">Dictionary</span>&lt;<span class="type">string</span>, <span class="type">UserSession</span>&gt; 
+        _cache = <span class="keyword">new</span> <span class="type">Dictionary</span>&lt;<span class="type">string</span>, <span class="type">UserSession</span>&gt;();
+        
+    <span class="keyword">public static void</span> <span class="method">AddSession</span>(<span class="type">string</span> sessionId, <span class="type">UserSession</span> session)
+    {
+        _cache[sessionId] = session; <span class="comment">// Nunca se remueve!</span>
+    }
+}
+
+<span class="comment">// Después de semanas: millones de sesiones expiradas en memoria
+// En sistema bancario: datos de clientes + tokens = riesgo de seguridad</span>
+                        </div>
+                        <div class="code-block good" style="font-size: 0.8em; margin-top: 15px;">
+                            <span class="code-label good">SOLUCIÓN</span>
+<span class="comment">// Usar MemoryCache con expiration</span>
+<span class="keyword">private readonly</span> <span class="type">IMemoryCache</span> _cache;
+
+<span class="keyword">public void</span> <span class="method">AddSession</span>(<span class="type">string</span> sessionId, <span class="type">UserSession</span> session)
+{
+    _cache.<span class="method">Set</span>(sessionId, session, <span class="type">TimeSpan</span>.<span class="method">FromMinutes</span>(30));
+}
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>🔄 Caso 3: HttpClient Leak</h3>
+                        <div class="code-block bad" style="font-size: 0.8em; margin-top: 15px;">
+<span class="comment">// PROBLEMA: Crear HttpClient por request</span>
+<span class="keyword">public async</span> <span class="type">Task</span>&lt;<span class="type">bool</span>&gt; <span class="method">ValidateWithBCRA</span>(<span class="type">string</span> cuit)
+{
+    <span class="keyword">var</span> client = <span class="keyword">new</span> <span class="type">HttpClient</span>(); <span class="comment">// ¡Problema!</span>
+    <span class="keyword">var</span> response = <span class="keyword">await</span> client.<span class="method">GetAsync</span>($<span class="string">"https://bcra.gob.ar/api/{cuit}"</span>);
+    <span class="keyword">return</span> response.<span class="method">IsSuccessStatusCode</span>;
+    <span class="comment">// HttpClient no se dispone = socket leak</span>
+}
+                        </div>
+                        <div class="code-block good" style="font-size: 0.8em; margin-top: 15px;">
+                            <span class="code-label good">SOLUCIÓN</span>
+<span class="comment">// Usar IHttpClientFactory (DI)</span>
+<span class="keyword">private readonly</span> <span class="type">HttpClient</span> _httpClient;
+
+<span class="keyword">public</span> <span class="method">BCRAValidator</span>(<span class="type">HttpClient</span> httpClient)
+{
+    _httpClient = httpClient;
+}
+
+<span class="keyword">public async</span> <span class="type">Task</span>&lt;<span class="type">bool</span>&gt; <span class="method">ValidateWithBCRA</span>(<span class="type">string</span> cuit)
+{
+    <span class="keyword">var</span> response = <span class="keyword">await</span> _httpClient.<span class="method">GetAsync</span>($<span class="string">"/api/{cuit}"</span>);
+    <span class="keyword">return</span> response.<span class="method">IsSuccessStatusCode</span>;
+}
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>💰 Impacto Real</h3>
+                        <ul class="list" style="font-size: 0.9em;">
+                            <li><strong>Downtime:</strong> $100K+ por hora en sistemas de pago</li>
+                            <li><strong>Scaling costs:</strong> Más servidores para compensar leaks</li>
+                            <li><strong>Customer trust:</strong> Interrupciones dañan reputación</li>
+                            <li><strong>Compliance:</strong> Reguladores requieren alta disponibilidad</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">15 / 18</div>
+        </div>
+
+        <!-- Slide 16: Ejercicios Prácticos -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Ejercicios Prácticos</h2>
+            </div>
+            <div class="content" style="overflow-y: auto;">
+                <div class="card">
+                    <h3>🏋️ Ejercicio 1: Implementar FileWriter</h3>
+                    <p>Crea una clase <code>FileWriter</code> que implemente IDisposable correctamente:</p>
+                    <div style="background: rgba(102, 126, 234, 0.1); padding: 15px; border-radius: 8px; margin: 15px 0;">
+                        <p><strong>Requisitos:</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Constructor recibe ruta de archivo y crea StreamWriter</li>
+                            <li>Método WriteLineAsync para escribir texto</li>
+                            <li>Implementa IDisposable para cerrar StreamWriter</li>
+                            <li>Incluye flag _disposed para evitar double-dispose</li>
+                        </ul>
+                    </div>
+                    <p><strong>Bonus:</strong> Escribe programa que use FileWriter con <code>using</code> statement.</p>
+                </div>
+
+                <div class="card">
+                    <h3>🔍 Ejercicio 2: Debug Memory Leak</h3>
+                    <p>Analiza este código de un sistema de audit logs. ¿Dónde está la fuga?</p>
+                    <div class="code-block bad" style="font-size: 0.8em; margin-top: 10px;">
+<span class="keyword">public class</span> <span class="type">AuditLogger</span>
+{
+    <span class="keyword">private static readonly</span> <span class="type">List</span>&lt;<span class="type">AuditEntry</span>&gt; _allLogs = <span class="keyword">new</span> <span class="type">List</span>&lt;<span class="type">AuditEntry</span>&gt;();
+    
+    <span class="keyword">public void</span> <span class="method">LogTransaction</span>(<span class="type">Transaction</span> tx)
+    {
+        <span class="keyword">var</span> entry = <span class="keyword">new</span> <span class="type">AuditEntry</span>
+        {
+            Timestamp = <span class="type">DateTime</span>.UtcNow,
+            TransactionData = tx,
+            UserId = tx.UserId
+        };
+        _allLogs.<span class="method">Add</span>(entry);
+    }
+    
+    <span class="keyword">public</span> <span class="type">IEnumerable</span>&lt;<span class="type">AuditEntry</span>&gt; <span class="method">GetRecentLogs</span>() => 
+        _allLogs.<span class="method">Where</span>(l => l.Timestamp > <span class="type">DateTime</span>.UtcNow.<span class="method">AddHours</span>(-24));
+}
+                    </div>
+                    <p style="margin-top: 15px;"><strong>Pregunta:</strong> ¿Qué pasará después de meses de uso? ¿Cómo lo corregirías?</p>
+                </div>
+
+                <div class="card">
+                    <h3>🧪 Ejercicio 3: GC Monitoring</h3>
+                    <p>Crea una utilidad para monitorear el GC en tiempo real:</p>
+                    <div style="background: rgba(102, 126, 234, 0.1); padding: 15px; border-radius: 8px; margin: 15px 0;">
+                        <p><strong>Requisitos:</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Mostrar memoria total cada segundo</li>
+                            <li>Contar collections de cada generación</li>
+                            <li>Alertar si Gen 2 collections > 5 por minuto</li>
+                            <li>Permitir forzar GC para testing</li>
+                        </ul>
+                    </div>
+                    <p><strong>Pista:</strong> Usa <code>GC.GetTotalMemory()</code> y <code>GC.CollectionCount()</code></p>
+                </div>
+
+                <div class="card">
+                    <h3>💡 Soluciones Ejercicio 2</h3>
+                    <details style="margin-top: 10px;">
+                        <summary style="cursor: pointer; color: #667eea;">Ver Análisis</summary>
+                        <div style="margin-top: 15px; font-size: 0.9em;">
+                            <p><strong>🚨 Problema:</strong> <code>_allLogs</code> es una lista estática que crece infinitamente. Nunca se remueven logs antiguos.</p>
+                            <p style="margin-top: 10px;"><strong>💰 Impacto:</strong> En sistema bancario con millones de transacciones diarias, OutOfMemory en pocas semanas.</p>
+                            <p style="margin-top: 10px;"><strong>✅ Solución:</strong> Usar MemoryCache con TTL o implementar cleanup de logs antiguos.</p>
+                        </div>
+                    </details>
+                </div>
+            </div>
+            <div class="slide-number">16 / 18</div>
+        </div>
+
+        <!-- Slide 17: Monitoring en Producción -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Monitoring en Producción</h2>
+                <p class="subtitle">Detecta problemas antes del colapso</p>
+            </div>
+            <div class="content">
+                <div class="grid">
+                    <div class="card">
+                        <h3>📊 Métricas Críticas</h3>
+                        <div class="code-block" style="font-size: 0.85em; margin-top: 15px;">
+<span class="comment">// Métricas clave para alertas</span>
+<span class="keyword">var</span> metrics = <span class="keyword">new</span>
+{
+    Gen0Collections = <span class="type">GC</span>.<span class="method">CollectionCount</span>(0),
+    Gen1Collections = <span class="type">GC</span>.<span class="method">CollectionCount</span>(1),
+    Gen2Collections = <span class="type">GC</span>.<span class="method">CollectionCount</span>(2),
+    TotalMemoryMB = <span class="type">GC</span>.<span class="method">GetTotalMemory</span>(<span class="keyword">false</span>) / 1024 / 1024,
+    WorkingSetMB = <span class="type">Environment</span>.WorkingSet / 1024 / 1024
+};
+
+<span class="comment">// Alertas automáticas</span>
+<span class="keyword">if</span> (metrics.Gen2Collections > lastGen2 + 5) 
+    <span class="method">AlertSlack</span>(<span class="string">"High Gen2 GC pressure detected!"</span>);
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>🚨 Thresholds de Alerta</h3>
+                        <ul class="list" style="font-size: 0.9em;">
+                            <li><strong>Gen 2 collections:</strong> >10 por minuto</li>
+                            <li><strong>% Time in GC:</strong> >10% consistente</li>
+                            <li><strong>Memory growth:</strong> >20% por hora</li>
+                            <li><strong>Large Object Heap:</strong> >500MB sin explicación</li>
+                            <li><strong>Finalizer queue:</strong> >1000 objetos</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>📈 Azure Application Insights</h3>
+                        <div class="code-block" style="font-size: 0.8em; margin-top: 15px;">
+<span class="comment">// Custom telemetry para GC</span>
+<span class="keyword">public class</span> <span class="type">GCTelemetryCollector</span>
+{
+    <span class="keyword">private readonly</span> <span class="type">TelemetryClient</span> _telemetry;
+    
+    <span class="keyword">public void</span> <span class="method">TrackGCMetrics</span>()
+    {
+        _telemetry.<span class="method">TrackMetric</span>(<span class="string">"GC.Gen0Collections"</span>, 
+            <span class="type">GC</span>.<span class="method">CollectionCount</span>(0));
+        _telemetry.<span class="method">TrackMetric</span>(<span class="string">"GC.TotalMemoryMB"</span>, 
+            <span class="type">GC</span>.<span class="method">GetTotalMemory</span>(<span class="keyword">false</span>) / 1024.0 / 1024.0);
+    }
+}
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>🔧 Response Playbook</h3>
+                        <ul class="list" style="font-size: 0.9em;">
+                            <li><strong>Memory spike:</strong> Capture heap dump + analyze</li>
+                            <li><strong>High Gen2:</strong> Check for large objects/leaks</li>
+                            <li><strong>Growing memory:</strong> Enable ETW tracing</li>
+                            <li><strong>OutOfMemory:</strong> Immediate restart + post-mortem</li>
+                            <li><strong>Slow finalizers:</strong> Review IDisposable usage</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="highlight">
+                    <h3>💼 Para Equipos Fintech</h3>
+                    <p><strong>SLAs típicos:</strong> 99.95% uptime = máximo 22 minutos downtime/mes. Un memory leak que cause restart puede agotar todo el budget de SLA.</p>
+                    <p style="margin-top: 15px;"><strong>Estrategia:</strong> Monitoring proactivo + automated rollback + chaos engineering para validar memory behavior bajo stress.</p>
+                </div>
+            </div>
+            <div class="slide-number">17 / 18</div>
+        </div>
+
+        <!-- Slide 18: Conclusiones -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Conclusiones y Próximos Pasos</h2>
+            </div>
+            <div class="content">
+                <div class="card" style="text-align: center; max-width: 800px; margin: 0 auto;">
+                    <h3>🎯 Conceptos Clave Dominados</h3>
+                    <div style="text-align: left; margin-top: 30px;">
+                        <p style="margin-bottom: 20px;">✅ <strong>GC Fundamentals:</strong> Heap, generaciones, alcanzabilidad, mark & compact</p>
+                        <p style="margin-bottom: 20px;">✅ <strong>IDisposable Pattern:</strong> Gestión correcta de recursos no gestionados</p>
+                        <p style="margin-bottom: 20px;">✅ <strong>Using Statement:</strong> Garantía automática de cleanup con manejo de excepciones</p>
+                        <p style="margin-bottom: 20px;">✅ <strong>Memory Leaks:</strong> Identificación, simulación y corrección de fugas gestionadas</p>
+                        <p style="margin-bottom: 20px;">✅ <strong>Production Monitoring:</strong> Métricas críticas y alertas preventivas</p>
+                    </div>
+                </div>
+                
+                <div class="grid" style="margin-top: 30px;">
+                    <div class="card">
+                        <h3>📚 Recursos Avanzados</h3>
+                        <ul class="list" style="font-size: 0.95em;">
+                            <li>"Pro .NET Memory Management" - Kokosa</li>
+                            <li>"Writing High-Performance .NET Code" - Watson</li>
+                            <li>Microsoft .NET GC documentation</li>
+                            <li>PerfView tutorials (Microsoft)</li>
+                            <li>dotMemory profiling guides</li>
+                            <li>".NET Application Architecture Guides"</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>🎯 Plan de Acción</h3>
+                        <ul class="list" style="font-size: 0.95em;">
+                            <li>Audita tu código por objetos IDisposable sin using</li>
+                            <li>Implementa monitoring de GC en staging</li>
+                            <li>Realiza memory profiling en aplicaciones críticas</li>
+                            <li>Crea alertas para métricas de memoria</li>
+                            <li>Practica debugging de memory leaks</li>
+                            <li>Documenta patrones de memoria de tu app</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>🚀 Temas Avanzados</h3>
+                        <ul class="list" style="font-size: 0.95em;">
+                            <li><strong>Span&lt;T&gt; y Memory&lt;T&gt;:</strong> Zero-allocation programming</li>
+                            <li><strong>Object Pooling:</strong> Para high-throughput scenarios</li>
+                            <li><strong>Custom allocators:</strong> Unmanaged memory control</li>
+                            <li><strong>GC tuning:</strong> Server vs Workstation modes</li>
+                            <li><strong>Large Object Heap:</strong> Strategies para objetos >85KB</li>
+                            <li><strong>Memory-mapped files:</strong> Para datasets grandes</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>💰 ROI en Enterprise</h3>
+                        <ul class="list" style="font-size: 0.95em;">
+                            <li><strong>Reduced hosting costs:</strong> Menos memoria = menores instancias</li>
+                            <li><strong>Better performance:</strong> Menos GC pause = mejor UX</li>
+                            <li><strong>Higher availability:</strong> Sin OOM crashes</li>
+                            <li><strong>Faster deployments:</strong> Predictable memory behavior</li>
+                            <li><strong>Easier scaling:</strong> Linear memory usage</li>
+                            <li><strong>Compliance ready:</strong> Stable systems para auditorías</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="highlight" style="margin-top: 40px;">
+                    <p style="text-align: center; font-size: 1.2em;">
+                        <strong>"El GC en .NET es tu aliado, pero la responsabilidad de la gestión eficiente de recursos sigue siendo tuya."</strong>
+                    </p>
+                    <p style="text-align: center; margin-top: 10px; color: #a8a8b3;">— Jeffrey Richter, CLR via C#</p>
+                </div>
+            </div>
+            <div class="slide-number">18 / 18</div>
+        </div>
+
+        <!-- Instructor Info -->
+        <div class="instructor-info">
+            <div class="instructor-name">Alejandro Sfrede</div>
+            <div class="instructor-area">Área de Arquitectura</div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="navigation">
+            <button class="nav-btn" onclick="previousSlide()" id="prevBtn">← Anterior</button>
+            <button class="nav-btn" onclick="nextSlide()" id="nextBtn">Siguiente →</button>
+            <button class="nav-btn" onclick="goHome()" style="background: rgba(102, 126, 234, 0.3);">🏠 Portal</button>
+        </div>
+
+        <div class="slide-counter">
+            <span id="currentSlide">1</span> / <span id="totalSlides">18</span>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            
+            document.getElementById('currentSlide').textContent = currentSlide + 1;
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+            
+            // Update progress bar
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        function goHome() {
+            window.location.href = '../index.html';
+        }
+
+        // Enhanced keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                previousSlide();
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                goHome();
+            }
+        });
+
+        // Touch/swipe support
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) changeSlide(1);
+            if (touchEndX > touchStartX + 50) changeSlide(-1);
+        }
+
+        // Initialize
+        document.getElementById('totalSlides').textContent = totalSlides;
+        showSlide(0);
+    </script>
+</body>
+</html>

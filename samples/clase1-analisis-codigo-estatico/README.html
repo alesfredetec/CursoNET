@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLASE 1: Análisis de Código Estático - CursoNET</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2rem;
+            font-weight: 300;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .section h2 {
+            color: white;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section h3 {
+            color: #ffd700;
+            font-size: 1.3rem;
+            margin: 20px 0 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section p, .section li {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .section ul {
+            padding-left: 20px;
+        }
+
+        .section li {
+            margin-bottom: 8px;
+        }
+
+        .icon {
+            font-size: 1.2em;
+        }
+
+        .exercises-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .exercise-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .exercise-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .exercise-card h4 {
+            color: #ffd700;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .exercise-card .file-name {
+            color: #90ee90;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .metric-card .number {
+            color: #ffd700;
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .metric-card .label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .nav-button {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-button:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            .metrics {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 CLASE 1: Análisis de Código Estático</h1>
+            <p class="subtitle">Técnicas avanzadas para identificar problemas de código usando herramientas automatizadas</p>
+        </div>
+
+        <div class="content-grid">
+            <div class="section">
+                <h2><span class="icon">🎯</span> Objetivos de Aprendizaje</h2>
+                <ul>
+                    <li><strong>Comprender</strong> la importancia del análisis estático</li>
+                    <li><strong>Dominar</strong> herramientas como SonarLint y analizadores .NET</li>
+                    <li><strong>Calcular</strong> métricas de complejidad ciclomática</li>
+                    <li><strong>Identificar</strong> code smells y anti-patrones</li>
+                    <li><strong>Implementar</strong> rules de calidad automatizadas</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2><span class="icon">🔧</span> Herramientas Utilizadas</h2>
+                <h3><span class="icon">⚡</span> SonarLint</h3>
+                <p>Análisis en tiempo real de calidad de código</p>
+                
+                <h3><span class="icon">📈</span> Code Metrics</h3>
+                <p>Complejidad ciclomática y métricas de mantenibilidad</p>
+                
+                <h3><span class="icon">🛡️</span> .NET Analyzers</h3>
+                <p>Reglas de código específicas para .NET</p>
+            </div>
+
+            <div class="section">
+                <h2><span class="icon">📚</span> Conceptos Clave</h2>
+                <h3><span class="icon">🔄</span> Complejidad Ciclomática</h3>
+                <p>Métrica que mide la complejidad de un programa basándose en el número de caminos de ejecución linealmente independientes.</p>
+                
+                <h3><span class="icon">💨</span> Code Smells</h3>
+                <p>Indicadores de problemas más profundos en el código que afectan mantenibilidad.</p>
+                
+                <h3><span class="icon">🎨</span> Clean Code</h3>
+                <p>Principios para escribir código legible, mantenible y eficiente.</p>
+            </div>
+
+            <div class="section">
+                <h2><span class="icon">⚙️</span> Técnicas Aplicadas</h2>
+                <ul>
+                    <li><strong>Refactoring de métodos largos</strong> - Dividir responsabilidades</li>
+                    <li><strong>Eliminación de duplicación</strong> - DRY principle</li>
+                    <li><strong>Simplificación de condiciones</strong> - Reducir complejidad</li>
+                    <li><strong>Naming conventions</strong> - Nombres descriptivos</li>
+                    <li><strong>Separation of concerns</strong> - Una responsabilidad por clase</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2><span class="icon">💻</span> Ejercicios Prácticos</h2>
+            <div class="exercises-grid">
+                <div class="exercise-card">
+                    <h4>📝 Ejemplo Problemático</h4>
+                    <div class="file-name">01-BadCodeExample-Before.cs</div>
+                    <p>Código con múltiples violaciones: métodos largos, alta complejidad ciclomática, duplicación y poor naming.</p>
+                    <p><strong>Complejidad:</strong> 15+ (Muy Alto)</p>
+                    <p><strong>Issues:</strong> 25+ violaciones detectadas</p>
+                </div>
+
+                <div class="exercise-card">
+                    <h4>✅ Solución Optimizada</h4>
+                    <div class="file-name">01-BadCodeExample-After.cs</div>
+                    <p>Refactoring completo aplicando principios de clean code, reduciendo complejidad y mejorando legibilidad.</p>
+                    <p><strong>Complejidad:</strong> 2-3 (Bajo)</p>
+                    <p><strong>Mejoras:</strong> 90% reducción en violaciones</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="metrics">
+            <div class="metric-card">
+                <span class="number">2</span>
+                <span class="label">Archivos de Ejercicios</span>
+            </div>
+            <div class="metric-card">
+                <span class="number">90%</span>
+                <span class="label">Reducción Complejidad</span>
+            </div>
+            <div class="metric-card">
+                <span class="number">25+</span>
+                <span class="label">Issues Corregidos</span>
+            </div>
+            <div class="metric-card">
+                <span class="number">15→3</span>
+                <span class="label">Complejidad Ciclomática</span>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <a href="../../index.html" class="nav-button">
+                <span>🏠</span> Volver al Portal Principal
+            </a>
+            <a href="../index.html" class="nav-button">
+                <span>📁</span> Ver Todos los Ejercicios
+            </a>
+            <a href="../clase2-analisis-requisitos/README.html" class="nav-button">
+                <span>➡️</span> Siguiente Clase
+            </a>
+        </div>
+    </div>
+</body>
+</html>

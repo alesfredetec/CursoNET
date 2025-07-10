@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLASE 2: Análisis de Requisitos - CursoNET</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2rem;
+            font-weight: 300;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .section h2 {
+            color: white;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section h3 {
+            color: #ffd700;
+            font-size: 1.3rem;
+            margin: 20px 0 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section p, .section li {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .section ul {
+            padding-left: 20px;
+        }
+
+        .section li {
+            margin-bottom: 8px;
+        }
+
+        .icon {
+            font-size: 1.2em;
+        }
+
+        .exercises-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .exercise-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .exercise-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .exercise-card h4 {
+            color: #ffd700;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .exercise-card .file-name {
+            color: #90ee90;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .metric-card .number {
+            color: #ffd700;
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .metric-card .label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .nav-button {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-button:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            .metrics {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 CLASE 2: Análisis de Requisitos</h1>
+            <p class="subtitle">Técnicas avanzadas para capturar, clasificar y gestionar requisitos funcionales y no funcionales</p>
+        </div>
+
+        <div class="content-grid">
+            <div class="section">
+                <h2><span class="icon">🎯</span> Objetivos de Aprendizaje</h2>
+                <ul>
+                    <li><strong>Clasificar</strong> requisitos funcionales vs no funcionales</li>
+                    <li><strong>Crear</strong> matrices de trazabilidad</li>
+                    <li><strong>Gestionar</strong> dependencias entre requisitos</li>
+                    <li><strong>Documentar</strong> casos de uso detallados</li>
+                    <li><strong>Validar</strong> completitud y consistencia</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2><span class="icon">🔧</span> Técnicas Utilizadas</h2>
+                <h3><span class="icon">📊</span> Matriz de Trazabilidad</h3>
+                <p>Seguimiento de requisitos desde origen hasta implementación</p>
+                
+                <h3><span class="icon">🔗</span> Análisis de Dependencias</h3>
+                <p>Identificación de relaciones críticas entre requisitos</p>
+                
+                <h3><span class="icon">📝</span> Casos de Uso</h3>
+                <p>Documentación detallada de interacciones usuario-sistema</p>
+            </div>
+
+            <div class="section">
+                <h2><span class="icon">📚</span> Conceptos Clave</h2>
+                <h3><span class="icon">⚙️</span> Requisitos Funcionales</h3>
+                <p>Qué debe hacer el sistema - funcionalidades específicas y comportamientos esperados.</p>
+                
+                <h3><span class="icon">🏗️</span> Requisitos No Funcionales</h3>
+                <p>Cómo debe funcionar el sistema - performance, seguridad, usabilidad, escalabilidad.</p>
+                
+                <h3><span class="icon">🔄</span> Gestión de Cambios</h3>
+                <p>Control de versiones y evolución de requisitos durante el proyecto.</p>
+            </div>
+
+            <div class="section">
+                <h2><span class="icon">⚙️</span> Metodologías Aplicadas</h2>
+                <ul>
+                    <li><strong>Elicitación de requisitos</strong> - Técnicas de captura</li>
+                    <li><strong>Priorización MoSCoW</strong> - Must, Should, Could, Won't</li>
+                    <li><strong>User Stories</strong> - Formato ágil de requisitos</li>
+                    <li><strong>Acceptance Criteria</strong> - Criterios de aceptación</li>
+                    <li><strong>Impact Analysis</strong> - Análisis de impacto de cambios</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2><span class="icon">💻</span> Ejercicios Prácticos</h2>
+            <div class="exercises-grid">
+                <div class="exercise-card">
+                    <h4>📝 Requisitos Mal Definidos</h4>
+                    <div class="file-name">01-Requirements-Analysis-Before.md</div>
+                    <p>Ejemplo real de requisitos ambiguos, incompletos y mal estructurados que causan problemas en el desarrollo.</p>
+                    <p><strong>Problemas:</strong> Ambigüedad, falta de priorización, dependencias no identificadas</p>
+                    <p><strong>Issues:</strong> 15+ problemas documentados</p>
+                </div>
+
+                <div class="exercise-card">
+                    <h4>✅ Especificación Completa</h4>
+                    <div class="file-name">01-Requirements-Analysis-After.md</div>
+                    <p>Transformación completa aplicando técnicas profesionales de análisis de requisitos con matriz de trazabilidad.</p>
+                    <p><strong>Mejoras:</strong> Clasificación clara, dependencias mapeadas, casos de uso detallados</p>
+                    <p><strong>Cobertura:</strong> 100% requisitos trazables</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="metrics">
+            <div class="metric-card">
+                <span class="number">2</span>
+                <span class="label">Documentos de Análisis</span>
+            </div>
+            <div class="metric-card">
+                <span class="number">35+</span>
+                <span class="label">Requisitos Documentados</span>
+            </div>
+            <div class="metric-card">
+                <span class="number">100%</span>
+                <span class="label">Trazabilidad</span>
+            </div>
+            <div class="metric-card">
+                <span class="number">15→0</span>
+                <span class="label">Ambigüedades Eliminadas</span>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <a href="../../index.html" class="nav-button">
+                <span>🏠</span> Volver al Portal Principal
+            </a>
+            <a href="../index.html" class="nav-button">
+                <span>📁</span> Ver Todos los Ejercicios
+            </a>
+            <a href="../clase3-tecnicas-noif/README.html" class="nav-button">
+                <span>➡️</span> Siguiente Clase
+            </a>
+        </div>
+    </div>
+</body>
+</html>

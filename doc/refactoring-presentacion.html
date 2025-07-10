@@ -1,0 +1,1837 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refactoring: De Procedural a Funcional y OO</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow: hidden;
+        }
+
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+            padding: 60px;
+            position: relative;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .slide-header {
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 3.5em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 2.5em;
+            color: #667eea;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        h3 {
+            font-size: 1.8em;
+            color: #764ba2;
+            margin: 30px 0 20px;
+            font-weight: 500;
+        }
+
+        .subtitle {
+            font-size: 1.5em;
+            color: #a8a8b3;
+            font-weight: 300;
+        }
+
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .list li {
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .list li:last-child {
+            border-bottom: none;
+        }
+
+        .list li::before {
+            content: '▸';
+            color: #667eea;
+            font-size: 1.5em;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .code-block {
+            background: #1e1e2e;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+            white-space: pre;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        .code-block.bad {
+            border-color: rgba(239, 68, 68, 0.5);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .code-block.good {
+            border-color: rgba(34, 197, 94, 0.5);
+            background: rgba(34, 197, 94, 0.05);
+        }
+
+        .code-label {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .code-label.bad {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .code-label.good {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .keyword {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .string {
+            color: #98c379;
+        }
+
+        .comment {
+            color: #7c8a9c;
+            font-style: italic;
+        }
+
+        .type {
+            color: #e06c75;
+        }
+
+        .method {
+            color: #61afef;
+        }
+
+        /* Enhanced Navigation */
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Instructor Info Styling */
+        .instructor-info {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            border-radius: 25px;
+            color: #a8a8b3;
+            font-size: 0.9rem;
+            z-index: 1000;
+            text-align: right;
+        }
+
+        .instructor-name {
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 2px;
+        }
+
+        .instructor-area {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        /* Slide counter */
+        .slide-counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            border-radius: 25px;
+            color: #a8a8b3;
+            font-size: 0.9rem;
+            z-index: 1000;
+        }
+
+        .slide-number {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            font-size: 1.2em;
+            color: #a8a8b3;
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+            z-index: 1001;
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+            margin: 20px 0;
+        }
+
+        .icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .smell-indicator {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin: 0 5px;
+        }
+
+        .smell-indicator.bad {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .smell-indicator.good {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .arrow {
+            font-size: 2em;
+            color: #667eea;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .comparison-table th {
+            background: rgba(102, 126, 234, 0.2);
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .comparison-table tr:hover td {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px;
+            }
+            h1 {
+                font-size: 2.5em;
+            }
+            h2 {
+                font-size: 2em;
+            }
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+            .code-block {
+                font-size: 0.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <div class="progress-bar" id="progressBar"></div>
+        
+        <!-- Slide 1: Título -->
+        <div class="slide active">
+            <div class="slide-header">
+                <h1>Refactoring</h1>
+                <p class="subtitle">De Código Procedural a Diseño Funcional y OO</p>
+            </div>
+            <div class="content" style="justify-content: center; align-items: center;">
+                <div class="card" style="text-align: center; max-width: 800px;">
+                    <div class="icon">🔧</div>
+                    <h3>Técnicas de Transformación de Código</h3>
+                    <p style="font-size: 1.2em; color: #a8a8b3; margin-top: 20px;">
+                        Extract Method • Introduce Class • Func&lt;T&gt; y Action&lt;T&gt;
+                    </p>
+                </div>
+            </div>
+            <div class="slide-number">1 / 15</div>
+        </div>
+
+        <!-- Slide 2: Introducción -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>¿Qué es Refactoring?</h2>
+            </div>
+            <div class="content">
+                <div class="card">
+                    <h3>📖 Definición</h3>
+                    <p style="font-size: 1.2em; margin-bottom: 20px;">
+                        "Proceso de reestructurar código existente, alterando su estructura interna 
+                        <strong>sin cambiar su comportamiento externo</strong>."
+                    </p>
+                    <p style="color: #a8a8b3;">— Martin Fowler</p>
+                </div>
+                
+                <div class="grid">
+                    <div class="card">
+                        <div class="icon">🎯</div>
+                        <h3>Objetivos</h3>
+                        <ul class="list">
+                            <li>Mejorar legibilidad</li>
+                            <li>Reducir complejidad</li>
+                            <li>Facilitar mantenimiento</li>
+                            <li>Eliminar duplicación</li>
+                            <li>Preparar para nuevas features</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <div class="icon">⚠️</div>
+                        <h3>Cuándo Refactorizar</h3>
+                        <ul class="list">
+                            <li>Al agregar nueva funcionalidad</li>
+                            <li>Al corregir un bug</li>
+                            <li>Durante code review</li>
+                            <li>Cuando el código "huele mal"</li>
+                            <li>Como parte del desarrollo diario</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">2 / 15</div>
+        </div>
+
+        <!-- Slide 3: Code Smells -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Code Smells Comunes</h2>
+                <p class="subtitle">Señales de que es hora de refactorizar</p>
+            </div>
+            <div class="content">
+                <div class="grid">
+                    <div class="card">
+                        <h3>🍝 Código Espagueti</h3>
+                        <p>Métodos largos con múltiples responsabilidades</p>
+                        <span class="smell-indicator bad">Malo</span>
+                        <pre style="margin-top: 10px; font-size: 0.9em;">
+Método con 200+ líneas
+Sin estructura clara
+Difícil de seguir</pre>
+                    </div>
+                    <div class="card">
+                        <h3>🔄 Duplicación</h3>
+                        <p>Copy-paste programming</p>
+                        <span class="smell-indicator bad">Malo</span>
+                        <pre style="margin-top: 10px; font-size: 0.9em;">
+Misma lógica en varios lugares
+Cambios requieren múltiples ediciones
+Alto riesgo de inconsistencias</pre>
+                    </div>
+                    <div class="card">
+                        <h3>🎭 God Class</h3>
+                        <p>Una clase que hace demasiado</p>
+                        <span class="smell-indicator bad">Malo</span>
+                        <pre style="margin-top: 10px; font-size: 0.9em;">
+1000+ líneas de código
+20+ métodos
+Múltiples responsabilidades</pre>
+                    </div>
+                    <div class="card">
+                        <h3>🔢 Lógica Condicional Compleja</h3>
+                        <p>if-else anidados profundamente</p>
+                        <span class="smell-indicator bad">Malo</span>
+                        <pre style="margin-top: 10px; font-size: 0.9em;">
+if { if { if { ... } } }
+Switch gigantes
+Difícil agregar casos nuevos</pre>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">3 / 15</div>
+        </div>
+
+        <!-- Slide 4: Técnicas de Refactoring -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Técnicas de Refactoring</h2>
+                <p class="subtitle">Las herramientas en nuestro arsenal</p>
+            </div>
+            <div class="content">
+                <div class="grid">
+                    <div class="card">
+                        <h3>📤 Extract Method</h3>
+                        <p>Tomar un fragmento de código y moverlo a su propio método</p>
+                        <div class="highlight" style="margin-top: 15px;">
+                            <p><strong>Cuándo usar:</strong> Cuando un método hace demasiado o tiene comentarios explicando qué hace cada sección</p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>🏗️ Introduce Class</h3>
+                        <p>Crear una nueva clase para agrupar comportamiento y datos relacionados</p>
+                        <div class="highlight" style="margin-top: 15px;">
+                            <p><strong>Cuándo usar:</strong> Cuando varios métodos y datos están más relacionados entre sí que con su clase actual</p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>🔄 Replace Conditional with Polymorphism</h3>
+                        <p>Reemplazar if-else/switch con herencia o composición</p>
+                        <div class="highlight" style="margin-top: 15px;">
+                            <p><strong>Cuándo usar:</strong> Cuando el mismo condicional aparece en varios lugares</p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>⚡ Use Func&lt;T&gt; / Action&lt;T&gt;</h3>
+                        <p>Reemplazar lógica rígida con delegados configurables</p>
+                        <div class="highlight" style="margin-top: 15px;">
+                            <p><strong>Cuándo usar:</strong> Para hacer el código extensible sin modificación</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">4 / 15</div>
+        </div>
+
+        <!-- Slide 5: Caso de Estudio - El Problema -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Caso de Estudio: Sistema de Órdenes</h2>
+                <p class="subtitle">El código inicial - lleno de "smells"</p>
+            </div>
+            <div class="content">
+                <div class="code-block bad">
+                    <span class="code-label bad">ANTES</span>
+<span class="keyword">public class</span> <span class="type">Program</span>
+{
+    <span class="keyword">public static void</span> <span class="method">Main</span>(<span class="type">string</span>[] args)
+    {
+        <span class="keyword">var</span> orders = <span class="keyword">new</span> <span class="type">List</span>&lt;<span class="type">Order</span>&gt;
+        {
+            <span class="keyword">new</span> <span class="type">Order</span> { Id = 1, Amount = 100, CustomerType = <span class="string">"Standard"</span> },
+            <span class="keyword">new</span> <span class="type">Order</span> { Id = 2, Amount = 250, CustomerType = <span class="string">"Premium"</span> },
+            <span class="keyword">new</span> <span class="type">Order</span> { Id = 3, Amount = 50, CustomerType = <span class="string">"Standard"</span> }
+        };
+
+        <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Procesando órdenes..."</span>);
+
+        <span class="comment">// TODO: Este método hace demasiadas cosas!</span>
+        <span class="keyword">foreach</span> (<span class="keyword">var</span> order <span class="keyword">in</span> orders)
+        {
+            <span class="comment">// Calcular descuento - lógica rígida</span>
+            <span class="type">decimal</span> discount = 0;
+            <span class="keyword">if</span> (order.CustomerType == <span class="string">"Premium"</span>)
+            {
+                discount = order.Amount * 0.15m; <span class="comment">// 15% para Premium</span>
+            }
+            <span class="keyword">else</span>
+            {
+                discount = order.Amount * 0.05m; <span class="comment">// 5% para Standard</span>
+            }
+            order.FinalPrice = order.Amount - discount;
+
+            <span class="type">Console</span>.<span class="method">WriteLine</span>($<span class="string">"Orden {order.Id}: Precio Final ${order.FinalPrice}"</span>);
+
+            <span class="comment">// Notificar al cliente - hardcodeado a email</span>
+            <span class="type">Console</span>.<span class="method">WriteLine</span>($<span class="string">"Enviando email de confirmación para la orden {order.Id}..."</span>);
+            <span class="type">Console</span>.<span class="method">WriteLine</span>($<span class="string">"Email enviado a cliente de la orden {order.Id}."</span>);
+        }
+
+        <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Procesamiento finalizado."</span>);
+    }
+}
+                </div>
+                
+                <div class="highlight">
+                    <h3>🚨 Problemas Identificados</h3>
+                    <ul style="margin-top: 10px;">
+                        <li>• <strong>Método Main hace demasiado:</strong> Lee datos, calcula, notifica (viola SRP)</li>
+                        <li>• <strong>Lógica de descuento rígida:</strong> Agregar "VIP" requiere modificar código (viola OCP)</li>
+                        <li>• <strong>Notificación hardcodeada:</strong> No podemos cambiar a SMS sin modificar</li>
+                        <li>• <strong>Sin separación de concerns:</strong> Todo mezclado en un solo lugar</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="slide-number">5 / 15</div>
+        </div>
+
+        <!-- Slide 6: Paso 1 - Extract Method -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Paso 1: Extract Method</h2>
+                <p class="subtitle">Mejorando la legibilidad</p>
+            </div>
+            <div class="content">
+                <div class="code-block good">
+                    <span class="code-label good">MEJOR</span>
+<span class="keyword">public class</span> <span class="type">Program</span>
+{
+    <span class="keyword">public static void</span> <span class="method">Main</span>(<span class="type">string</span>[] args)
+    {
+        <span class="keyword">var</span> orders = <span class="keyword">new</span> <span class="type">List</span>&lt;<span class="type">Order</span>&gt; { <span class="comment">/* ... */</span> };
+        <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Procesando órdenes..."</span>);
+
+        <span class="keyword">foreach</span> (<span class="keyword">var</span> order <span class="keyword">in</span> orders)
+        {
+            <span class="comment">// Ahora el bucle es más legible - describe QUÉ hace, no CÓMO</span>
+            <span class="method">CalculateFinalPrice</span>(order);
+            <span class="type">Console</span>.<span class="method">WriteLine</span>($<span class="string">"Orden {order.Id}: Precio Final ${order.FinalPrice}"</span>);
+            
+            <span class="method">SendConfirmationEmail</span>(order);
+        }
+
+        <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Procesamiento finalizado."</span>);
+    }
+
+    <span class="comment">// Método extraído para cálculo de precio</span>
+    <span class="keyword">private static void</span> <span class="method">CalculateFinalPrice</span>(<span class="type">Order</span> order)
+    {
+        <span class="type">decimal</span> discount = 0;
+        <span class="keyword">if</span> (order.CustomerType == <span class="string">"Premium"</span>)
+            discount = order.Amount * 0.15m;
+        <span class="keyword">else</span>
+            discount = order.Amount * 0.05m;
+        
+        order.FinalPrice = order.Amount - discount;
+    }
+
+    <span class="comment">// Método extraído para notificación</span>
+    <span class="keyword">private static void</span> <span class="method">SendConfirmationEmail</span>(<span class="type">Order</span> order)
+    {
+        <span class="type">Console</span>.<span class="method">WriteLine</span>($<span class="string">"Enviando email de confirmación para la orden {order.Id}..."</span>);
+        <span class="type">Console</span>.<span class="method">WriteLine</span>($<span class="string">"Email enviado a cliente de la orden {order.Id}."</span>);
+    }
+}
+                </div>
+                
+                <div class="grid" style="margin-top: 20px;">
+                    <div class="card">
+                        <h3>✅ Mejoras</h3>
+                        <ul class="list" style="font-size: 0.95em;">
+                            <li>Método Main más corto y claro</li>
+                            <li>Cada método tiene un propósito único</li>
+                            <li>Nombres descriptivos</li>
+                            <li>Más fácil de testear</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>❌ Aún Pendiente</h3>
+                        <ul class="list" style="font-size: 0.95em;">
+                            <li>Program sigue teniendo múltiples responsabilidades</li>
+                            <li>Lógica de negocio en clase de entrada</li>
+                            <li>Métodos estáticos dificultan testing</li>
+                            <li>Sin flexibilidad en descuentos</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">6 / 15</div>
+        </div>
+
+        <!-- Slide 7: Paso 2 - Introduce Class -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Paso 2: Introduce Class</h2>
+                <p class="subtitle">Separación de responsabilidades (SRP)</p>
+            </div>
+            <div class="content">
+                <div class="two-column">
+                    <div>
+                        <h3>Nueva Clase: OrderProcessor</h3>
+                        <div class="code-block good" style="font-size: 0.85em;">
+<span class="keyword">public class</span> <span class="type">OrderProcessor</span>
+{
+    <span class="keyword">public void</span> <span class="method">ProcessOrders</span>(<span class="type">IEnumerable</span>&lt;<span class="type">Order</span>&gt; orders)
+    {
+        <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Procesando órdenes..."</span>);
+        
+        <span class="keyword">foreach</span> (<span class="keyword">var</span> order <span class="keyword">in</span> orders)
+        {
+            <span class="method">CalculateFinalPrice</span>(order);
+            <span class="type">Console</span>.<span class="method">WriteLine</span>($<span class="string">"Orden {order.Id}: ${order.FinalPrice}"</span>);
+            <span class="method">SendConfirmationEmail</span>(order);
+        }
+        
+        <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Procesamiento finalizado."</span>);
+    }
+
+    <span class="keyword">private void</span> <span class="method">CalculateFinalPrice</span>(<span class="type">Order</span> order)
+    {
+        <span class="comment">// Misma lógica, ahora encapsulada</span>
+    }
+
+    <span class="keyword">private void</span> <span class="method">SendConfirmationEmail</span>(<span class="type">Order</span> order)
+    {
+        <span class="comment">// Misma lógica, ahora encapsulada</span>
+    }
+}
+                        </div>
+                    </div>
+                    <div>
+                        <h3>Program Simplificado</h3>
+                        <div class="code-block good" style="font-size: 0.85em;">
+<span class="keyword">public class</span> <span class="type">Program</span>
+{
+    <span class="keyword">public static void</span> <span class="method">Main</span>(<span class="type">string</span>[] args)
+    {
+        <span class="keyword">var</span> orders = <span class="keyword">new</span> <span class="type">List</span>&lt;<span class="type">Order</span>&gt; 
+        { 
+            <span class="comment">/* ... órdenes ... */</span> 
+        };
+        
+        <span class="comment">// Program solo orquesta</span>
+        <span class="keyword">var</span> processor = <span class="keyword">new</span> <span class="type">OrderProcessor</span>();
+        processor.<span class="method">ProcessOrders</span>(orders);
+    }
+}
+                        </div>
+                        
+                        <div class="highlight" style="margin-top: 20px;">
+                            <p><strong>Principio SRP en acción:</strong></p>
+                            <p>• Program: Punto de entrada</p>
+                            <p>• OrderProcessor: Lógica de negocio</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="arrow">⬇️</div>
+                
+                <div class="card">
+                    <h3>🎯 Beneficios de la Separación</h3>
+                    <ul class="list" style="font-size: 0.95em;">
+                        <li>Cada clase tiene una única razón para cambiar</li>
+                        <li>OrderProcessor es reutilizable y testeable</li>
+                        <li>Fácil agregar nuevos procesadores sin tocar Program</li>
+                        <li>Código más organizado y mantenible</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="slide-number">7 / 15</div>
+        </div>
+
+        <!-- Slide 8: Introducción a Func y Action -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Delegados: Func&lt;T&gt; y Action&lt;T&gt;</h2>
+                <p class="subtitle">La clave para código flexible y extensible</p>
+            </div>
+            <div class="content">
+                <div class="grid">
+                    <div class="card">
+                        <h3>📥 Action&lt;T&gt;</h3>
+                        <p style="margin-bottom: 15px;">Encapsula un método que <strong>NO retorna valor</strong> (void)</p>
+                        <div class="code-block" style="font-size: 0.9em;">
+<span class="comment">// Definición</span>
+<span class="type">Action</span>&lt;<span class="type">Order</span>&gt; notifier;
+
+<span class="comment">// Asignación con lambda</span>
+notifier = (order) => {
+    <span class="type">Console</span>.<span class="method">WriteLine</span>($<span class="string">"Procesando {order.Id}"</span>);
+};
+
+<span class="comment">// Uso</span>
+notifier(myOrder);
+                        </div>
+                        <p style="margin-top: 15px; font-size: 0.9em; color: #a8a8b3;">
+                            Perfecto para: Notificaciones, logging, efectos secundarios
+                        </p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>📤 Func&lt;T, TResult&gt;</h3>
+                        <p style="margin-bottom: 15px;">Encapsula un método que <strong>RETORNA un valor</strong></p>
+                        <div class="code-block" style="font-size: 0.9em;">
+<span class="comment">// Definición</span>
+<span class="type">Func</span>&lt;<span class="type">Order</span>, <span class="type">decimal</span>&gt; calculator;
+
+<span class="comment">// Asignación con lambda</span>
+calculator = (order) => {
+    <span class="keyword">return</span> order.Amount * 0.1m;
+};
+
+<span class="comment">// Uso</span>
+<span class="type">decimal</span> result = calculator(myOrder);
+                        </div>
+                        <p style="margin-top: 15px; font-size: 0.9em; color: #a8a8b3;">
+                            Perfecto para: Cálculos, transformaciones, reglas de negocio
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="highlight">
+                    <h3>💡 ¿Por qué usar delegados?</h3>
+                    <p>Permiten <strong>inyectar comportamiento</strong> sin modificar el código. 
+                    Es la base del Principio Open/Closed: "Abierto para extensión, cerrado para modificación".</p>
+                </div>
+            </div>
+            <div class="slide-number">8 / 15</div>
+        </div>
+
+        <!-- Slide 9: Paso 3A - Func para Descuentos -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Paso 3A: Flexibilizando con Func&lt;T&gt;</h2>
+                <p class="subtitle">Reemplazando if-else rígido con estrategias dinámicas</p>
+            </div>
+            <div class="content">
+                <div class="code-block good">
+                    <span class="code-label good">FLEXIBLE</span>
+<span class="keyword">public class</span> <span class="type">OrderProcessor</span>
+{
+    <span class="comment">// Ahora recibe una estrategia de descuento como parámetro</span>
+    <span class="keyword">public void</span> <span class="method">ProcessOrders</span>(<span class="type">IEnumerable</span>&lt;<span class="type">Order</span>&gt; orders, 
+                              <span class="type">Func</span>&lt;<span class="type">Order</span>, <span class="type">decimal</span>&gt; calculateDiscountStrategy)
+    {
+        <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Procesando órdenes..."</span>);
+        
+        <span class="keyword">foreach</span> (<span class="keyword">var</span> order <span class="keyword">in</span> orders)
+        {
+            <span class="comment">// Ya NO hay if-else. Simplemente invocamos la función</span>
+            <span class="type">decimal</span> discount = <span class="method">calculateDiscountStrategy</span>(order);
+            order.FinalPrice = order.Amount - discount;
+            
+            <span class="type">Console</span>.<span class="method">WriteLine</span>($<span class="string">"Orden {order.Id}: Precio Final ${order.FinalPrice}"</span>);
+            <span class="method">SendConfirmationEmail</span>(order);
+        }
+        
+        <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Procesamiento finalizado."</span>);
+    }
+}
+                </div>
+                
+                <div class="two-column" style="margin-top: 20px;">
+                    <div class="card">
+                        <h3>Uso en Program</h3>
+                        <div class="code-block" style="font-size: 0.85em;">
+<span class="comment">// Definimos la lógica FUERA del procesador</span>
+<span class="type">Func</span>&lt;<span class="type">Order</span>, <span class="type">decimal</span>&gt; discountRule = (order) =>
+{
+    <span class="keyword">if</span> (order.CustomerType == <span class="string">"Premium"</span>)
+        <span class="keyword">return</span> order.Amount * 0.15m;
+    <span class="keyword">return</span> order.Amount * 0.05m;
+};
+
+<span class="comment">// Pasamos la estrategia al procesador</span>
+processor.<span class="method">ProcessOrders</span>(orders, discountRule);
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>🚀 Ventajas</h3>
+                        <ul class="list" style="font-size: 0.95em;">
+                            <li>OrderProcessor no conoce reglas de descuento</li>
+                            <li>Fácil agregar nuevas estrategias</li>
+                            <li>Sin modificar código existente</li>
+                            <li>Testeable con mocks</li>
+                            <li>Cumple Open/Closed Principle</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">9 / 15</div>
+        </div>
+
+        <!-- Slide 10: Paso 3B - Action para Notificaciones -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Paso 3B: Flexibilizando con Action&lt;T&gt;</h2>
+                <p class="subtitle">Notificaciones configurables</p>
+            </div>
+            <div class="content">
+                <div class="code-block good">
+                    <span class="code-label good">MÁXIMA FLEXIBILIDAD</span>
+<span class="keyword">public class</span> <span class="type">OrderProcessor</span>
+{
+    <span class="comment">// Ahora también recibe una acción de notificación</span>
+    <span class="keyword">public void</span> <span class="method">ProcessOrders</span>(<span class="type">IEnumerable</span>&lt;<span class="type">Order</span>&gt; orders, 
+                              <span class="type">Func</span>&lt;<span class="type">Order</span>, <span class="type">decimal</span>&gt; calculateDiscountStrategy, 
+                              <span class="type">Action</span>&lt;<span class="type">Order</span>&gt; notificationAction)
+    {
+        <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Procesando órdenes..."</span>);
+        
+        <span class="keyword">foreach</span> (<span class="keyword">var</span> order <span class="keyword">in</span> orders)
+        {
+            <span class="type">decimal</span> discount = <span class="method">calculateDiscountStrategy</span>(order);
+            order.FinalPrice = order.Amount - discount;
+            <span class="type">Console</span>.<span class="method">WriteLine</span>($<span class="string">"Orden {order.Id}: Precio Final ${order.FinalPrice}"</span>);
+            
+            <span class="comment">// Simplemente invocamos la acción que nos pasaron</span>
+            <span class="method">notificationAction</span>(order);
+        }
+        
+        <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Procesamiento finalizado."</span>);
+    }
+}
+                </div>
+                
+                <h3 style="margin-top: 30px;">Múltiples Estrategias de Notificación</h3>
+                <div class="grid">
+                    <div class="card">
+                        <h4>📧 Email</h4>
+                        <div class="code-block" style="font-size: 0.85em;">
+<span class="type">Action</span>&lt;<span class="type">Order</span>&gt; emailNotifier = (order) => {
+    <span class="type">Console</span>.<span class="method">WriteLine</span>(
+        $<span class="string">"📧 Email enviado para orden {order.Id}"</span>
+    );
+};
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h4>📱 SMS</h4>
+                        <div class="code-block" style="font-size: 0.85em;">
+<span class="type">Action</span>&lt;<span class="type">Order</span>&gt; smsNotifier = (order) => {
+    <span class="type">Console</span>.<span class="method">WriteLine</span>(
+        $<span class="string">"📱 SMS enviado para orden {order.Id}"</span>
+    );
+};
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h4>🔔 Push</h4>
+                        <div class="code-block" style="font-size: 0.85em;">
+<span class="type">Action</span>&lt;<span class="type">Order</span>&gt; pushNotifier = (order) => {
+    <span class="type">Console</span>.<span class="method">WriteLine</span>(
+        $<span class="string">"🔔 Push enviado para orden {order.Id}"</span>
+    );
+};
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">10 / 15</div>
+        </div>
+
+        <!-- Slide 11: Código Final Completo -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Resultado Final</h2>
+                <p class="subtitle">Sistema flexible y extensible</p>
+            </div>
+            <div class="content">
+                <div class="code-block good" style="font-size: 0.85em;">
+<span class="keyword">public class</span> <span class="type">Program</span>
+{
+    <span class="keyword">public static void</span> <span class="method">Main</span>(<span class="type">string</span>[] args)
+    {
+        <span class="keyword">var</span> orders = <span class="method">GetOrders</span>();
+        <span class="keyword">var</span> processor = <span class="keyword">new</span> <span class="type">OrderProcessor</span>();
+
+        <span class="comment">// 1. Definimos la regla de descuento</span>
+        <span class="type">Func</span>&lt;<span class="type">Order</span>, <span class="type">decimal</span>&gt; discountRule = (order) => 
+        {
+            <span class="keyword">return order.CustomerType switch</span>
+            {
+                <span class="string">"Premium"</span> => order.Amount * 0.15m,
+                <span class="string">"VIP"</span> => order.Amount * 0.25m,     <span class="comment">// ¡Fácil agregar nuevos tipos!</span>
+                _ => order.Amount * 0.05m
+            };
+        };
+
+        <span class="comment">// 2. Procesamos con notificación por Email</span>
+        <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"=== PROCESAMIENTO CON EMAIL ==="</span>);
+        processor.<span class="method">ProcessOrders</span>(orders, discountRule, 
+            order => <span class="type">Console</span>.<span class="method">WriteLine</span>($<span class="string">"📧 Email enviado para orden {order.Id}"</span>));
+
+        <span class="comment">// 3. Mismos datos, diferente notificación - ¡Sin cambiar OrderProcessor!</span>
+        <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"\n=== PROCESAMIENTO CON SMS ==="</span>);
+        processor.<span class="method">ProcessOrders</span>(orders, discountRule,
+            order => <span class="type">Console</span>.<span class="method">WriteLine</span>($<span class="string">"📱 SMS enviado para orden {order.Id}"</span>));
+
+        <span class="comment">// 4. Podemos combinar múltiples acciones</span>
+        <span class="type">Action</span>&lt;<span class="type">Order</span>&gt; multiNotifier = (order) => 
+        {
+            <span class="type">Console</span>.<span class="method">WriteLine</span>($<span class="string">"📧 Email enviado para orden {order.Id}"</span>);
+            <span class="type">Console</span>.<span class="method">WriteLine</span>($<span class="string">"📱 SMS enviado para orden {order.Id}"</span>);
+            <span class="keyword">if</span> (order.FinalPrice > 100)
+                <span class="type">Console</span>.<span class="method">WriteLine</span>($<span class="string">"🎉 ¡Felicitaciones por tu compra!"</span>);
+        };
+
+        <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"\n=== PROCESAMIENTO MULTI-CANAL ==="</span>);
+        processor.<span class="method">ProcessOrders</span>(orders, discountRule, multiNotifier);
+    }
+}
+                </div>
+                
+                <div class="highlight">
+                    <p><strong>🎯 Lo que logramos:</strong> Un sistema donde podemos cambiar las reglas de negocio 
+                    y los canales de notificación sin tocar el código del procesador. ¡Eso es Open/Closed Principle en acción!</p>
+                </div>
+            </div>
+            <div class="slide-number">11 / 15</div>
+        </div>
+
+        <!-- Slide 12: Comparación Antes/Después -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Antes vs Después</h2>
+                <p class="subtitle">El impacto del refactoring</p>
+            </div>
+            <div class="content">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Aspecto</th>
+                            <th>Antes <span class="smell-indicator bad">🚫</span></th>
+                            <th>Después <span class="smell-indicator good">✅</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Estructura</strong></td>
+                            <td>Un método monolítico hace todo</td>
+                            <td>Clases especializadas con responsabilidad única</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Flexibilidad</strong></td>
+                            <td>if-else rígido, modificación necesaria</td>
+                            <td>Estrategias inyectables con Func/Action</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Testabilidad</strong></td>
+                            <td>Difícil de testear, todo acoplado</td>
+                            <td>Fácil mock de dependencias</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Mantenibilidad</strong></td>
+                            <td>Cambios afectan todo el código</td>
+                            <td>Cambios localizados, sin efectos secundarios</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Extensibilidad</strong></td>
+                            <td>Agregar features requiere modificar</td>
+                            <td>Agregar features sin tocar código existente</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Principios SOLID</strong></td>
+                            <td>Viola SRP y OCP</td>
+                            <td>Cumple SRP, OCP, DIP</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="grid" style="margin-top: 30px;">
+                    <div class="card">
+                        <h3>📊 Métricas de Mejora</h3>
+                        <ul class="list" style="font-size: 0.95em;">
+                            <li>Complejidad ciclomática: 8 → 2</li>
+                            <li>Líneas por método: 50+ → <15</li>
+                            <li>Acoplamiento: Alto → Bajo</li>
+                            <li>Cohesión: Baja → Alta</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>💰 ROI del Refactoring</h3>
+                        <ul class="list" style="font-size: 0.95em;">
+                            <li>Menos bugs en producción</li>
+                            <li>Nuevas features más rápidas</li>
+                            <li>Onboarding más sencillo</li>
+                            <li>Menos deuda técnica</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">12 / 15</div>
+        </div>
+
+        <!-- Slide 13: Patrones Relacionados -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Evolución: Patrones de Diseño</h2>
+                <p class="subtitle">Los siguientes pasos en tu journey</p>
+            </div>
+            <div class="content">
+                <div class="grid">
+                    <div class="card">
+                        <h3>📋 Strategy Pattern</h3>
+                        <p>Formaliza el uso de Func/Action en clases dedicadas</p>
+                        <div class="code-block" style="font-size: 0.85em; margin-top: 10px;">
+<span class="keyword">interface</span> <span class="type">IDiscountStrategy</span>
+{
+    <span class="type">decimal</span> <span class="method">Calculate</span>(<span class="type">Order</span> order);
+}
+
+<span class="keyword">class</span> <span class="type">PremiumDiscount</span> : <span class="type">IDiscountStrategy</span>
+{
+    <span class="comment">// Implementación específica</span>
+}
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>🏭 Factory Pattern</h3>
+                        <p>Crea estrategias dinámicamente según contexto</p>
+                        <div class="code-block" style="font-size: 0.85em; margin-top: 10px;">
+<span class="keyword">class</span> <span class="type">StrategyFactory</span>
+{
+    <span class="keyword">public</span> <span class="type">INotificationStrategy</span> <span class="method">Create</span>(<span class="type">string</span> type)
+    {
+        <span class="keyword">return type switch</span>
+        {
+            <span class="string">"email"</span> => <span class="keyword">new</span> <span class="type">EmailStrategy</span>(),
+            <span class="string">"sms"</span> => <span class="keyword">new</span> <span class="type">SmsStrategy</span>(),
+            _ => <span class="keyword">new</span> <span class="type">DefaultStrategy</span>()
+        };
+    }
+}
+                        </div>
+                    </div>
+                </div>
+                <div class="grid">
+                    <div class="card">
+                        <h3>🔗 Chain of Responsibility</h3>
+                        <p>Maneja procesamiento complejo en pasos</p>
+                        <div class="highlight" style="margin-top: 10px;">
+                            <p>Útil cuando necesitas aplicar múltiples validaciones o transformaciones en secuencia</p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>🎭 Decorator Pattern</h3>
+                        <p>Agrega funcionalidad sin modificar código base</p>
+                        <div class="highlight" style="margin-top: 10px;">
+                            <p>Perfecto para agregar logging, caching, o métricas a operaciones existentes</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">13 / 15</div>
+        </div>
+
+        <!-- Slide 14: Ejercicios Prácticos -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Ejercicios Prácticos</h2>
+                <p class="subtitle">Aplica lo aprendido</p>
+            </div>
+            <div class="content" style="overflow-y: auto;">
+                <div class="card">
+                    <h3>🏋️ Ejercicio 1: Identificar Code Smells</h3>
+                    <p>Analiza este código y lista todos los problemas:</p>
+                    <div class="code-block bad" style="font-size: 0.85em; margin-top: 10px;">
+<span class="keyword">public void</span> <span class="method">ProcessPayment</span>(<span class="type">Payment</span> payment)
+{
+    <span class="comment">// Validar monto</span>
+    <span class="keyword">if</span> (payment.Amount <= 0) { <span class="comment">/* error */</span> }
+    <span class="keyword">if</span> (payment.Amount > 10000) { <span class="comment">/* requiere aprobación */</span> }
+    
+    <span class="comment">// Calcular fee según método</span>
+    <span class="keyword">if</span> (payment.Method == <span class="string">"CreditCard"</span>) {
+        payment.Fee = payment.Amount * 0.03m;
+    } <span class="keyword">else if</span> (payment.Method == <span class="string">"DebitCard"</span>) {
+        payment.Fee = payment.Amount * 0.01m;
+    } <span class="keyword">else if</span> (payment.Method == <span class="string">"Cash"</span>) {
+        payment.Fee = 0;
+    }
+    
+    <span class="comment">// Procesar</span>
+    <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Procesando..."</span>);
+    <span class="comment">// 50 líneas más de código...</span>
+}
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔨 Ejercicio 2: Aplicar Extract Method</h3>
+                    <p>Refactoriza el código anterior extrayendo métodos con nombres descriptivos.</p>
+                    <div class="highlight" style="margin-top: 10px;">
+                        <p><strong>Pista:</strong> Identifica cada responsabilidad y crea un método para ella.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>⚡ Ejercicio 3: Implementar con Func&lt;T&gt;</h3>
+                    <p>Reemplaza la lógica de cálculo de fee con un <code>Func&lt;Payment, decimal&gt;</code></p>
+                    <div class="highlight" style="margin-top: 10px;">
+                        <p><strong>Bonus:</strong> Crea un diccionario de estrategias por método de pago.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🚀 Ejercicio 4: Diseño Completo</h3>
+                    <p>Diseña un sistema de notificaciones que soporte:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>• Email, SMS, Push, Slack</li>
+                        <li>• Prioridades (inmediato, batch)</li>
+                        <li>• Templates personalizables</li>
+                        <li>• Retry en caso de fallo</li>
+                    </ul>
+                    <p style="margin-top: 15px;">Usa <code>Action&lt;T&gt;</code> y principios SOLID.</p>
+                </div>
+            </div>
+            <div class="slide-number">14 / 15</div>
+        </div>
+
+        <!-- Slide 15: Anexo - Strategy Pattern -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Anexo: Strategy Pattern</h2>
+                <p class="subtitle">De Func&lt;T&gt; a un patrón formal</p>
+            </div>
+            <div class="content">
+                <div class="two-column">
+                    <div>
+                        <h3>📋 Estructura del Patrón</h3>
+                        <div class="code-block" style="font-size: 0.85em;">
+<span class="comment">// 1. Interfaz de estrategia</span>
+<span class="keyword">public interface</span> <span class="type">IDiscountStrategy</span>
+{
+    <span class="type">decimal</span> <span class="method">CalculateDiscount</span>(<span class="type">Order</span> order);
+}
+
+<span class="comment">// 2. Implementaciones concretas</span>
+<span class="keyword">public class</span> <span class="type">StandardDiscount</span> : <span class="type">IDiscountStrategy</span>
+{
+    <span class="keyword">public</span> <span class="type">decimal</span> <span class="method">CalculateDiscount</span>(<span class="type">Order</span> order)
+    {
+        <span class="keyword">return</span> order.Amount * 0.05m;
+    }
+}
+
+<span class="keyword">public class</span> <span class="type">PremiumDiscount</span> : <span class="type">IDiscountStrategy</span>
+{
+    <span class="keyword">public</span> <span class="type">decimal</span> <span class="method">CalculateDiscount</span>(<span class="type">Order</span> order)
+    {
+        <span class="keyword">return</span> order.Amount * 0.15m;
+    }
+}
+
+<span class="comment">// 3. Contexto que usa la estrategia</span>
+<span class="keyword">public class</span> <span class="type">OrderProcessor</span>
+{
+    <span class="keyword">private</span> <span class="type">IDiscountStrategy</span> _strategy;
+    
+    <span class="keyword">public</span> <span class="method">OrderProcessor</span>(<span class="type">IDiscountStrategy</span> strategy)
+    {
+        _strategy = strategy;
+    }
+    
+    <span class="keyword">public void</span> <span class="method">ProcessOrder</span>(<span class="type">Order</span> order)
+    {
+        <span class="keyword">var</span> discount = _strategy.<span class="method">CalculateDiscount</span>(order);
+        <span class="comment">// Procesar...</span>
+    }
+}
+                        </div>
+                    </div>
+                    <div>
+                        <h3>📊 Diagrama UML</h3>
+                        <div class="card" style="background: #2a2a3e; padding: 20px; text-align: center;">
+                            <pre style="font-size: 0.8em; color: #a8a8b3;">
+┌─────────────────┐
+│    Context      │
+│ (OrderProcessor)│
+└────────┬────────┘
+         │ uses
+         ▼
+┌─────────────────┐
+│ &lt;&lt;interface&gt;&gt;   │
+│ IStrategy       │
+├─────────────────┤
+│ +Execute()      │
+└────────┬────────┘
+         │
+    ┌────┴────┐
+    │         │
+┌───▼───┐ ┌───▼───┐
+│Strategy│ │Strategy│
+│   A    │ │   B    │
+└────────┘ └────────┘
+                            </pre>
+                        </div>
+                        
+                        <h3>💡 Tips de Uso</h3>
+                        <div class="card">
+                            <ul class="list" style="font-size: 0.9em;">
+                                <li><strong>Cuándo usar:</strong> Múltiples algoritmos intercambiables</li>
+                                <li><strong>Ventaja:</strong> Elimina condicionales complejos</li>
+                                <li><strong>Con DI:</strong> Inyecta estrategias según configuración</li>
+                                <li><strong>Testing:</strong> Mock fácil de estrategias</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="highlight" style="margin-top: 20px;">
+                    <p><strong>🔄 Evolución:</strong> Func&lt;T&gt; → Strategy Pattern → Strategy + Factory → Strategy + DI Container</p>
+                </div>
+            </div>
+            <div class="slide-number">15 / 20</div>
+        </div>
+
+        <!-- Slide 16: Anexo - Factory Pattern -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Anexo: Factory Pattern</h2>
+                <p class="subtitle">Creación dinámica de estrategias</p>
+            </div>
+            <div class="content">
+                <div class="code-block">
+<span class="keyword">public class</span> <span class="type">DiscountStrategyFactory</span>
+{
+    <span class="keyword">private readonly</span> <span class="type">Dictionary</span>&lt;<span class="type">string</span>, <span class="type">Func</span>&lt;<span class="type">IDiscountStrategy</span>&gt;&gt; _strategies;
+    
+    <span class="keyword">public</span> <span class="method">DiscountStrategyFactory</span>()
+    {
+        _strategies = <span class="keyword">new</span> <span class="type">Dictionary</span>&lt;<span class="type">string</span>, <span class="type">Func</span>&lt;<span class="type">IDiscountStrategy</span>&gt;&gt;
+        {
+            [<span class="string">"Standard"</span>] = () => <span class="keyword">new</span> <span class="type">StandardDiscount</span>(),
+            [<span class="string">"Premium"</span>] = () => <span class="keyword">new</span> <span class="type">PremiumDiscount</span>(),
+            [<span class="string">"VIP"</span>] = () => <span class="keyword">new</span> <span class="type">VIPDiscount</span>(),
+            [<span class="string">"BlackFriday"</span>] = () => <span class="keyword">new</span> <span class="type">BlackFridayDiscount</span>()
+        };
+    }
+    
+    <span class="keyword">public</span> <span class="type">IDiscountStrategy</span> <span class="method">CreateStrategy</span>(<span class="type">string</span> customerType)
+    {
+        <span class="keyword">if</span> (_strategies.<span class="method">TryGetValue</span>(customerType, <span class="keyword">out var</span> factory))
+        {
+            <span class="keyword">return</span> factory();
+        }
+        
+        <span class="keyword">return new</span> <span class="type">DefaultDiscount</span>(); <span class="comment">// Fallback</span>
+    }
+    
+    <span class="comment">// Permite registrar nuevas estrategias dinámicamente</span>
+    <span class="keyword">public void</span> <span class="method">RegisterStrategy</span>(<span class="type">string</span> type, <span class="type">Func</span>&lt;<span class="type">IDiscountStrategy</span>&gt; factory)
+    {
+        _strategies[type] = factory;
+    }
+}
+
+<span class="comment">// Uso con DI en ASP.NET Core</span>
+<span class="keyword">public class</span> <span class="type">Startup</span>
+{
+    <span class="keyword">public void</span> <span class="method">ConfigureServices</span>(<span class="type">IServiceCollection</span> services)
+    {
+        services.<span class="method">AddSingleton</span>&lt;<span class="type">DiscountStrategyFactory</span>&gt;();
+        
+        <span class="comment">// Registro condicional basado en configuración</span>
+        services.<span class="method">AddScoped</span>&lt;<span class="type">IDiscountStrategy</span>&gt;(provider =>
+        {
+            <span class="keyword">var</span> factory = provider.<span class="method">GetService</span>&lt;<span class="type">DiscountStrategyFactory</span>&gt;();
+            <span class="keyword">var</span> context = provider.<span class="method">GetService</span>&lt;<span class="type">IHttpContextAccessor</span>&gt;();
+            <span class="keyword">var</span> customerType = context.HttpContext.User.<span class="method">GetCustomerType</span>();
+            
+            <span class="keyword">return</span> factory.<span class="method">CreateStrategy</span>(customerType);
+        });
+    }
+}
+                </div>
+                
+                <div class="grid" style="margin-top: 20px;">
+                    <div class="card">
+                        <h3>✅ Ventajas</h3>
+                        <ul class="list" style="font-size: 0.9em;">
+                            <li>Centraliza la creación de objetos</li>
+                            <li>Fácil agregar nuevos tipos</li>
+                            <li>Desacopla creación de uso</li>
+                            <li>Testeable con mocks</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>💡 Tips Avanzados</h3>
+                        <ul class="list" style="font-size: 0.9em;">
+                            <li>Usa reflexión para auto-registro</li>
+                            <li>Combina con atributos para metadata</li>
+                            <li>Cache de instancias si son stateless</li>
+                            <li>Considera Abstract Factory para familias</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">16 / 20</div>
+        </div>
+
+        <!-- Slide 17: Tips y Best Practices -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Tips y Best Practices</h2>
+                <p class="subtitle">Guía práctica para refactoring exitoso</p>
+            </div>
+            <div class="content">
+                <div class="grid">
+                    <div class="card">
+                        <h3>🎯 Cuándo Refactorizar</h3>
+                        <ul class="list" style="font-size: 0.9em;">
+                            <li><strong>Regla del Boy Scout:</strong> Deja el código mejor de como lo encontraste</li>
+                            <li><strong>Regla de tres:</strong> Primera vez copia, segunda vez duda, tercera vez refactoriza</li>
+                            <li><strong>Antes de agregar feature:</strong> Prepara el terreno</li>
+                            <li><strong>Al encontrar un bug:</strong> Refactoriza para que sea obvio</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>⚠️ Cuándo NO Refactorizar</h3>
+                        <ul class="list" style="font-size: 0.9em;">
+                            <li><strong>Deadline crítico:</strong> Anota deuda técnica</li>
+                            <li><strong>Código que funciona y no se toca:</strong> Si no está roto...</li>
+                            <li><strong>Sin tests:</strong> Primero agrega cobertura</li>
+                            <li><strong>Reescribir es más barato:</strong> A veces es mejor empezar de cero</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>🛡️ Refactoring Seguro</h3>
+                        <ul class="list" style="font-size: 0.9em;">
+                            <li><strong>Tests primero:</strong> Garantiza comportamiento</li>
+                            <li><strong>Pequeños pasos:</strong> Commit frecuente</li>
+                            <li><strong>Una cosa a la vez:</strong> No mezcles refactorings</li>
+                            <li><strong>IDE tools:</strong> Usa refactoring automático</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>📊 Métricas de Éxito</h3>
+                        <ul class="list" style="font-size: 0.9em;">
+                            <li><strong>Complejidad ciclomática:</strong> Target < 10</li>
+                            <li><strong>Líneas por método:</strong> Target < 20</li>
+                            <li><strong>Cobertura de tests:</strong> Mantener > 80%</li>
+                            <li><strong>Velocidad del equipo:</strong> Debe aumentar</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="highlight" style="margin-top: 30px;">
+                    <h3>🔥 Pro Tips para Sistemas de Alta Concurrencia</h3>
+                    <div class="two-column" style="margin-top: 15px;">
+                        <div>
+                            <p><strong>1. Stateless Strategies:</strong><br>
+                            Las estrategias sin estado son thread-safe por diseño</p>
+                            
+                            <p style="margin-top: 15px;"><strong>2. Inmutabilidad:</strong><br>
+                            Prefiere objetos inmutables para evitar race conditions</p>
+                        </div>
+                        <div>
+                            <p><strong>3. Async all the way:</strong><br>
+                            Usa <code>Func&lt;T, Task&lt;TResult&gt;&gt;</code> para operaciones async</p>
+                            
+                            <p style="margin-top: 15px;"><strong>4. Circuit Breaker:</strong><br>
+                            Envuelve estrategias externas con Polly</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">17 / 20</div>
+        </div>
+
+        <!-- Slide 18: Preguntas de Revisión -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Preguntas de Revisión</h2>
+                <p class="subtitle">Evalúa tu comprensión</p>
+            </div>
+            <div class="content" style="overflow-y: auto;">
+                <div class="card">
+                    <h3>❓ Pregunta 1: Code Smells</h3>
+                    <p style="margin-bottom: 10px;"><strong>Identifica todos los code smells en este código:</strong></p>
+                    <div class="code-block bad" style="font-size: 0.85em;">
+<span class="keyword">public class</span> <span class="type">UserService</span>
+{
+    <span class="keyword">public void</span> <span class="method">ProcessUser</span>(<span class="type">string</span> data)
+    {
+        <span class="comment">// Parse user data</span>
+        <span class="keyword">var</span> parts = data.<span class="method">Split</span>(<span class="string">','</span>);
+        <span class="keyword">var</span> name = parts[0];
+        <span class="keyword">var</span> email = parts[1];
+        <span class="keyword">var</span> type = parts[2];
+        
+        <span class="comment">// Validate</span>
+        <span class="keyword">if</span> (<span class="type">string</span>.<span class="method">IsNullOrEmpty</span>(name) || <span class="type">string</span>.<span class="method">IsNullOrEmpty</span>(email))
+            <span class="keyword">throw new</span> <span class="type">Exception</span>(<span class="string">"Invalid data"</span>);
+        
+        <span class="comment">// Calculate discount</span>
+        <span class="type">decimal</span> discount = 0;
+        <span class="keyword">if</span> (type == <span class="string">"Gold"</span>) discount = 0.2m;
+        <span class="keyword">else if</span> (type == <span class="string">"Silver"</span>) discount = 0.1m;
+        <span class="keyword">else</span> discount = 0.05m;
+        
+        <span class="comment">// Save to database</span>
+        <span class="keyword">using</span> (<span class="keyword">var</span> conn = <span class="keyword">new</span> <span class="type">SqlConnection</span>(<span class="string">"..."</span>))
+        {
+            <span class="comment">// SQL code...</span>
+        }
+        
+        <span class="comment">// Send email</span>
+        <span class="keyword">var</span> smtp = <span class="keyword">new</span> <span class="type">SmtpClient</span>();
+        <span class="comment">// Email code...</span>
+    }
+}
+                    </div>
+                    
+                    <details style="margin-top: 10px;">
+                        <summary style="cursor: pointer; color: #667eea;">Ver Respuesta</summary>
+                        <div class="highlight" style="margin-top: 10px;">
+                            <p><strong>Code Smells identificados:</strong></p>
+                            <ul style="margin-left: 20px;">
+                                <li>• <strong>God Method:</strong> Hace demasiadas cosas</li>
+                                <li>• <strong>Primitive Obsession:</strong> Usa string array en vez de objeto</li>
+                                <li>• <strong>Magic Numbers:</strong> Índices hardcodeados [0], [1], [2]</li>
+                                <li>• <strong>Violación SRP:</strong> Parse, validate, calculate, save, notify</li>
+                                <li>• <strong>Hardcoded Dependencies:</strong> SqlConnection, SmtpClient</li>
+                                <li>• <strong>Poor Error Handling:</strong> Exception genérica</li>
+                                <li>• <strong>Conditional Complexity:</strong> if-else para descuentos</li>
+                            </ul>
+                        </div>
+                    </details>
+                </div>
+
+                <div class="card">
+                    <h3>❓ Pregunta 2: Aplicar Extract Method</h3>
+                    <p style="margin-bottom: 10px;"><strong>¿Qué métodos extraerías del código anterior y qué nombres les darías?</strong></p>
+                    
+                    <details style="margin-top: 10px;">
+                        <summary style="cursor: pointer; color: #667eea;">Ver Respuesta</summary>
+                        <div class="highlight" style="margin-top: 10px;">
+                            <pre style="font-size: 0.9em;">
+1. ParseUserData(string data) → User
+2. ValidateUser(User user) → void/bool
+3. CalculateDiscount(string userType) → decimal
+4. SaveUser(User user) → void
+5. SendWelcomeEmail(User user) → void
+
+Bonus: CreateUser como método coordinador</pre>
+                        </div>
+                    </details>
+                </div>
+
+                <div class="card">
+                    <h3>❓ Pregunta 3: Diseño con Func&lt;T&gt;</h3>
+                    <p style="margin-bottom: 10px;"><strong>Reescribe el cálculo de descuento usando Func&lt;string, decimal&gt;. 
+                    ¿Cómo lo harías extensible para agregar nuevos tipos de usuario sin modificar código?</strong></p>
+                    
+                    <details style="margin-top: 10px;">
+                        <summary style="cursor: pointer; color: #667eea;">Ver Respuesta</summary>
+                        <div class="highlight" style="margin-top: 10px;">
+                            <div class="code-block" style="font-size: 0.85em;">
+<span class="comment">// Diccionario de estrategias</span>
+<span class="keyword">var</span> discountStrategies = <span class="keyword">new</span> <span class="type">Dictionary</span>&lt;<span class="type">string</span>, <span class="type">Func</span>&lt;<span class="type">string</span>, <span class="type">decimal</span>&gt;&gt;
+{
+    [<span class="string">"Gold"</span>] = _ => 0.2m,
+    [<span class="string">"Silver"</span>] = _ => 0.1m,
+    [<span class="string">"Bronze"</span>] = _ => 0.05m,
+    [<span class="string">"Platinum"</span>] = _ => 0.3m  <span class="comment">// Fácil agregar</span>
+};
+
+<span class="comment">// Uso con fallback</span>
+<span class="keyword">var</span> discount = discountStrategies.<span class="method">GetValueOrDefault</span>(userType, _ => 0.05m)(userType);
+                            </div>
+                        </div>
+                    </details>
+                </div>
+
+                <div class="card">
+                    <h3>❓ Pregunta 4: Principios SOLID</h3>
+                    <p style="margin-bottom: 10px;"><strong>Explica cómo el uso de Action&lt;T&gt; para notificaciones ayuda a cumplir con DIP 
+                    (Dependency Inversion Principle).</strong></p>
+                    
+                    <details style="margin-top: 10px;">
+                        <summary style="cursor: pointer; color: #667eea;">Ver Respuesta</summary>
+                        <div class="highlight" style="margin-top: 10px;">
+                            <p><strong>DIP establece:</strong> "Depende de abstracciones, no de concreciones"</p>
+                            <p style="margin-top: 10px;">Al usar Action&lt;Order&gt;:</p>
+                            <ul style="margin-left: 20px;">
+                                <li>• OrderProcessor no conoce SmtpClient (concreción)</li>
+                                <li>• Depende de una abstracción (la acción a ejecutar)</li>
+                                <li>• El código de alto nivel no depende de detalles de implementación</li>
+                                <li>• Fácil cambiar entre email, SMS, push sin modificar OrderProcessor</li>
+                            </ul>
+                        </div>
+                    </details>
+                </div>
+
+                <div class="card">
+                    <h3>🎯 Ejercicio de Diseño</h3>
+                    <p><strong>Diseña un sistema de validación flexible usando Func&lt;T, bool&gt;</strong></p>
+                    <p style="margin-top: 10px;">Requisitos:</p>
+                    <ul style="margin-left: 20px; font-size: 0.9em;">
+                        <li>• Validar órdenes con múltiples reglas</li>
+                        <li>• Reglas componibles (AND, OR)</li>
+                        <li>• Mensajes de error descriptivos</li>
+                        <li>• Fácil agregar nuevas validaciones</li>
+                    </ul>
+                    <p style="margin-top: 15px;"><em>Discutir soluciones en grupo (10 min)</em></p>
+                </div>
+            </div>
+            <div class="slide-number">18 / 20</div>
+        </div>
+
+        <!-- Slide 19: Caso de Estudio Avanzado -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Caso Avanzado: Pipeline de Procesamiento</h2>
+                <p class="subtitle">Combinando todas las técnicas</p>
+            </div>
+            <div class="content">
+                <div class="code-block good">
+<span class="comment">// Pipeline flexible usando delegados y método builder</span>
+<span class="keyword">public class</span> <span class="type">OrderPipeline</span>
+{
+    <span class="keyword">private readonly</span> <span class="type">List</span>&lt;<span class="type">Func</span>&lt;<span class="type">Order</span>, <span class="type">Task</span>&lt;<span class="type">Order</span>&gt;&gt;&gt; _steps = <span class="keyword">new</span>();
+    <span class="keyword">private readonly</span> <span class="type">List</span>&lt;<span class="type">Func</span>&lt;<span class="type">Order</span>, <span class="type">bool</span>&gt;&gt; _validations = <span class="keyword">new</span>();
+    <span class="keyword">private</span> <span class="type">Action</span>&lt;<span class="type">Order</span>, <span class="type">Exception</span>&gt; _errorHandler;
+
+    <span class="comment">// Fluent API para configurar el pipeline</span>
+    <span class="keyword">public</span> <span class="type">OrderPipeline</span> <span class="method">AddValidation</span>(<span class="type">Func</span>&lt;<span class="type">Order</span>, <span class="type">bool</span>&gt; validation)
+    {
+        _validations.<span class="method">Add</span>(validation);
+        <span class="keyword">return this</span>;
+    }
+
+    <span class="keyword">public</span> <span class="type">OrderPipeline</span> <span class="method">AddStep</span>(<span class="type">Func</span>&lt;<span class="type">Order</span>, <span class="type">Task</span>&lt;<span class="type">Order</span>&gt;&gt; step)
+    {
+        _steps.<span class="method">Add</span>(step);
+        <span class="keyword">return this</span>;
+    }
+
+    <span class="keyword">public</span> <span class="type">OrderPipeline</span> <span class="method">OnError</span>(<span class="type">Action</span>&lt;<span class="type">Order</span>, <span class="type">Exception</span>&gt; handler)
+    {
+        _errorHandler = handler;
+        <span class="keyword">return this</span>;
+    }
+
+    <span class="keyword">public async</span> <span class="type">Task</span>&lt;<span class="type">Order</span>&gt; <span class="method">ExecuteAsync</span>(<span class="type">Order</span> order)
+    {
+        <span class="keyword">try</span>
+        {
+            <span class="comment">// Ejecutar validaciones</span>
+            <span class="keyword">if</span> (!_validations.<span class="method">All</span>(v => v(order)))
+                <span class="keyword">throw new</span> <span class="type">ValidationException</span>(<span class="string">"Order validation failed"</span>);
+
+            <span class="comment">// Ejecutar pipeline</span>
+            <span class="keyword">var</span> result = order;
+            <span class="keyword">foreach</span> (<span class="keyword">var</span> step <span class="keyword">in</span> _steps)
+            {
+                result = <span class="keyword">await</span> <span class="method">step</span>(result);
+            }
+            
+            <span class="keyword">return</span> result;
+        }
+        <span class="keyword">catch</span> (<span class="type">Exception</span> ex)
+        {
+            _errorHandler?.Invoke(order, ex);
+            <span class="keyword">throw</span>;
+        }
+    }
+}
+
+<span class="comment">// Uso del pipeline</span>
+<span class="keyword">var</span> pipeline = <span class="keyword">new</span> <span class="type">OrderPipeline</span>()
+    .<span class="method">AddValidation</span>(order => order.Amount > 0)
+    .<span class="method">AddValidation</span>(order => !<span class="type">string</span>.<span class="method">IsNullOrEmpty</span>(order.CustomerType))
+    .<span class="method">AddStep</span>(<span class="keyword">async</span> order => {
+        <span class="comment">// Calcular precio con descuento</span>
+        order.FinalPrice = order.Amount - <span class="method">CalculateDiscount</span>(order);
+        <span class="keyword">return</span> order;
+    })
+    .<span class="method">AddStep</span>(<span class="keyword">async</span> order => {
+        <span class="comment">// Guardar en base de datos</span>
+        <span class="keyword">await</span> _repository.<span class="method">SaveAsync</span>(order);
+        <span class="keyword">return</span> order;
+    })
+    .<span class="method">AddStep</span>(<span class="keyword">async</span> order => {
+        <span class="comment">// Enviar notificación</span>
+        <span class="keyword">await</span> _notificationService.<span class="method">NotifyAsync</span>(order);
+        <span class="keyword">return</span> order;
+    })
+    .<span class="method">OnError</span>((order, ex) => _logger.<span class="method">LogError</span>(ex, <span class="string">"Error processing order {OrderId}"</span>, order.Id));
+
+<span class="comment">// Procesar orden</span>
+<span class="keyword">var</span> processedOrder = <span class="keyword">await</span> pipeline.<span class="method">ExecuteAsync</span>(newOrder);
+                </div>
+                
+                <div class="highlight" style="margin-top: 20px;">
+                    <p><strong>🚀 Beneficios del Pipeline Pattern:</strong></p>
+                    <ul style="margin-left: 20px;">
+                        <li>• Composición flexible de operaciones</li>
+                        <li>• Fácil agregar/quitar/reordenar pasos</li>
+                        <li>• Manejo centralizado de errores</li>
+                        <li>• Testeable paso por paso</li>
+                        <li>• Reutilizable para diferentes flujos</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="slide-number">19 / 20</div>
+        </div>
+
+        <!-- Slide 20: Conclusiones Finales -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Conclusiones y Próximos Pasos</h2>
+            </div>
+            <div class="content">
+                <div class="card" style="text-align: center; max-width: 800px; margin: 0 auto;">
+                    <h3>🎯 Conceptos Clave Aprendidos</h3>
+                    <div style="text-align: left; margin-top: 30px;">
+                        <p style="margin-bottom: 20px;">✅ <strong>Extract Method:</strong> Primera línea de defensa contra código complejo</p>
+                        <p style="margin-bottom: 20px;">✅ <strong>Introduce Class:</strong> Separación de responsabilidades (SRP)</p>
+                        <p style="margin-bottom: 20px;">✅ <strong>Func&lt;T&gt; y Action&lt;T&gt;:</strong> Flexibilidad sin modificación (OCP)</p>
+                        <p style="margin-bottom: 20px;">✅ <strong>Patrones de Diseño:</strong> Evolución natural del refactoring</p>
+                        <p style="margin-bottom: 20px;">✅ <strong>Clean Code:</strong> Código que expresa intención, no implementación</p>
+                    </div>
+                </div>
+                
+                <div class="grid" style="margin-top: 30px;">
+                    <div class="card">
+                        <h3>📚 Recursos Recomendados</h3>
+                        <ul class="list" style="font-size: 0.95em;">
+                            <li>"Refactoring" - Martin Fowler</li>
+                            <li>"Clean Code" - Robert Martin</li>
+                            <li>"Design Patterns" - Gang of Four</li>
+                            <li>refactoring.guru</li>
+                            <li>"Working Effectively with Legacy Code" - M. Feathers</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>🎯 Plan de Acción</h3>
+                        <ul class="list" style="font-size: 0.95em;">
+                            <li>Identifica un método > 50 líneas</li>
+                            <li>Aplica Extract Method</li>
+                            <li>Busca if-else repetitivos</li>
+                            <li>Experimenta con delegados</li>
+                            <li>Implementa un patrón</li>
+                            <li>Mide el impacto</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="highlight" style="margin-top: 40px;">
+                    <p style="text-align: center; font-size: 1.2em;">
+                        <strong>"El código limpio no se escribe siguiendo un conjunto de reglas. 
+                        Se escribe poniendo atención a los detalles."</strong>
+                    </p>
+                    <p style="text-align: center; margin-top: 10px; color: #a8a8b3;">— Robert C. Martin</p>
+                </div>
+            </div>
+            <div class="slide-number">20 / 20</div>
+        </div>
+
+        <!-- Instructor Info -->
+        <div class="instructor-info">
+            <div class="instructor-name">Alejandro Sfrede</div>
+            <div class="instructor-area">Área de Arquitectura</div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="navigation">
+            <button class="nav-btn" onclick="previousSlide()" id="prevBtn">← Anterior</button>
+            <button class="nav-btn" onclick="nextSlide()" id="nextBtn">Siguiente →</button>
+            <button class="nav-btn" onclick="goHome()" style="background: rgba(102, 126, 234, 0.3);">🏠 Portal</button>
+        </div>
+
+        <div class="slide-counter">
+            <span id="currentSlide">1</span> / <span id="totalSlides">20</span>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            
+            document.getElementById('currentSlide').textContent = currentSlide + 1;
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+            
+            // Update progress bar
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        function goHome() {
+            window.location.href = '../index.html';
+        }
+
+        // Enhanced keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                previousSlide();
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                goHome();
+            }
+        });
+
+        // Touch/swipe support
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) changeSlide(1);
+            if (touchEndX > touchStartX + 50) changeSlide(-1);
+        }
+
+        // Initialize
+        document.getElementById('totalSlides').textContent = totalSlides;
+        showSlide(0);
+    </script>
+</body>
+</html>

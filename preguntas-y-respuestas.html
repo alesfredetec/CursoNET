@@ -1,0 +1,456 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CursoNET - Preguntas y Respuestas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f0c29;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-color: #f0f0f0;
+            --primary-glow: #6a11cb;
+            --secondary-glow: #2575fc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #16213e);
+            background-size: 400% 400%;
+            animation: gradient-animation 15s ease infinite;
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 40px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .header h1 {
+            font-size: 4em;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px rgba(106, 17, 203, 0.3);
+        }
+
+        .header p {
+            font-size: 1.3em;
+            color: #a8a8b3;
+            font-weight: 300;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .search-box,
+        .filter-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .search-box input,
+        .filter-box select {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1em;
+            outline: none;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .filter-box select {
+            padding: 5px;
+            border-radius: 6px;
+        }
+
+        .filter-box option {
+            background: #1a1a2e;
+            color: white;
+        }
+
+        .qa-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .qa-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .qa-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 2px;
+            background: var(--category-color, var(--primary-glow));
+            opacity: 0.8;
+        }
+
+        .qa-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2), 0 0 30px var(--category-color, var(--primary-glow));
+            border-color: var(--category-color, var(--primary-glow));
+        }
+
+        .question {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.7s ease-in-out, margin-top 0.7s ease-in-out;
+            color: #c0c0c0;
+            line-height: 1.7;
+            font-weight: 300;
+        }
+
+        .qa-card.active .answer {
+            max-height: 600px;
+            margin-top: 20px;
+        }
+
+        .toggle-icon {
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 1.5em;
+            font-weight: 300;
+        }
+
+        .qa-card.active .toggle-icon {
+            transform: rotate(135deg);
+        }
+
+        .category-tag {
+            display: inline-block;
+            background: var(--category-color, var(--primary-glow));
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            margin-bottom: 15px;
+            color: #ffffff;
+            font-weight: 600;
+            text-shadow: 0 0 5px rgba(0,0,0,0.3);
+        }
+        
+        .home-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        
+        .home-button:hover {
+            background: rgba(102, 126, 234, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .answer footer.source {
+            margin-top: 15px;
+            font-size: 0.9em;
+            font-style: italic;
+            color: #a8a8b3;
+        }
+
+        .answer footer.source a {
+            color: var(--secondary-glow);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .answer footer.source a:hover {
+            text-decoration: underline;
+            color: #899ff3;
+        }
+        
+        .no-results {
+            color: #a8a8b3;
+            text-align: center;
+            grid-column: 1 / -1;
+            font-size: 1.2em;
+            padding: 40px;
+        }
+
+        /* --- NEW VISIBLE LOADER STYLES --- */
+        .loader-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(15, 12, 41, 0.95);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease-in-out;
+            z-index: 10;
+        }
+
+        .qa-card.loading .loader-overlay {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .loader-text {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: var(--category-color, var(--primary-glow));
+            text-shadow: 0 0 10px var(--category-color, var(--primary-glow));
+            animation: fadeInOut 1.5s ease-in-out infinite;
+            transition: color 0.5s ease;
+            text-align: center;
+            padding: 20px;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.5; transform: scale(0.98); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+    </style>
+</head>
+<body>
+    <a href="index.html" class="home-button">🏠 Volver al Portal</a>
+    <div class="container">
+        <div class="header">
+            <h1>Preguntas y Respuestas</h1>
+            <p>100 preguntas clave para consolidar tu conocimiento y prepararte para entrevistas técnicas.</p>
+        </div>
+
+        <div class="controls">
+            <div class="search-box">
+                <span>🔍</span>
+                <input type="text" id="searchInput" placeholder="Buscar preguntas...">
+            </div>
+            <div class="filter-box">
+                <span>📚</span>
+                <select id="categoryFilter">
+                    <option value="all">Todas las Categorías</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="qa-container" id="qaContainer">
+        </div>
+    </div>
+
+    <script src="qa-data.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof qaData === 'undefined') {
+                console.error("Error: Los datos de qaData no se cargaron.");
+                document.getElementById('qaContainer').innerHTML = '<p class="no-results">Error al cargar los datos.</p>';
+                return;
+            }
+
+            const qaContainer = document.getElementById('qaContainer');
+            const categoryFilter = document.getElementById('categoryFilter');
+            const searchInput = document.getElementById('searchInput');
+            
+            const stringToHslColor = (str, s, l) => {
+                let hash = 0;
+                for (let i = 0; i < str.length; i++) {
+                    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+                }
+                const h = hash % 360;
+                return `hsl(${h}, ${s}%, ${l}%)`;
+            };
+
+            const shuffleArray = (array) => {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+            };
+
+            const loaderWords = [
+                "Alineando bits cuánticos...",
+                "Desfragmentando la cafeína...",
+                "Consultando oráculos de silicio...",
+                "Generando sinergia algorítmica...",
+                "Traduciendo de binario a sarcasmo...",
+                "Evitando una singularidad...",
+                "Peinando al gato de Schrödinger...",
+                "Optimizando los flujos de neutrones...",
+                "Buscando un ; perdido...",
+                "Es culpa del DNS... siempre.",
+                "Convirtiendo café en código...",
+                "Haciendo un `git blame` al universo...",
+                "Entrenando la red neuronal con memes...",
+                "¡Potenciando los condensadores de flujo!",
+                "Calculando la entropía del código...",
+                "Invocando al espíritu de Alan Turing...",
+                "Asegurándome de que no es un Skynet...",
+                "Recompilando el kernel de la realidad...",
+                "Viendo si funciona en mi máquina...",
+                "Buscando la documentación (que no existe)...",
+                "Ignorando el error 418: I'm a teapot...",
+                "Añadiendo más `console.log`..."
+            ];
+
+            shuffleArray(qaData);
+
+            const categories = [...new Set(qaData.map(item => item.category))];
+            categories.sort().forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                categoryFilter.appendChild(option);
+            });
+
+            function renderQACards(filter = 'all', searchTerm = '') {
+                qaContainer.innerHTML = '';
+                const lowerCaseSearchTerm = searchTerm.toLowerCase();
+                const filteredData = qaData.filter(item => {
+                    const matchesCategory = filter === 'all' || item.category === filter;
+                    const matchesSearch = lowerCaseSearchTerm === '' || 
+                                        item.question.toLowerCase().includes(lowerCaseSearchTerm) || 
+                                        item.answer.toLowerCase().includes(lowerCaseSearchTerm);
+                    return matchesCategory && matchesSearch;
+                });
+
+                if (filteredData.length === 0) {
+                    qaContainer.innerHTML = '<p class="no-results">No se encontraron resultados.</p>';
+                    return;
+                }
+
+                filteredData.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'qa-card';
+                    card.dataset.category = item.category;
+                    
+                    const categoryColor = stringToHslColor(item.category, 70, 60);
+                    card.style.setProperty('--category-color', categoryColor);
+
+                    let answerHtml = `<p>${item.answer}</p>`;
+                    if (item.source && item.sourceUrl) {
+                        answerHtml += `<footer class="source">Fuente: <a href="${item.sourceUrl}" target="_blank" rel="noopener noreferrer">${item.source}</a></footer>`;
+                    }
+
+                    card.innerHTML = `
+                        <div class="loader-overlay">
+                            <div class="loader-text"></div>
+                        </div>
+                        <div class="category-tag">${item.category}</div>
+                        <div class="question">
+                            <span>${item.question}</span>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="answer">
+                            <div class="answer-content">${answerHtml}</div>
+                        </div>
+                    `;
+                    
+                    card.addEventListener('click', () => {
+                        if (card.classList.contains('active')) {
+                            card.classList.remove('active');
+                        } else if (!card.classList.contains('loading')) {
+                            card.classList.add('loading');
+                            
+                            const loaderText = card.querySelector('.loader-text');
+                            const answerContent = card.querySelector('.answer-content');
+                            
+                            answerContent.style.display = 'none';
+
+                            let wordIndex = 0;
+                            shuffleArray(loaderWords);
+                            loaderText.textContent = loaderWords[0];
+
+                            const wordInterval = setInterval(() => {
+                                wordIndex = (wordIndex + 1) % loaderWords.length;
+                                loaderText.textContent = loaderWords[wordIndex];
+                            }, 650);
+
+                            const randomDelay = Math.random() * (8000 - 4000) + 4000;
+                            
+                            setTimeout(() => {
+                                clearInterval(wordInterval);
+                                card.classList.remove('loading');
+                                card.classList.add('active');
+                                answerContent.style.display = 'block';
+                            }, randomDelay);
+                        }
+                    });
+                    qaContainer.appendChild(card);
+                });
+            }
+
+            categoryFilter.addEventListener('change', () => {
+                renderQACards(categoryFilter.value, searchInput.value);
+            });
+
+            searchInput.addEventListener('input', () => {
+                renderQACards(categoryFilter.value, searchInput.value);
+            });
+
+            renderQACards();
+        });
+    </script>
+</body>
+</html>

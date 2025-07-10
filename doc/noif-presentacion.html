@@ -1,0 +1,2119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Técnicas "No If" para un Código Limpio y Flexible</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow: hidden;
+        }
+
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+            padding: 60px;
+            position: relative;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .slide-header {
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 3.5em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 2.5em;
+            color: #667eea;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        h3 {
+            font-size: 1.8em;
+            color: #764ba2;
+            margin: 30px 0 20px;
+            font-weight: 500;
+        }
+
+        .subtitle {
+            font-size: 1.5em;
+            color: #a8a8b3;
+            font-weight: 300;
+        }
+
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .list li {
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .list li:last-child {
+            border-bottom: none;
+        }
+
+        .list li::before {
+            content: '▸';
+            color: #667eea;
+            font-size: 1.5em;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .code-block {
+            background: #1e1e2e;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+            white-space: pre;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        .code-block.bad {
+            border-color: rgba(239, 68, 68, 0.5);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .code-block.good {
+            border-color: rgba(34, 197, 94, 0.5);
+            background: rgba(34, 197, 94, 0.05);
+        }
+
+        .code-label {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .code-label.bad {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .code-label.good {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .keyword {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .string {
+            color: #98c379;
+        }
+
+        .comment {
+            color: #7c8a9c;
+            font-style: italic;
+        }
+
+        .type {
+            color: #e06c75;
+        }
+
+        .method {
+            color: #61afef;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: rgba(102, 126, 234, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .slide-counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            z-index: 1000;
+            color: #a8a8b3;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .instructor-info {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 15px 25px;
+            border-radius: 25px;
+            font-size: 13px;
+            z-index: 1000;
+            color: #a8a8b3;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: right;
+        }
+
+        .instructor-name {
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .instructor-title {
+            color: #a8a8b3;
+            font-size: 11px;
+        }
+
+        .nav-hints {
+            position: fixed;
+            bottom: 90px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 11px;
+            z-index: 1000;
+            color: #666;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-hints.show {
+            opacity: 1;
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+            z-index: 1001;
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+            margin: 20px 0;
+        }
+
+        .icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .smell-indicator {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin: 0 5px;
+        }
+
+        .smell-indicator.bad {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .smell-indicator.good {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .arrow {
+            font-size: 2em;
+            color: #667eea;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .comparison-table th {
+            background: rgba(102, 126, 234, 0.2);
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .comparison-table tr:hover td {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .pattern-evolution {
+            background: linear-gradient(45deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px;
+            }
+            h1 {
+                font-size: 2.5em;
+            }
+            h2 {
+                font-size: 2em;
+            }
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+            .code-block {
+                font-size: 0.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <div class="progress-bar" id="progressBar"></div>
+        
+        <!-- Slide 1: Título -->
+        <div class="slide active">
+            <div class="slide-header">
+                <h1>Técnicas "No If"</h1>
+                <p class="subtitle">Para un Código Limpio y Flexible</p>
+            </div>
+            <div class="content" style="justify-content: center; align-items: center;">
+                <div class="card" style="text-align: center; max-width: 800px;">
+                    <div class="icon">🚫</div>
+                    <h3>Eliminando la Complejidad Condicional</h3>
+                    <p style="font-size: 1.2em; color: #a8a8b3; margin-top: 20px;">
+                        Dictionary • Strategy • State • Polymorphism
+                    </p>
+                </div>
+            </div>
+            <div class="slide-number">1 / 20</div>
+        </div>
+
+        <!-- Slide 2: ¿Por qué evitar los if? -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>¿Por qué evitar los if?</h2>
+            </div>
+            <div class="content">
+                <div class="card">
+                    <h3>🎯 El Problema: Complejidad Ciclomática</h3>
+                    <p style="font-size: 1.2em; margin-bottom: 20px;">
+                        Los if-else y switch son herramientas básicas, pero su uso excesivo conduce a código:
+                    </p>
+                </div>
+                
+                <div class="grid">
+                    <div class="card">
+                        <div class="icon">📚</div>
+                        <h3>Difícil de Leer</h3>
+                        <ul class="list">
+                            <li>Lógica ramificada y enrevesada</li>
+                            <li>Múltiples niveles de anidación</li>
+                            <li>Flujo no lineal</li>
+                            <li>Contexto perdido entre ramas</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <div class="icon">🔧</div>
+                        <h3>Difícil de Mantener</h3>
+                        <ul class="list">
+                            <li>Añadir condición = modificar código existente</li>
+                            <li>Viola principio Open/Closed</li>
+                            <li>Propenso a errores de regresión</li>
+                            <li>Duplicación de lógica</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <div class="icon">🧪</div>
+                        <h3>Difícil de Probar</h3>
+                        <ul class="list">
+                            <li>Una prueba por cada rama</li>
+                            <li>Combinaciones exponenciales</li>
+                            <li>Mock complejo de dependencias</li>
+                            <li>Coverage difícil de alcanzar</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="highlight">
+                    <p><strong>💡 Objetivo:</strong> No eliminar todos los if, sino reemplazar la lógica de negocio compleja con diseños más robustos, flexibles y orientados a objetos.</p>
+                </div>
+            </div>
+            <div class="slide-number">2 / 20</div>
+        </div>
+
+        <!-- Slide 3: Clase 1 - Diccionarios al Rescate -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Clase 1: Adiós al switch</h2>
+                <p class="subtitle">Diccionarios al rescate</p>
+            </div>
+            <div class="content">
+                <div class="card">
+                    <h3>🎯 Objetivo</h3>
+                    <p>Reemplazar estructuras switch o cadenas de if-else que mapean una clave a una acción o valor, utilizando la simplicidad y eficiencia de un <code>Dictionary</code>.</p>
+                </div>
+
+                <h3>El Problema: Un "Factory" Rígido</h3>
+                <div class="code-block bad">
+                    <span class="code-label bad">ANTES</span>
+<span class="keyword">public class</span> <span class="type">NotifierFactory</span>
+{
+    <span class="comment">// Este método viola el Principio de Abierto/Cerrado</span>
+    <span class="keyword">public</span> <span class="type">INotifier</span> <span class="method">GetNotifier</span>(<span class="type">string</span> notificationType)
+    {
+        <span class="keyword">switch</span> (notificationType.<span class="method">ToLower</span>())
+        {
+            <span class="keyword">case</span> <span class="string">"email"</span>:
+                <span class="keyword">return new</span> <span class="type">EmailNotifier</span>();
+            <span class="keyword">case</span> <span class="string">"sms"</span>:
+                <span class="keyword">return new</span> <span class="type">SmsNotifier</span>();
+            <span class="keyword">case</span> <span class="string">"push"</span>:
+                <span class="keyword">return new</span> <span class="type">PushNotifier</span>();
+            <span class="keyword">default</span>:
+                <span class="keyword">throw new</span> <span class="type">ArgumentException</span>(<span class="string">"Tipo no válido"</span>);
+        }
+    }
+}
+                </div>
+
+                <div class="highlight">
+                    <p><strong>🚨 Problema:</strong> Si añadimos WhatsAppNotifier, TENEMOS que modificar esta clase. Viola Open/Closed Principle.</p>
+                </div>
+            </div>
+            <div class="slide-number">3 / 20</div>
+        </div>
+
+        <!-- Slide 4: Solución con Diccionarios -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>La Solución: Mapeo con Diccionarios</h2>
+            </div>
+            <div class="content">
+                <div class="two-column">
+                    <div>
+                        <h3>Paso a Paso</h3>
+                        <div class="card">
+                            <p><strong>1. Identificar el Mapeo:</strong><br>
+                            Una clave string se mapea a la creación de un objeto.</p>
+                            
+                            <p style="margin-top: 15px;"><strong>2. Crear el Diccionario:</strong><br>
+                            <code>Dictionary&lt;string, Func&lt;INotifier&gt;&gt;</code> para creación perezosa.</p>
+                            
+                            <p style="margin-top: 15px;"><strong>3. Refactorizar:</strong><br>
+                            El switch se reemplaza por búsqueda en diccionario.</p>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="code-block good">
+                            <span class="code-label good">DESPUÉS</span>
+<span class="keyword">public class</span> <span class="type">NotifierFactory</span>
+{
+    <span class="keyword">private readonly</span> <span class="type">Dictionary</span>&lt;<span class="type">string</span>, <span class="type">Func</span>&lt;<span class="type">INotifier</span>&gt;&gt; _notifiers;
+
+    <span class="keyword">public</span> <span class="method">NotifierFactory</span>()
+    {
+        _notifiers = <span class="keyword">new</span> <span class="type">Dictionary</span>&lt;<span class="type">string</span>, <span class="type">Func</span>&lt;<span class="type">INotifier</span>&gt;&gt;
+        {
+            { <span class="string">"email"</span>, () => <span class="keyword">new</span> <span class="type">EmailNotifier</span>() },
+            { <span class="string">"sms"</span>, () => <span class="keyword">new</span> <span class="type">SmsNotifier</span>() },
+            { <span class="string">"push"</span>, () => <span class="keyword">new</span> <span class="type">PushNotifier</span>() }
+        };
+    }
+
+    <span class="keyword">public</span> <span class="type">INotifier</span> <span class="method">GetNotifier</span>(<span class="type">string</span> notificationType)
+    {
+        <span class="keyword">if</span> (_notifiers.<span class="method">TryGetValue</span>(notificationType.<span class="method">ToLower</span>(), <span class="keyword">out var</span> factory))
+        {
+            <span class="keyword">return</span> factory();
+        }
+        
+        <span class="keyword">throw new</span> <span class="type">ArgumentException</span>(<span class="string">"Tipo no válido"</span>);
+    }
+}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight">
+                    <p><strong>✅ Ventaja:</strong> Para añadir WhatsAppNotifier, simplemente añadimos una entrada al diccionario. ¡Cumple Open/Closed!</p>
+                </div>
+            </div>
+            <div class="slide-number">4 / 20</div>
+        </div>
+
+        <!-- Slide 5: Ejemplo Práctico - Calculadora -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Ejercicio: Calculadora Matemática</h2>
+            </div>
+            <div class="content">
+                <div class="two-column">
+                    <div>
+                        <h3>Código Original</h3>
+                        <div class="code-block bad">
+                            <span class="code-label bad">RÍGIDO</span>
+<span class="keyword">public int</span> <span class="method">Calculate</span>(<span class="type">char</span> operation, <span class="type">int</span> a, <span class="type">int</span> b)
+{
+    <span class="keyword">switch</span> (operation)
+    {
+        <span class="keyword">case</span> <span class="string">'+'</span>:
+            <span class="keyword">return</span> a + b;
+        <span class="keyword">case</span> <span class="string">'-'</span>:
+            <span class="keyword">return</span> a - b;
+        <span class="keyword">case</span> <span class="string">'*'</span>:
+            <span class="keyword">return</span> a * b;
+        <span class="keyword">case</span> <span class="string">'/'</span>:
+            <span class="keyword">return</span> a / b;
+        <span class="keyword">default</span>:
+            <span class="keyword">throw new</span> <span class="type">InvalidOperationException</span>();
+    }
+}
+                        </div>
+                    </div>
+                    <div>
+                        <h3>Versión con Dictionary</h3>
+                        <div class="code-block good">
+                            <span class="code-label good">FLEXIBLE</span>
+<span class="keyword">public class</span> <span class="type">Calculator</span>
+{
+    <span class="keyword">private readonly</span> <span class="type">Dictionary</span>&lt;<span class="type">char</span>, <span class="type">Func</span>&lt;<span class="type">int</span>, <span class="type">int</span>, <span class="type">int</span>&gt;&gt; _operations;
+
+    <span class="keyword">public</span> <span class="method">Calculator</span>()
+    {
+        _operations = <span class="keyword">new</span> <span class="type">Dictionary</span>&lt;<span class="type">char</span>, <span class="type">Func</span>&lt;<span class="type">int</span>, <span class="type">int</span>, <span class="type">int</span>&gt;&gt;
+        {
+            { <span class="string">'+'</span>, (a, b) => a + b },
+            { <span class="string">'-'</span>, (a, b) => a - b },
+            { <span class="string">'*'</span>, (a, b) => a * b },
+            { <span class="string">'/'</span>, (a, b) => a / b },
+            { <span class="string">'%'</span>, (a, b) => a % b }, <span class="comment">// ¡Fácil agregar!</span>
+            { <span class="string">'^'</span>, (a, b) => (<span class="type">int</span>)<span class="type">Math</span>.<span class="method">Pow</span>(a, b) }
+        };
+    }
+
+    <span class="keyword">public int</span> <span class="method">Calculate</span>(<span class="type">char</span> operation, <span class="type">int</span> a, <span class="type">int</span> b)
+    {
+        <span class="keyword">return</span> _operations.<span class="method">GetValueOrDefault</span>(operation, 
+            (x, y) => <span class="keyword">throw new</span> <span class="type">InvalidOperationException</span>())(a, b);
+    }
+}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid" style="margin-top: 20px;">
+                    <div class="card">
+                        <h3>✅ Beneficios</h3>
+                        <ul class="list" style="font-size: 0.95em;">
+                            <li>Agregar operaciones sin modificar Calculate</li>
+                            <li>Lógica más limpia y expresiva</li>
+                            <li>Fácil testing de operaciones individuales</li>
+                            <li>Composición de operaciones complejas</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>🎯 Casos de Uso</h3>
+                        <ul class="list" style="font-size: 0.95em;">
+                            <li>Factories y builders</li>
+                            <li>Command processors</li>
+                            <li>State machines simples</li>
+                            <li>Mapeo de enums a acciones</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">5 / 20</div>
+        </div>
+
+        <!-- Slide 6: Clase 2 - Strategy Pattern -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Clase 2: El Patrón Strategy</h2>
+                <p class="subtitle">Encapsulando algoritmos</p>
+            </div>
+            <div class="content">
+                <div class="card">
+                    <h3>🎯 Objetivo</h3>
+                    <p>Reemplazar bloques if-else complejos que representan diferentes algoritmos o estrategias de negocio, encapsulando cada algoritmo en su propia clase.</p>
+                </div>
+
+                <h3>El Problema: Cálculo de Costos de Envío</h3>
+                <div class="code-block bad">
+                    <span class="code-label bad">ANTES</span>
+<span class="keyword">public class</span> <span class="type">ShippingCalculator</span>
+{
+    <span class="comment">// Cada nueva compañía requiere modificar este método</span>
+    <span class="keyword">public decimal</span> <span class="method">CalculateShippingCost</span>(<span class="type">Order</span> order, <span class="type">string</span> provider)
+    {
+        <span class="type">decimal</span> cost = 0;
+        <span class="keyword">if</span> (provider == <span class="string">"FedEx"</span>)
+        {
+            <span class="comment">// Lógica compleja de FedEx</span>
+            cost = order.WeightInKg * 3.5m + 5;
+        }
+        <span class="keyword">else if</span> (provider == <span class="string">"UPS"</span>)
+        {
+            <span class="comment">// Lógica de UPS</span>
+            cost = order.WeightInKg * 4.2m;
+        }
+        <span class="keyword">else if</span> (provider == <span class="string">"DHL"</span>)
+        {
+            <span class="comment">// Lógica de DHL</span>
+            cost = 15 + (order.WeightInKg > 10 ? (order.WeightInKg - 10) * 2 : 0);
+        }
+        <span class="keyword">return</span> cost;
+    }
+}
+                </div>
+
+                <div class="highlight">
+                    <p><strong>🚨 Problema:</strong> Este método crece con cada nueva compañía y se vuelve más frágil. Viola SRP y OCP.</p>
+                </div>
+            </div>
+            <div class="slide-number">6 / 20</div>
+        </div>
+
+        <!-- Slide 7: Strategy Pattern - Solución -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Solución Paso a Paso: Strategy Pattern</h2>
+            </div>
+            <div class="content">
+                <div class="pattern-evolution">
+                    <h3>Paso 1: Definir la Interfaz de la Estrategia</h3>
+                    <div class="code-block" style="margin-top: 15px;">
+<span class="keyword">public interface</span> <span class="type">IShippingStrategy</span>
+{
+    <span class="type">decimal</span> <span class="method">CalculateCost</span>(<span class="type">Order</span> order);
+}
+                    </div>
+                </div>
+
+                <div class="two-column" style="margin-top: 30px;">
+                    <div>
+                        <h3>Paso 2: Estrategias Concretas</h3>
+                        <div class="code-block good" style="font-size: 0.85em;">
+<span class="keyword">public class</span> <span class="type">FedExShippingStrategy</span> : <span class="type">IShippingStrategy</span>
+{
+    <span class="keyword">public decimal</span> <span class="method">CalculateCost</span>(<span class="type">Order</span> order) 
+        => order.WeightInKg * 3.5m + 5;
+}
+
+<span class="keyword">public class</span> <span class="type">UPSShippingStrategy</span> : <span class="type">IShippingStrategy</span>
+{
+    <span class="keyword">public decimal</span> <span class="method">CalculateCost</span>(<span class="type">Order</span> order) 
+        => order.WeightInKg * 4.2m;
+}
+
+<span class="keyword">public class</span> <span class="type">DHLShippingStrategy</span> : <span class="type">IShippingStrategy</span>
+{
+    <span class="keyword">public decimal</span> <span class="method">CalculateCost</span>(<span class="type">Order</span> order) 
+        => 15 + (order.WeightInKg > 10 ? (order.WeightInKg - 10) * 2 : 0);
+}
+                        </div>
+                    </div>
+                    <div>
+                        <h3>Paso 3: Contexto Simplificado</h3>
+                        <div class="code-block good" style="font-size: 0.85em;">
+<span class="keyword">public class</span> <span class="type">ShippingCalculator</span>
+{
+    <span class="comment">// Depende de la ABSTRACCIÓN, no de implementaciones</span>
+    <span class="keyword">public decimal</span> <span class="method">CalculateShippingCost</span>(<span class="type">Order</span> order, 
+                                    <span class="type">IShippingStrategy</span> strategy)
+    {
+        <span class="keyword">return</span> strategy.<span class="method">CalculateCost</span>(order);
+    }
+}
+
+<span class="comment">// Uso del patrón</span>
+<span class="keyword">var</span> order = <span class="keyword">new</span> <span class="type">Order</span> { WeightInKg = 5 };
+<span class="keyword">var</span> calculator = <span class="keyword">new</span> <span class="type">ShippingCalculator</span>();
+
+<span class="type">IShippingStrategy</span> fedexStrategy = <span class="keyword">new</span> <span class="type">FedExShippingStrategy</span>();
+<span class="type">decimal</span> cost = calculator.<span class="method">CalculateShippingCost</span>(order, fedexStrategy);
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight">
+                    <p><strong>✅ Ventaja:</strong> Para añadir "Estafeta", creamos EstafetaShippingStrategy. ShippingCalculator no cambia.</p>
+                </div>
+            </div>
+            <div class="slide-number">7 / 20</div>
+        </div>
+
+        <!-- Slide 8: Strategy Pattern - Ejercicio -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Ejercicio: Sistema de Exportación</h2>
+            </div>
+            <div class="content">
+                <div class="two-column">
+                    <div>
+                        <h3>Código Original</h3>
+                        <div class="code-block bad">
+                            <span class="code-label bad">RÍGIDO</span>
+<span class="keyword">public class</span> <span class="type">Exporter</span>
+{
+    <span class="keyword">public void</span> <span class="method">Export</span>(<span class="type">Report</span> report, <span class="type">string</span> format)
+    {
+        <span class="keyword">if</span> (format == <span class="string">"PDF"</span>)
+        {
+            <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Creando PDF..."</span>);
+            <span class="comment">// Lógica PDF compleja</span>
+        }
+        <span class="keyword">else if</span> (format == <span class="string">"CSV"</span>)
+        {
+            <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Creando CSV..."</span>);
+            <span class="comment">// Lógica CSV</span>
+        }
+        <span class="keyword">else if</span> (format == <span class="string">"JSON"</span>)
+        {
+            <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Serializando JSON..."</span>);
+            <span class="comment">// Lógica JSON</span>
+        }
+    }
+}
+                        </div>
+                    </div>
+                    <div>
+                        <h3>Versión con Strategy</h3>
+                        <div class="code-block good">
+                            <span class="code-label good">FLEXIBLE</span>
+<span class="keyword">public interface</span> <span class="type">IExportStrategy</span>
+{
+    <span class="keyword">void</span> <span class="method">Export</span>(<span class="type">Report</span> report);
+}
+
+<span class="keyword">public class</span> <span class="type">PdfExportStrategy</span> : <span class="type">IExportStrategy</span>
+{
+    <span class="keyword">public void</span> <span class="method">Export</span>(<span class="type">Report</span> report)
+    {
+        <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"📄 Generando PDF..."</span>);
+        <span class="comment">// Lógica específica de PDF</span>
+    }
+}
+
+<span class="keyword">public class</span> <span class="type">ExcelExportStrategy</span> : <span class="type">IExportStrategy</span>
+{
+    <span class="keyword">public void</span> <span class="method">Export</span>(<span class="type">Report</span> report)
+    {
+        <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"📊 Generando Excel..."</span>);
+        <span class="comment">// Lógica específica de Excel</span>
+    }
+}
+
+<span class="keyword">public class</span> <span class="type">ReportExporter</span>
+{
+    <span class="keyword">public void</span> <span class="method">Export</span>(<span class="type">Report</span> report, <span class="type">IExportStrategy</span> strategy)
+    {
+        strategy.<span class="method">Export</span>(report);
+    }
+}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid" style="margin-top: 20px;">
+                    <div class="card">
+                        <h3>🎯 Patrones Relacionados</h3>
+                        <ul class="list" style="font-size: 0.95em;">
+                            <li><strong>Factory:</strong> Crear estrategias dinámicamente</li>
+                            <li><strong>Decorator:</strong> Componer estrategias</li>
+                            <li><strong>Command:</strong> Encapsular operaciones</li>
+                            <li><strong>Template Method:</strong> Algoritmos con pasos variables</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>🔧 En el Mundo Real</h3>
+                        <ul class="list" style="font-size: 0.95em;">
+                            <li>Algoritmos de pricing dinámico</li>
+                            <li>Diferentes métodos de pago</li>
+                            <li>Validaciones por tipo de usuario</li>
+                            <li>Estrategias de caching</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">8 / 20</div>
+        </div>
+
+        <!-- Slide 9: Clase 3 - State Pattern -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Clase 3: El Patrón State</h2>
+                <p class="subtitle">Gestión de comportamiento por estado</p>
+            </div>
+            <div class="content">
+                <div class="card">
+                    <h3>🎯 Objetivo</h3>
+                    <p>Eliminar condicionales que gestionan el comportamiento de un objeto basado en su estado interno. El patrón permite a un objeto alterar su comportamiento cuando su estado interno cambia.</p>
+                </div>
+
+                <h3>El Problema: Gestión de un Documento</h3>
+                <div class="code-block bad">
+                    <span class="code-label bad">ANTES</span>
+<span class="keyword">public class</span> <span class="type">Document</span>
+{
+    <span class="keyword">public string</span> State { <span class="keyword">get</span>; <span class="keyword">private set</span>; } = <span class="string">"Borrador"</span>;
+
+    <span class="keyword">public void</span> <span class="method">Publish</span>()
+    {
+        <span class="keyword">if</span> (State == <span class="string">"Borrador"</span>)
+        {
+            <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Publicando documento..."</span>);
+            State = <span class="string">"Publicado"</span>;
+        }
+        <span class="keyword">else if</span> (State == <span class="string">"Publicado"</span>)
+        {
+            <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Error: Ya está publicado"</span>);
+        }
+        <span class="keyword">else if</span> (State == <span class="string">"Archivado"</span>)
+        {
+            <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Error: No se puede publicar archivado"</span>);
+        }
+    }
+    
+    <span class="comment">// Archive(), Edit(), etc. con lógica similar...</span>
+}
+                </div>
+
+                <div class="highlight">
+                    <p><strong>🚨 Problema:</strong> Lógica de transición dispersa y compleja. Añadir "En Revisión" requiere modificar todos los métodos.</p>
+                </div>
+            </div>
+            <div class="slide-number">9 / 20</div>
+        </div>
+
+        <!-- Slide 10: State Pattern - Solución -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Solución: State Pattern</h2>
+            </div>
+            <div class="content">
+                <div class="pattern-evolution">
+                    <h3>Paso 1: Definir la Interfaz de Estado</h3>
+                    <div class="code-block" style="margin-top: 15px;">
+<span class="keyword">public interface</span> <span class="type">IDocumentState</span>
+{
+    <span class="keyword">void</span> <span class="method">Publish</span>(<span class="type">Document</span> document);
+    <span class="keyword">void</span> <span class="method">Archive</span>(<span class="type">Document</span> document);
+    <span class="keyword">void</span> <span class="method">Edit</span>(<span class="type">Document</span> document);
+}
+                    </div>
+                </div>
+
+                <div class="two-column" style="margin-top: 30px;">
+                    <div>
+                        <h3>Paso 2: Estados Concretos</h3>
+                        <div class="code-block good" style="font-size: 0.8em;">
+<span class="keyword">public class</span> <span class="type">DraftState</span> : <span class="type">IDocumentState</span>
+{
+    <span class="keyword">public void</span> <span class="method">Publish</span>(<span class="type">Document</span> document)
+    {
+        <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Publicando documento..."</span>);
+        document.<span class="method">SetState</span>(<span class="keyword">new</span> <span class="type">PublishedState</span>());
+    }
+
+    <span class="keyword">public void</span> <span class="method">Archive</span>(<span class="type">Document</span> document)
+    {
+        <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Archivando borrador..."</span>);
+        document.<span class="method">SetState</span>(<span class="keyword">new</span> <span class="type">ArchivedState</span>());
+    }
+
+    <span class="keyword">public void</span> <span class="method">Edit</span>(<span class="type">Document</span> document)
+    {
+        <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Editando borrador..."</span>);
+        <span class="comment">// Permanece en Draft</span>
+    }
+}
+
+<span class="keyword">public class</span> <span class="type">PublishedState</span> : <span class="type">IDocumentState</span>
+{
+    <span class="keyword">public void</span> <span class="method">Publish</span>(<span class="type">Document</span> document) 
+        => <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Ya está publicado"</span>);
+
+    <span class="keyword">public void</span> <span class="method">Archive</span>(<span class="type">Document</span> document)
+    {
+        <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Archivando publicado..."</span>);
+        document.<span class="method">SetState</span>(<span class="keyword">new</span> <span class="type">ArchivedState</span>());
+    }
+
+    <span class="keyword">public void</span> <span class="method">Edit</span>(<span class="type">Document</span> document)
+    {
+        <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Creando nueva versión..."</span>);
+        document.<span class="method">SetState</span>(<span class="keyword">new</span> <span class="type">DraftState</span>());
+    }
+}
+                        </div>
+                    </div>
+                    <div>
+                        <h3>Paso 3: Contexto Simplificado</h3>
+                        <div class="code-block good" style="font-size: 0.8em;">
+<span class="keyword">public class</span> <span class="type">Document</span>
+{
+    <span class="keyword">private</span> <span class="type">IDocumentState</span> _currentState;
+
+    <span class="keyword">public</span> <span class="method">Document</span>()
+    {
+        _currentState = <span class="keyword">new</span> <span class="type">DraftState</span>(); <span class="comment">// Estado inicial</span>
+    }
+
+    <span class="comment">// Permite que estados cambien el estado</span>
+    <span class="keyword">public void</span> <span class="method">SetState</span>(<span class="type">IDocumentState</span> newState) 
+        => _currentState = newState;
+
+    <span class="comment">// Métodos DELEGAN al estado actual</span>
+    <span class="keyword">public void</span> <span class="method">Publish</span>() => _currentState.<span class="method">Publish</span>(<span class="keyword">this</span>);
+    <span class="keyword">public void</span> <span class="method">Archive</span>() => _currentState.<span class="method">Archive</span>(<span class="keyword">this</span>);
+    <span class="keyword">public void</span> <span class="method">Edit</span>() => _currentState.<span class="method">Edit</span>(<span class="keyword">this</span>);
+}
+
+<span class="comment">// Uso del patrón</span>
+<span class="keyword">var</span> doc = <span class="keyword">new</span> <span class="type">Document</span>();
+doc.<span class="method">Publish</span>();  <span class="comment">// Draft → Published</span>
+doc.<span class="method">Edit</span>();     <span class="comment">// Published → Draft</span>
+doc.<span class="method">Archive</span>(); <span class="comment">// Draft → Archived</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight">
+                    <p><strong>✅ Ventaja:</strong> Toda la lógica de un estado está en una clase. Para añadir "En Revisión", creamos ReviewState sin tocar Document.</p>
+                </div>
+            </div>
+            <div class="slide-number">10 / 20</div>
+        </div>
+
+        <!-- Slide 11: State Pattern - Ticket Support -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Ejercicio: Ticket de Soporte</h2>
+            </div>
+            <div class="content">
+                <div class="two-column">
+                    <div>
+                        <h3>Código Original</h3>
+                        <div class="code-block bad">
+                            <span class="code-label bad">MONOLÍTICO</span>
+<span class="keyword">public class</span> <span class="type">SupportTicket</span>
+{
+    <span class="keyword">public string</span> Status { <span class="keyword">get</span>; <span class="keyword">private set</span>; } = <span class="string">"Abierto"</span>;
+
+    <span class="keyword">public void</span> <span class="method">AssignToDeveloper</span>()
+    {
+        <span class="keyword">if</span> (Status == <span class="string">"Abierto"</span>)
+        {
+            <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Asignando ticket..."</span>);
+            Status = <span class="string">"En Progreso"</span>;
+        }
+        <span class="keyword">else</span> 
+        {
+            <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Acción no permitida"</span>);
+        }
+    }
+    
+    <span class="keyword">public void</span> <span class="method">Resolve</span>()
+    {
+        <span class="keyword">if</span> (Status == <span class="string">"En Progreso"</span>)
+        {
+            <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Resolviendo ticket..."</span>);
+            Status = <span class="string">"Cerrado"</span>;
+        }
+        <span class="keyword">else</span> 
+        {
+            <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Acción no permitida"</span>);
+        }
+    }
+}
+                        </div>
+                    </div>
+                    <div>
+                        <h3>Versión con State Pattern</h3>
+                        <div class="code-block good" style="font-size: 0.8em;">
+<span class="keyword">public interface</span> <span class="type">ITicketState</span>
+{
+    <span class="keyword">void</span> <span class="method">AssignToDeveloper</span>(<span class="type">SupportTicket</span> ticket);
+    <span class="keyword">void</span> <span class="method">Resolve</span>(<span class="type">SupportTicket</span> ticket);
+    <span class="keyword">void</span> <span class="method">Reopen</span>(<span class="type">SupportTicket</span> ticket);
+}
+
+<span class="keyword">public class</span> <span class="type">OpenTicketState</span> : <span class="type">ITicketState</span>
+{
+    <span class="keyword">public void</span> <span class="method">AssignToDeveloper</span>(<span class="type">SupportTicket</span> ticket)
+    {
+        <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"🔄 Asignando a developer..."</span>);
+        ticket.<span class="method">SetState</span>(<span class="keyword">new</span> <span class="type">InProgressTicketState</span>());
+    }
+
+    <span class="keyword">public void</span> <span class="method">Resolve</span>(<span class="type">SupportTicket</span> ticket) 
+        => <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"❌ Debe asignarse primero"</span>);
+
+    <span class="keyword">public void</span> <span class="method">Reopen</span>(<span class="type">SupportTicket</span> ticket) 
+        => <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"❌ Ya está abierto"</span>);
+}
+
+<span class="keyword">public class</span> <span class="type">InProgressTicketState</span> : <span class="type">ITicketState</span>
+{
+    <span class="keyword">public void</span> <span class="method">AssignToDeveloper</span>(<span class="type">SupportTicket</span> ticket) 
+        => <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"❌ Ya está asignado"</span>);
+
+    <span class="keyword">public void</span> <span class="method">Resolve</span>(<span class="type">SupportTicket</span> ticket)
+    {
+        <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"✅ Resolviendo ticket..."</span>);
+        ticket.<span class="method">SetState</span>(<span class="keyword">new</span> <span class="type">ClosedTicketState</span>());
+    }
+
+    <span class="keyword">public void</span> <span class="method">Reopen</span>(<span class="type">SupportTicket</span> ticket)
+    {
+        <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"↩️ Reabriendo ticket..."</span>);
+        ticket.<span class="method">SetState</span>(<span class="keyword">new</span> <span class="type">OpenTicketState</span>());
+    }
+}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid" style="margin-top: 20px;">
+                    <div class="card">
+                        <h3>🎯 Cuándo Usar State Pattern</h3>
+                        <ul class="list" style="font-size: 0.95em;">
+                            <li>Objeto con comportamiento que cambia por estado</li>
+                            <li>Múltiples estados con transiciones complejas</li>
+                            <li>Máquinas de estado finito</li>
+                            <li>Workflows con validaciones por estado</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>🔧 Casos Reales</h3>
+                        <ul class="list" style="font-size: 0.95em;">
+                            <li>Pedidos: Pendiente → Procesando → Enviado</li>
+                            <li>Conexiones: Desconectado → Conectando → Conectado</li>
+                            <li>Media Player: Play → Pause → Stop</li>
+                            <li>Aprobaciones: Solicitado → Revisión → Aprobado</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">11 / 20</div>
+        </div>
+
+        <!-- Slide 12: Clase 4 - Polimorfismo -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Clase 4: Polimorfismo</h2>
+                <p class="subtitle">El "No If" de la OOP</p>
+            </div>
+            <div class="content">
+                <div class="card">
+                    <h3>🎯 Objetivo</h3>
+                    <p>Reemplazar condicionales que verifican el tipo de un objeto (<code>if (obj is TypeA)</code>) utilizando el comportamiento polimórfico fundamental de la Programación Orientada a Objetos.</p>
+                </div>
+
+                <h3>El Problema: Formas Geométricas</h3>
+                <div class="code-block bad">
+                    <span class="code-label bad">TYPE CHECKING</span>
+<span class="keyword">public class</span> <span class="type">AreaCalculator</span>
+{
+    <span class="keyword">public double</span> <span class="method">CalculateTotalArea</span>(<span class="type">List</span>&lt;<span class="type">object</span>&gt; shapes)
+    {
+        <span class="type">double</span> totalArea = 0;
+        <span class="keyword">foreach</span> (<span class="keyword">var</span> shape <span class="keyword">in</span> shapes)
+        {
+            <span class="comment">// ¡Code smell terrible! Es frágil y viola OCP</span>
+            <span class="keyword">if</span> (shape <span class="keyword">is</span> <span class="type">Square</span> s)
+            {
+                totalArea += s.Side * s.Side;
+            }
+            <span class="keyword">else if</span> (shape <span class="keyword">is</span> <span class="type">Circle</span> c)
+            {
+                totalArea += <span class="type">Math</span>.PI * c.Radius * c.Radius;
+            }
+            <span class="keyword">else if</span> (shape <span class="keyword">is</span> <span class="type">Rectangle</span> r)
+            {
+                totalArea += r.Width * r.Height;
+            }
+            <span class="comment">// Añadir Triangle requiere modificar este bucle!</span>
+        }
+        <span class="keyword">return</span> totalArea;
+    }
+}
+                </div>
+
+                <div class="highlight">
+                    <p><strong>🚨 Problema:</strong> Viola OCP. Cada nueva forma requiere modificar el calculador. Type checking es anti-OOP.</p>
+                </div>
+            </div>
+            <div class="slide-number">12 / 20</div>
+        </div>
+
+        <!-- Slide 13: Polimorfismo - Solución -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Solución: Polimorfismo Puro</h2>
+            </div>
+            <div class="content">
+                <div class="pattern-evolution">
+                    <h3>Paso 1: Crear Abstracción Común</h3>
+                    <div class="code-block" style="margin-top: 15px;">
+<span class="keyword">public abstract class</span> <span class="type">Shape</span>
+{
+    <span class="keyword">public abstract double</span> <span class="method">CalculateArea</span>();
+}
+                    </div>
+                </div>
+
+                <div class="two-column" style="margin-top: 30px;">
+                    <div>
+                        <h3>Paso 2: Implementaciones Específicas</h3>
+                        <div class="code-block good" style="font-size: 0.85em;">
+<span class="keyword">public class</span> <span class="type">Square</span> : <span class="type">Shape</span>
+{
+    <span class="keyword">public double</span> Side { <span class="keyword">get</span>; <span class="keyword">set</span>; }
+
+    <span class="keyword">public override double</span> <span class="method">CalculateArea</span>()
+        => Side * Side;
+}
+
+<span class="keyword">public class</span> <span class="type">Circle</span> : <span class="type">Shape</span>
+{
+    <span class="keyword">public double</span> Radius { <span class="keyword">get</span>; <span class="keyword">set</span>; }
+
+    <span class="keyword">public override double</span> <span class="method">CalculateArea</span>()
+        => <span class="type">Math</span>.PI * Radius * Radius;
+}
+
+<span class="keyword">public class</span> <span class="type">Triangle</span> : <span class="type">Shape</span>
+{
+    <span class="keyword">public double</span> Base { <span class="keyword">get</span>; <span class="keyword">set</span>; }
+    <span class="keyword">public double</span> Height { <span class="keyword">get</span>; <span class="keyword">set</span>; }
+
+    <span class="keyword">public override double</span> <span class="method">CalculateArea</span>()
+        => (Base * Height) / 2;
+}
+                        </div>
+                    </div>
+                    <div>
+                        <h3>Paso 3: Cálculo Polimórfico</h3>
+                        <div class="code-block good" style="font-size: 0.85em;">
+<span class="keyword">public class</span> <span class="type">AreaCalculator</span>
+{
+    <span class="comment">// Lista de abstracción, no de object</span>
+    <span class="keyword">public double</span> <span class="method">CalculateTotalArea</span>(<span class="type">List</span>&lt;<span class="type">Shape</span>&gt; shapes)
+    {
+        <span class="type">double</span> totalArea = 0;
+        <span class="keyword">foreach</span> (<span class="keyword">var</span> shape <span class="keyword">in</span> shapes)
+        {
+            <span class="comment">// NO hay if. .NET elige implementación correcta</span>
+            totalArea += shape.<span class="method">CalculateArea</span>();
+        }
+        <span class="keyword">return</span> totalArea;
+    }
+}
+
+<span class="comment">// Versión LINQ más elegante</span>
+<span class="keyword">public double</span> <span class="method">CalculateTotalAreaLINQ</span>(<span class="type">List</span>&lt;<span class="type">Shape</span>&gt; shapes)
+    => shapes.<span class="method">Sum</span>(s => s.<span class="method">CalculateArea</span>());
+
+<span class="comment">// Uso del polimorfismo</span>
+<span class="keyword">var</span> shapes = <span class="keyword">new</span> <span class="type">List</span>&lt;<span class="type">Shape</span>&gt;
+{
+    <span class="keyword">new</span> <span class="type">Square</span> { Side = 5 },
+    <span class="keyword">new</span> <span class="type">Circle</span> { Radius = 3 },
+    <span class="keyword">new</span> <span class="type">Triangle</span> { Base = 4, Height = 6 }
+};
+
+<span class="keyword">var</span> calculator = <span class="keyword">new</span> <span class="type">AreaCalculator</span>();
+<span class="keyword">var</span> totalArea = calculator.<span class="method">CalculateTotalArea</span>(shapes);
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight">
+                    <p><strong>✅ Ventaja:</strong> Agregar Pentagon requiere solo crear la clase. AreaCalculator no cambia. Polimorfismo = OCP automático.</p>
+                </div>
+            </div>
+            <div class="slide-number">13 / 20</div>
+        </div>
+
+        <!-- Slide 14: Polimorfismo - Ejercicio Empleados -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Ejercicio: Sistema de Bonos</h2>
+            </div>
+            <div class="content">
+                <div class="two-column">
+                    <div>
+                        <h3>Código Original</h3>
+                        <div class="code-block bad">
+                            <span class="code-label bad">TYPE CHECKING</span>
+<span class="keyword">public class</span> <span class="type">BonusCalculator</span>
+{
+    <span class="keyword">public decimal</span> <span class="method">CalculateBonus</span>(<span class="type">object</span> employee)
+    {
+        <span class="keyword">if</span> (employee <span class="keyword">is</span> <span class="type">Manager</span> m) 
+            <span class="keyword">return</span> m.Salary * 0.20m;
+            
+        <span class="keyword">if</span> (employee <span class="keyword">is</span> <span class="type">Developer</span> d) 
+            <span class="keyword">return</span> d.Salary * 0.10m + d.LinesOfCode * 0.01m;
+            
+        <span class="keyword">if</span> (employee <span class="keyword">is</span> <span class="type">SalesPerson</span> s) 
+            <span class="keyword">return</span> s.Commission * 0.30m;
+            
+        <span class="keyword">return</span> 0;
+    }
+}
+
+<span class="comment">// Clases desconectadas</span>
+<span class="keyword">public class</span> <span class="type">Manager</span> 
+{ 
+    <span class="keyword">public decimal</span> Salary { <span class="keyword">get</span>; <span class="keyword">set</span>; } 
+}
+
+<span class="keyword">public class</span> <span class="type">Developer</span> 
+{ 
+    <span class="keyword">public decimal</span> Salary { <span class="keyword">get</span>; <span class="keyword">set</span>; }
+    <span class="keyword">public int</span> LinesOfCode { <span class="keyword">get</span>; <span class="keyword">set</span>; }
+}
+                        </div>
+                    </div>
+                    <div>
+                        <h3>Versión Polimórfica</h3>
+                        <div class="code-block good" style="font-size: 0.8em;">
+<span class="keyword">public abstract class</span> <span class="type">Employee</span>
+{
+    <span class="keyword">public string</span> Name { <span class="keyword">get</span>; <span class="keyword">set</span>; }
+    <span class="keyword">public abstract decimal</span> <span class="method">CalculateBonus</span>();
+}
+
+<span class="keyword">public class</span> <span class="type">Manager</span> : <span class="type">Employee</span>
+{
+    <span class="keyword">public decimal</span> Salary { <span class="keyword">get</span>; <span class="keyword">set</span>; }
+
+    <span class="keyword">public override decimal</span> <span class="method">CalculateBonus</span>()
+        => Salary * 0.20m; <span class="comment">// 20% del salario</span>
+}
+
+<span class="keyword">public class</span> <span class="type">Developer</span> : <span class="type">Employee</span>
+{
+    <span class="keyword">public decimal</span> Salary { <span class="keyword">get</span>; <span class="keyword">set</span>; }
+    <span class="keyword">public int</span> LinesOfCode { <span class="keyword">get</span>; <span class="keyword">set</span>; }
+
+    <span class="keyword">public override decimal</span> <span class="method">CalculateBonus</span>()
+        => Salary * 0.10m + LinesOfCode * 0.01m;
+}
+
+<span class="keyword">public class</span> <span class="type">SalesPerson</span> : <span class="type">Employee</span>
+{
+    <span class="keyword">public decimal</span> Commission { <span class="keyword">get</span>; <span class="keyword">set</span>; }
+
+    <span class="keyword">public override decimal</span> <span class="method">CalculateBonus</span>()
+        => Commission * 0.30m; <span class="comment">// 30% de comisión</span>
+}
+
+<span class="comment">// Calculador simplificado</span>
+<span class="keyword">public class</span> <span class="type">PayrollProcessor</span>
+{
+    <span class="keyword">public decimal</span> <span class="method">CalculateTotalBonuses</span>(<span class="type">List</span>&lt;<span class="type">Employee</span>&gt; employees)
+        => employees.<span class="method">Sum</span>(e => e.<span class="method">CalculateBonus</span>());
+}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid" style="margin-top: 20px;">
+                    <div class="card">
+                        <h3>🎯 Beneficios del Polimorfismo</h3>
+                        <ul class="list" style="font-size: 0.95em;">
+                            <li>Elimina type checking completamente</li>
+                            <li>OCP automático para nuevos tipos</li>
+                            <li>Cada clase maneja su propia lógica</li>
+                            <li>Código más expresivo y mantenible</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>⚡ Casos Avanzados</h3>
+                        <ul class="list" style="font-size: 0.95em;">
+                            <li><strong>Visitor Pattern:</strong> Operaciones sobre jerarquías</li>
+                            <li><strong>Template Method:</strong> Algoritmos con pasos variables</li>
+                            <li><strong>Factory Method:</strong> Creación polimórfica</li>
+                            <li><strong>Chain of Responsibility:</strong> Procesamiento secuencial</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">14 / 20</div>
+        </div>
+
+        <!-- Slide 15: Comparación de Patrones -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Comparación: Cuándo Usar Cada Patrón</h2>
+            </div>
+            <div class="content">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Patrón</th>
+                            <th>Cuándo Usar</th>
+                            <th>Ejemplo de Uso</th>
+                            <th>Complejidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Dictionary</strong></td>
+                            <td>Mapeo simple clave → valor/acción</td>
+                            <td>Factory, Command processor, Configuración</td>
+                            <td><span class="smell-indicator good">Baja</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Strategy</strong></td>
+                            <td>Algoritmos intercambiables, lógica compleja</td>
+                            <td>Pricing, Validación, Exportación</td>
+                            <td><span class="smell-indicator good">Media</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>State</strong></td>
+                            <td>Comportamiento cambia por estado interno</td>
+                            <td>Workflows, State machines, UI states</td>
+                            <td><span class="smell-indicator">Media-Alta</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Polimorfismo</strong></td>
+                            <td>Type checking, jerarquías naturales</td>
+                            <td>Formas geométricas, Empleados, Medios de pago</td>
+                            <td><span class="smell-indicator good">Baja</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="grid" style="margin-top: 30px;">
+                    <div class="card">
+                        <h3>🚀 Combinando Patrones</h3>
+                        <div class="code-block" style="font-size: 0.85em; margin-top: 10px;">
+<span class="comment">// Dictionary + Strategy</span>
+<span class="keyword">var</span> strategies = <span class="keyword">new</span> <span class="type">Dictionary</span>&lt;<span class="type">string</span>, <span class="type">IPaymentStrategy</span>&gt;
+{
+    [<span class="string">"credit"</span>] = <span class="keyword">new</span> <span class="type">CreditCardStrategy</span>(),
+    [<span class="string">"paypal"</span>] = <span class="keyword">new</span> <span class="type">PayPalStrategy</span>(),
+    [<span class="string">"crypto"</span>] = <span class="keyword">new</span> <span class="type">CryptoStrategy</span>()
+};
+
+<span class="comment">// Strategy + State</span>
+<span class="keyword">public class</span> <span class="type">Order</span>
+{
+    <span class="keyword">private</span> <span class="type">IOrderState</span> _state = <span class="keyword">new</span> <span class="type">PendingState</span>();
+    <span class="keyword">private</span> <span class="type">IPaymentStrategy</span> _paymentStrategy;
+    
+    <span class="keyword">public void</span> <span class="method">SetPaymentMethod</span>(<span class="type">IPaymentStrategy</span> strategy)
+        => _paymentStrategy = strategy;
+        
+    <span class="keyword">public void</span> <span class="method">Process</span>() 
+        => _state.<span class="method">Process</span>(<span class="keyword">this</span>, _paymentStrategy);
+}
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>💡 Reglas de Oro</h3>
+                        <ul class="list" style="font-size: 0.95em;">
+                            <li><strong>Empieza simple:</strong> Dictionary primero</li>
+                            <li><strong>Evoluciona:</strong> Dictionary → Strategy cuando se complique</li>
+                            <li><strong>Estado complejo:</strong> State pattern para FSM</li>
+                            <li><strong>Jerarquías naturales:</strong> Polimorfismo directo</li>
+                            <li><strong>No sobre-engineer:</strong> A veces un if simple está bien</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">15 / 20</div>
+        </div>
+
+        <!-- Slide 16: Casos de Uso en Fintech -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Casos Reales en Fintech</h2>
+                <p class="subtitle">Aplicando "No If" en sistemas de pagos</p>
+            </div>
+            <div class="content">
+                <div class="grid">
+                    <div class="card">
+                        <h3>💳 Procesamiento de Pagos</h3>
+                        <div class="code-block" style="font-size: 0.8em; margin-top: 15px;">
+<span class="comment">// Strategy para diferentes gateways</span>
+<span class="keyword">public interface</span> <span class="type">IPaymentGateway</span>
+{
+    <span class="type">Task</span>&lt;<span class="type">PaymentResult</span>&gt; <span class="method">ProcessAsync</span>(<span class="type">PaymentRequest</span> request);
+}
+
+<span class="keyword">public class</span> <span class="type">CoelsaGateway</span> : <span class="type">IPaymentGateway</span> { <span class="comment">/* ... */</span> }
+<span class="keyword">public class</span> <span class="type">StripeGateway</span> : <span class="type">IPaymentGateway</span> { <span class="comment">/* ... */</span> }
+
+<span class="comment">// Factory para selección dinámica</span>
+<span class="keyword">var</span> gateways = <span class="keyword">new</span> <span class="type">Dictionary</span>&lt;<span class="type">string</span>, <span class="type">IPaymentGateway</span>&gt;
+{
+    [<span class="string">"AR"</span>] = <span class="keyword">new</span> <span class="type">CoelsaGateway</span>(),
+    [<span class="string">"US"</span>] = <span class="keyword">new</span> <span class="type">StripeGateway</span>()
+};
+
+<span class="keyword">var</span> gateway = gateways[user.Country];
+<span class="keyword">await</span> gateway.<span class="method">ProcessAsync</span>(paymentRequest);
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>🔐 Validaciones KYC</h3>
+                        <div class="code-block" style="font-size: 0.8em; margin-top: 15px;">
+<span class="comment">// Strategy para diferentes niveles KYC</span>
+<span class="keyword">public abstract class</span> <span class="type">KycValidator</span>
+{
+    <span class="keyword">public abstract</span> <span class="type">ValidationResult</span> <span class="method">Validate</span>(<span class="type">User</span> user);
+}
+
+<span class="keyword">public class</span> <span class="type">BasicKycValidator</span> : <span class="type">KycValidator</span>
+{
+    <span class="keyword">public override</span> <span class="type">ValidationResult</span> <span class="method">Validate</span>(<span class="type">User</span> user)
+    {
+        <span class="comment">// Validar email + teléfono</span>
+        <span class="keyword">return</span> user.Email != <span class="keyword">null</span> && user.Phone != <span class="keyword">null</span> 
+            ? <span class="type">ValidationResult</span>.Valid 
+            : <span class="type">ValidationResult</span>.Invalid;
+    }
+}
+
+<span class="keyword">public class</span> <span class="type">EnhancedKycValidator</span> : <span class="type">KycValidator</span>
+{
+    <span class="keyword">public override</span> <span class="type">ValidationResult</span> <span class="method">Validate</span>(<span class="type">User</span> user)
+    {
+        <span class="comment">// Validar documentos + biometría + BCRA</span>
+        <span class="keyword">return</span> <span class="type">ComplexValidation</span>(user);
+    }
+}
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>📊 Pricing Dinámico</h3>
+                        <div class="code-block" style="font-size: 0.8em; margin-top: 15px;">
+<span class="comment">// Dictionary para reglas de pricing</span>
+<span class="keyword">var</span> pricingRules = <span class="keyword">new</span> <span class="type">Dictionary</span>&lt;<span class="type">string</span>, <span class="type">Func</span>&lt;<span class="type">Transaction</span>, <span class="type">decimal</span>&gt;&gt;
+{
+    [<span class="string">"VIP"</span>] = tx => 0, <span class="comment">// Sin comisión</span>
+    [<span class="string">"Premium"</span>] = tx => tx.Amount * 0.01m,
+    [<span class="string">"Standard"</span>] = tx => <span class="type">Math</span>.<span class="method">Max</span>(tx.Amount * 0.025m, 10m),
+    [<span class="string">"Basic"</span>] = tx => tx.Amount * 0.03m + 5m
+};
+
+<span class="comment">// Aplicar regla sin if-else</span>
+<span class="keyword">var</span> fee = pricingRules.<span class="method">GetValueOrDefault</span>(user.Tier, 
+    tx => tx.Amount * 0.05m)(transaction);
+
+<span class="comment">// Reglas especiales por hora</span>
+<span class="keyword">if</span> (<span class="type">DateTime</span>.Now.Hour >= 22) <span class="comment">// Un if está OK aquí</span>
+    fee *= 1.5m; <span class="comment">// Recargo nocturno</span>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>🚦 Estados de Transacción</h3>
+                        <div class="code-block" style="font-size: 0.8em; margin-top: 15px;">
+<span class="comment">// State pattern para lifecycle de transacciones</span>
+<span class="keyword">public interface</span> <span class="type">ITransactionState</span>
+{
+    <span class="type">Task</span> <span class="method">ProcessAsync</span>(<span class="type">Transaction</span> tx);
+    <span class="type">Task</span> <span class="method">CancelAsync</span>(<span class="type">Transaction</span> tx);
+    <span class="type">Task</span> <span class="method">RefundAsync</span>(<span class="type">Transaction</span> tx);
+}
+
+<span class="keyword">public class</span> <span class="type">PendingTransactionState</span> : <span class="type">ITransactionState</span>
+{
+    <span class="keyword">public async</span> <span class="type">Task</span> <span class="method">ProcessAsync</span>(<span class="type">Transaction</span> tx)
+    {
+        <span class="comment">// Validar + Procesar + Cambiar a ProcessedState</span>
+        <span class="keyword">if</span> (<span class="keyword">await</span> <span class="method">ValidateTransaction</span>(tx))
+        {
+            <span class="keyword">await</span> <span class="method">ChargeCard</span>(tx);
+            tx.<span class="method">SetState</span>(<span class="keyword">new</span> <span class="type">ProcessedTransactionState</span>());
+        }
+    }
+    
+    <span class="keyword">public async</span> <span class="type">Task</span> <span class="method">CancelAsync</span>(<span class="type">Transaction</span> tx)
+    {
+        tx.<span class="method">SetState</span>(<span class="keyword">new</span> <span class="type">CancelledTransactionState</span>());
+    }
+}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">16 / 20</div>
+        </div>
+
+        <!-- Slide 17: Métricas y Testing -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Testing y Métricas</h2>
+                <p class="subtitle">Validando la mejora del código</p>
+            </div>
+            <div class="content">
+                <div class="two-column">
+                    <div>
+                        <h3>📊 Métricas de Calidad</h3>
+                        <table class="comparison-table" style="font-size: 0.9em;">
+                            <tr>
+                                <th>Métrica</th>
+                                <th>Antes</th>
+                                <th>Después</th>
+                            </tr>
+                            <tr>
+                                <td>Complejidad Ciclomática</td>
+                                <td><span class="smell-indicator bad">15-25</span></td>
+                                <td><span class="smell-indicator good">2-5</span></td>
+                            </tr>
+                            <tr>
+                                <td>Líneas por método</td>
+                                <td><span class="smell-indicator bad">50-100+</span></td>
+                                <td><span class="smell-indicator good">5-20</span></td>
+                            </tr>
+                            <tr>
+                                <td>Acoplamiento</td>
+                                <td><span class="smell-indicator bad">Alto</span></td>
+                                <td><span class="smell-indicator good">Bajo</span></td>
+                            </tr>
+                            <tr>
+                                <td>Test Coverage</td>
+                                <td><span class="smell-indicator bad">30-50%</span></td>
+                                <td><span class="smell-indicator good">80-95%</span></td>
+                            </tr>
+                        </table>
+
+                        <div class="card" style="margin-top: 20px;">
+                            <h4>🛠️ Herramientas de Medición</h4>
+                            <ul class="list" style="font-size: 0.9em;">
+                                <li>SonarCloud para code smells</li>
+                                <li>NDepend para métricas .NET</li>
+                                <li>Coverlet para coverage</li>
+                                <li>Stryker.NET para mutation testing</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <h3>🧪 Testing Simplificado</h3>
+                        <div class="code-block" style="font-size: 0.85em;">
+<span class="comment">// ANTES: Difícil de testear</span>
+[<span class="type">Test</span>]
+<span class="keyword">public void</span> <span class="method">CalculateShipping_WithMultipleProviders_ReturnsCorrectCost</span>()
+{
+    <span class="comment">// Necesita mockear todo el método gigante</span>
+    <span class="keyword">var</span> calculator = <span class="keyword">new</span> <span class="type">ShippingCalculator</span>();
+    <span class="comment">// Test complejo y frágil...</span>
+}
+
+<span class="comment">// DESPUÉS: Fácil de testear cada estrategia</span>
+[<span class="type">Test</span>]
+<span class="keyword">public void</span> <span class="method">FedExStrategy_Calculate_ReturnsWeightTimesPlusFlat</span>()
+{
+    <span class="keyword">var</span> strategy = <span class="keyword">new</span> <span class="type">FedExShippingStrategy</span>();
+    <span class="keyword">var</span> order = <span class="keyword">new</span> <span class="type">Order</span> { WeightInKg = 2 };
+    
+    <span class="keyword">var</span> result = strategy.<span class="method">CalculateCost</span>(order);
+    
+    <span class="type">Assert</span>.<span class="method">AreEqual</span>(12m, result); <span class="comment">// 2 * 3.5 + 5</span>
+}
+
+[<span class="type">Test</span>]
+<span class="keyword">public void</span> <span class="method">Calculator_WithMockStrategy_CallsStrategy</span>()
+{
+    <span class="keyword">var</span> mockStrategy = <span class="keyword">new</span> <span class="type">Mock</span>&lt;<span class="type">IShippingStrategy</span>&gt;();
+    <span class="keyword">var</span> calculator = <span class="keyword">new</span> <span class="type">ShippingCalculator</span>();
+    
+    calculator.<span class="method">CalculateShippingCost</span>(order, mockStrategy.Object);
+    
+    mockStrategy.<span class="method">Verify</span>(s => s.<span class="method">CalculateCost</span>(order), <span class="type">Times</span>.Once);
+}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight">
+                    <p><strong>💡 Beneficio Clave:</strong> Cada patrón hace el código más testeable. Strategy permite mockear algoritmos, State permite testear transiciones, Polimorfismo permite testear cada tipo independientemente.</p>
+                </div>
+            </div>
+            <div class="slide-number">17 / 20</div>
+        </div>
+
+        <!-- Slide 18: Ejercicios Prácticos -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Ejercicios Prácticos</h2>
+                <p class="subtitle">Aplica lo aprendido</p>
+            </div>
+            <div class="content" style="overflow-y: auto;">
+                <div class="card">
+                    <h3>🏋️ Ejercicio 1: Identificar Patrón Correcto</h3>
+                    <p>Analiza cada escenario y selecciona el patrón más apropiado:</p>
+                    <div class="grid" style="margin-top: 15px; font-size: 0.9em;">
+                        <div style="background: rgba(102, 126, 234, 0.1); padding: 15px; border-radius: 8px;">
+                            <p><strong>A)</strong> Sistema de notificaciones que envía por email, SMS, push o Slack según configuración del usuario.</p>
+                            <p style="margin-top: 10px; color: #a8a8b3;"><em>¿Dictionary, Strategy, State o Polimorfismo?</em></p>
+                        </div>
+                        <div style="background: rgba(102, 126, 234, 0.1); padding: 15px; border-radius: 8px;">
+                            <p><strong>B)</strong> Pedido de e-commerce: Pendiente → Confirmado → Enviado → Entregado, con acciones específicas en cada estado.</p>
+                            <p style="margin-top: 10px; color: #a8a8b3;"><em>¿Dictionary, Strategy, State o Polimorfismo?</em></p>
+                        </div>
+                        <div style="background: rgba(102, 126, 234, 0.1); padding: 15px; border-radius: 8px;">
+                            <p><strong>C)</strong> Calculadora de impuestos para Argentina, México, Colombia con lógicas muy diferentes.</p>
+                            <p style="margin-top: 10px; color: #a8a8b3;"><em>¿Dictionary, Strategy, State o Polimorfismo?</em></p>
+                        </div>
+                        <div style="background: rgba(102, 126, 234, 0.1); padding: 15px; border-radius: 8px;">
+                            <p><strong>D)</strong> Sistema de reportes que calcula métricas diferentes: Orders, Customers, Revenue, Inventory.</p>
+                            <p style="margin-top: 10px; color: #a8a8b3;"><em>¿Dictionary, Strategy, State o Polimorfismo?</em></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔨 Ejercicio 2: Refactoring Challenge</h3>
+                    <p>Refactoriza este código de un sistema de descuentos:</p>
+                    <div class="code-block bad" style="font-size: 0.8em; margin-top: 10px;">
+<span class="keyword">public class</span> <span class="type">DiscountCalculator</span>
+{
+    <span class="keyword">public decimal</span> <span class="method">CalculateDiscount</span>(<span class="type">Customer</span> customer, <span class="type">Order</span> order)
+    {
+        <span class="keyword">if</span> (customer.Type == <span class="string">"VIP"</span> && order.Amount > 1000)
+            <span class="keyword">return</span> order.Amount * 0.20m;
+        <span class="keyword">else if</span> (customer.Type == <span class="string">"VIP"</span>)
+            <span class="keyword">return</span> order.Amount * 0.15m;
+        <span class="keyword">else if</span> (customer.Type == <span class="string">"Premium"</span> && customer.YearsActive > 5)
+            <span class="keyword">return</span> order.Amount * 0.12m;
+        <span class="keyword">else if</span> (customer.Type == <span class="string">"Premium"</span>)
+            <span class="keyword">return</span> order.Amount * 0.08m;
+        <span class="keyword">else if</span> (order.Amount > 500)
+            <span class="keyword">return</span> order.Amount * 0.05m;
+        <span class="keyword">else</span>
+            <span class="keyword">return</span> 0;
+    }
+}
+                    </div>
+                    <p style="margin-top: 15px;"><strong>Tareas:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>1. Diseña las clases necesarias usando Strategy pattern</li>
+                        <li>2. Crea un factory para seleccionar la estrategia correcta</li>
+                        <li>3. Escribe tests unitarios para cada estrategia</li>
+                        <li>4. Bonus: Usa Dictionary para mapear tipos a estrategias</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>🚀 Ejercicio 3: Sistema Completo</h3>
+                    <p><strong>Diseña un procesador de transacciones bancarias que:</strong></p>
+                    <ol style="margin-left: 20px; margin-top: 10px;">
+                        <li>Valide transacciones según el tipo (Transferencia, Pago, Depósito)</li>
+                        <li>Cada tipo tiene reglas de validación diferentes</li>
+                        <li>Las transacciones pasan por estados: Pendiente → Procesando → Completada/Rechazada</li>
+                        <li>Cada estado permite diferentes operaciones</li>
+                        <li>Debe enviar notificaciones por el canal preferido del usuario</li>
+                    </ol>
+                    <p style="margin-top: 15px;"><strong>Combina:</strong> Strategy (validaciones), State (estados), Dictionary (notificaciones)</p>
+                    <p style="margin-top: 10px; font-size: 0.9em; color: #a8a8b3;"><em>Tiempo: 30 minutos | Presentación: 10 minutos por equipo</em></p>
+                </div>
+
+                <div class="card">
+                    <h3>💡 Soluciones Ejercicio 1</h3>
+                    <details style="margin-top: 10px;">
+                        <summary style="cursor: pointer; color: #667eea;">Ver Respuestas</summary>
+                        <div style="margin-top: 10px; font-size: 0.9em;">
+                            <p><strong>A) Notificaciones:</strong> <span class="smell-indicator good">Dictionary</span> - Mapeo simple canal → implementación</p>
+                            <p><strong>B) Estados de Pedido:</strong> <span class="smell-indicator good">State</span> - Comportamiento cambia por estado con transiciones</p>
+                            <p><strong>C) Impuestos por País:</strong> <span class="smell-indicator good">Strategy</span> - Algoritmos complejos intercambiables</p>
+                            <p><strong>D) Métricas de Reportes:</strong> <span class="smell-indicator good">Polimorfismo</span> - Jerarquía natural de tipos de reporte</p>
+                        </div>
+                    </details>
+                </div>
+            </div>
+            <div class="slide-number">18 / 20</div>
+        </div>
+
+        <!-- Slide 19: Evolución y Patrones Avanzados -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Evolución: Patrones Avanzados</h2>
+                <p class="subtitle">El siguiente nivel en tu journey</p>
+            </div>
+            <div class="content">
+                <div class="grid">
+                    <div class="card">
+                        <h3>🔗 Chain of Responsibility</h3>
+                        <p style="margin-bottom: 15px;">Evolución natural de múltiples validaciones secuenciales</p>
+                        <div class="code-block" style="font-size: 0.8em;">
+<span class="keyword">public abstract class</span> <span class="type">ValidationHandler</span>
+{
+    <span class="keyword">protected</span> <span class="type">ValidationHandler</span> _next;
+    
+    <span class="keyword">public</span> <span class="type">ValidationHandler</span> <span class="method">SetNext</span>(<span class="type">ValidationHandler</span> next)
+    {
+        _next = next;
+        <span class="keyword">return</span> next;
+    }
+    
+    <span class="keyword">public virtual</span> <span class="type">ValidationResult</span> <span class="method">Handle</span>(<span class="type">Request</span> request)
+    {
+        <span class="keyword">var</span> result = <span class="method">Validate</span>(request);
+        <span class="keyword">if</span> (result.IsValid && _next != <span class="keyword">null</span>)
+            <span class="keyword">return</span> _next.<span class="method">Handle</span>(request);
+        <span class="keyword">return</span> result;
+    }
+    
+    <span class="keyword">protected abstract</span> <span class="type">ValidationResult</span> <span class="method">Validate</span>(<span class="type">Request</span> request);
+}
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>🎭 Decorator Pattern</h3>
+                        <p style="margin-bottom: 15px;">Agregar funcionalidad sin modificar código base</p>
+                        <div class="code-block" style="font-size: 0.8em;">
+<span class="keyword">public class</span> <span class="type">CachedPaymentGateway</span> : <span class="type">IPaymentGateway</span>
+{
+    <span class="keyword">private readonly</span> <span class="type">IPaymentGateway</span> _gateway;
+    <span class="keyword">private readonly</span> <span class="type">IMemoryCache</span> _cache;
+    
+    <span class="keyword">public async</span> <span class="type">Task</span>&lt;<span class="type">PaymentResult</span>&gt; <span class="method">ProcessAsync</span>(<span class="type">PaymentRequest</span> request)
+    {
+        <span class="keyword">var</span> cacheKey = $<span class="string">"payment_{request.Id}"</span>;
+        <span class="keyword">if</span> (_cache.<span class="method">TryGetValue</span>(cacheKey, <span class="keyword">out</span> <span class="type">PaymentResult</span> cached))
+            <span class="keyword">return</span> cached;
+            
+        <span class="keyword">var</span> result = <span class="keyword">await</span> _gateway.<span class="method">ProcessAsync</span>(request);
+        _cache.<span class="method">Set</span>(cacheKey, result, <span class="type">TimeSpan</span>.<span class="method">FromMinutes</span>(5));
+        <span class="keyword">return</span> result;
+    }
+}
+
+<span class="comment">// Uso: wrapping múltiple</span>
+<span class="type">IPaymentGateway</span> gateway = <span class="keyword">new</span> <span class="type">StripeGateway</span>();
+gateway = <span class="keyword">new</span> <span class="type">CachedPaymentGateway</span>(gateway);
+gateway = <span class="keyword">new</span> <span class="type">LoggedPaymentGateway</span>(gateway);
+gateway = <span class="keyword">new</span> <span class="type">MetricsPaymentGateway</span>(gateway);
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>🏭 Abstract Factory</h3>
+                        <p style="margin-bottom: 15px;">Crear familias de objetos relacionados</p>
+                        <div class="code-block" style="font-size: 0.8em;">
+<span class="keyword">public interface</span> <span class="type">IFinancialServiceFactory</span>
+{
+    <span class="type">IPaymentGateway</span> <span class="method">CreatePaymentGateway</span>();
+    <span class="type">IFraudDetector</span> <span class="method">CreateFraudDetector</span>();
+    <span class="type">IComplianceValidator</span> <span class="method">CreateComplianceValidator</span>();
+}
+
+<span class="keyword">public class</span> <span class="type">ArgentinaFinancialFactory</span> : <span class="type">IFinancialServiceFactory</span>
+{
+    <span class="keyword">public</span> <span class="type">IPaymentGateway</span> <span class="method">CreatePaymentGateway</span>() 
+        => <span class="keyword">new</span> <span class="type">CoelsaGateway</span>();
+        
+    <span class="keyword">public</span> <span class="type">IFraudDetector</span> <span class="method">CreateFraudDetector</span>() 
+        => <span class="keyword">new</span> <span class="type">BCRAFraudDetector</span>();
+        
+    <span class="keyword">public</span> <span class="type">IComplianceValidator</span> <span class="method">CreateComplianceValidator</span>() 
+        => <span class="keyword">new</span> <span class="type">CNVValidator</span>();
+}
+
+<span class="keyword">public class</span> <span class="type">USAFinancialFactory</span> : <span class="type">IFinancialServiceFactory</span>
+{
+    <span class="comment">// Implementa servicios específicos de USA</span>
+}
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>📋 Command Pattern</h3>
+                        <p style="margin-bottom: 15px;">Encapsular requests como objetos, útil para CQRS</p>
+                        <div class="code-block" style="font-size: 0.8em;">
+<span class="keyword">public interface</span> <span class="type">ICommand</span>&lt;<span class="type">TResult</span>&gt;
+{
+    <span class="type">Task</span>&lt;<span class="type">TResult</span>&gt; <span class="method">ExecuteAsync</span>();
+}
+
+<span class="keyword">public class</span> <span class="type">ProcessPaymentCommand</span> : <span class="type">ICommand</span>&lt;<span class="type">PaymentResult</span>&gt;
+{
+    <span class="keyword">private readonly</span> <span class="type">PaymentRequest</span> _request;
+    <span class="keyword">private readonly</span> <span class="type">IPaymentGateway</span> _gateway;
+    
+    <span class="keyword">public async</span> <span class="type">Task</span>&lt;<span class="type">PaymentResult</span>&gt; <span class="method">ExecuteAsync</span>()
+    {
+        <span class="comment">// Lógica de procesamiento</span>
+        <span class="keyword">return await</span> _gateway.<span class="method">ProcessAsync</span>(_request);
+    }
+}
+
+<span class="comment">// Command Bus para manejo centralizado</span>
+<span class="keyword">public class</span> <span class="type">CommandBus</span>
+{
+    <span class="keyword">public async</span> <span class="type">Task</span>&lt;<span class="type">TResult</span>&gt; <span class="method">ExecuteAsync</span>&lt;<span class="type">TResult</span>&gt;(<span class="type">ICommand</span>&lt;<span class="type">TResult</span>&gt; command)
+    {
+        <span class="comment">// Logging, validation, metrics</span>
+        <span class="keyword">return await</span> command.<span class="method">ExecuteAsync</span>();
+    }
+}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight">
+                    <p><strong>🔄 Evolución Natural:</strong> Dictionary → Strategy → Strategy + Factory → Abstract Factory + DI Container → CQRS + Event Sourcing</p>
+                </div>
+            </div>
+            <div class="slide-number">19 / 20</div>
+        </div>
+
+        <!-- Slide 20: Conclusiones -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Conclusiones y Próximos Pasos</h2>
+            </div>
+            <div class="content">
+                <div class="card" style="text-align: center; max-width: 800px; margin: 0 auto;">
+                    <h3>🎯 Conceptos Clave Dominados</h3>
+                    <div style="text-align: left; margin-top: 30px;">
+                        <p style="margin-bottom: 20px;">✅ <strong>Dictionary Pattern:</strong> Elimina switch statements con mapeos simples</p>
+                        <p style="margin-bottom: 20px;">✅ <strong>Strategy Pattern:</strong> Encapsula algoritmos intercambiables</p>
+                        <p style="margin-bottom: 20px;">✅ <strong>State Pattern:</strong> Gestiona comportamiento basado en estado interno</p>
+                        <p style="margin-bottom: 20px;">✅ <strong>Polimorfismo:</strong> Elimina type checking con jerarquías naturales</p>
+                        <p style="margin-bottom: 20px;">✅ <strong>Principios SOLID:</strong> Open/Closed en acción práctica</p>
+                    </div>
+                </div>
+                
+                <div class="grid" style="margin-top: 30px;">
+                    <div class="card">
+                        <h3>📚 Recursos para Profundizar</h3>
+                        <ul class="list" style="font-size: 0.95em;">
+                            <li>"Refactoring" - Martin Fowler</li>
+                            <li>"Design Patterns" - Gang of Four</li>
+                            <li>"Clean Code" - Robert Martin</li>
+                            <li>"refactoring.guru" - Patrones visuales</li>
+                            <li>"Effective C#" - Bill Wagner</li>
+                            <li>"Architecture Patterns with Python" - Percival & Gregory</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>🎯 Plan de Acción</h3>
+                        <ul class="list" style="font-size: 0.95em;">
+                            <li>Identifica un switch en tu código actual</li>
+                            <li>Refactoriza usando Dictionary pattern</li>
+                            <li>Busca if-else complejos para Strategy</li>
+                            <li>Encuentra máquinas de estado para State pattern</li>
+                            <li>Detecta type checking para Polimorfismo</li>
+                            <li>Mide impacto: complejidad y testabilidad</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>🚀 Siguientes Niveles</h3>
+                        <ul class="list" style="font-size: 0.95em;">
+                            <li>Chain of Responsibility para validaciones</li>
+                            <li>Decorator para funcionalidad cross-cutting</li>
+                            <li>Command + CQRS para arquitecturas complejas</li>
+                            <li>Event Sourcing para auditabilidad</li>
+                            <li>Microservices con Domain-Driven Design</li>
+                            <li>Reactive Programming con observables</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>💰 ROI en Fintech</h3>
+                        <ul class="list" style="font-size: 0.95em;">
+                            <li>Menos bugs en sistemas críticos</li>
+                            <li>Onboarding más rápido de nuevos devs</li>
+                            <li>Features de compliance más ágiles</li>
+                            <li>Integración con nuevos gateways sin fricción</li>
+                            <li>Auditorías de código más fáciles</li>
+                            <li>Escalabilidad automática del equipo</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="highlight" style="margin-top: 40px;">
+                    <p style="text-align: center; font-size: 1.2em;">
+                        <strong>"El código excelente no es el que funciona, sino el que se puede entender, modificar y extender con confianza."</strong>
+                    </p>
+                    <p style="text-align: center; margin-top: 10px; color: #a8a8b3;">— Martin Fowler, adaptado</p>
+                </div>
+            </div>
+            <div class="slide-number">20 / 20</div>
+        </div>
+
+    <!-- Instructor Info -->
+    <div class="instructor-info">
+        <div class="instructor-name">Alejandro Sfrede</div>
+        <div class="instructor-title">Área de Arquitectura</div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="navigation">
+        <button class="nav-btn" onclick="previousSlide()" id="prevBtn">
+            <span>←</span> Anterior
+        </button>
+        <button class="nav-btn" onclick="nextSlide()" id="nextBtn">
+            Siguiente <span>→</span>
+        </button>
+        <button class="nav-btn" onclick="goHome()" style="background: rgba(102, 126, 234, 0.3);">
+            🏠 Portal
+        </button>
+    </div>
+
+    <!-- Navigation Hints -->
+    <div class="nav-hints" id="navHints">
+        Use ← → o Space para navegar
+    </div>
+
+    <!-- Slide Counter -->
+    <div class="slide-counter">
+        <span id="currentSlide">1</span> / <span id="totalSlides">20</span>
+    </div>
+    </div>
+
+    <script>
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        document.getElementById('totalSlides').textContent = totalSlides;
+
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[index].classList.add('active');
+            document.getElementById('currentSlide').textContent = index + 1;
+            
+            // Update navigation buttons
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = index === totalSlides - 1;
+            
+            // Show navigation hints briefly
+            showNavHints();
+        }
+
+        function showNavHints() {
+            const hints = document.getElementById('navHints');
+            hints.classList.add('show');
+            setTimeout(() => {
+                hints.classList.remove('show');
+            }, 2000);
+        }
+
+        function goHome() {
+            window.location.href = '../index.html';
+        }
+
+        function nextSlide() {
+            if (currentSlideIndex < totalSlides - 1) {
+                currentSlideIndex++;
+                showSlide(currentSlideIndex);
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlideIndex > 0) {
+                currentSlideIndex--;
+                showSlide(currentSlideIndex);
+            }
+        }
+
+        // Enhanced keyboard navigation (PowerPoint-style)
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowRight':
+                case ' ':
+                case 'PageDown':
+                case 'Enter':
+                    e.preventDefault();
+                    nextSlide();
+                    break;
+                case 'ArrowLeft':
+                case 'PageUp':
+                case 'Backspace':
+                    e.preventDefault();
+                    previousSlide();
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    currentSlideIndex = 0;
+                    showSlide(currentSlideIndex);
+                    break;
+                case 'End':
+                    e.preventDefault();
+                    currentSlideIndex = totalSlides - 1;
+                    showSlide(currentSlideIndex);
+                    break;
+                case 'Escape':
+                    e.preventDefault();
+                    goHome();
+                    break;
+            }
+        });
+
+        // Touch navigation for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    nextSlide(); // Swipe left - next slide
+                } else {
+                    previousSlide(); // Swipe right - previous slide
+                }
+            }
+        }
+
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>
