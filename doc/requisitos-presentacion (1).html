@@ -383,11 +383,11 @@
                         </div>
                         <div class="card">
                             <p><strong>💳 Procesamiento:</strong><br>
-                            "El sistema debe procesar pagos con tarjeta Visa/Mastercard mediante integración con Coelsa"</p>
+                            "El sistema debe procesar pagos con tarjeta Visa/Mastercard mediante integración con Prisma"</p>
                         </div>
                         <div class="card">
                             <p><strong>📱 QR:</strong><br>
-                            "El sistema debe generar códigos QR para pagos siguiendo el estándar EMVCo"</p>
+                            "El sistema debe generar códigos QR para pagos siguiendo el estándar EMVCo / Coelsa"</p>
                         </div>
                     </div>
                 </div>
@@ -566,27 +566,49 @@
                 <p class="subtitle">BDD (Behavior Driven Development)</p>
             </div>
             <div class="content">
-                <div class="code-block">
-<span class="keyword">Feature:</span> Procesamiento de Pago con QR
+ 
 
-<span class="keyword">Scenario:</span> Pago exitoso con código QR válido
-  <span class="keyword">Given</span> que soy un cliente con la wallet activa
-    <span class="keyword">And</span> tengo saldo suficiente de $5000
-    <span class="keyword">And</span> el comercio tiene un QR válido por $1000
-  <span class="keyword">When</span> escaneo el código QR
-    <span class="keyword">And</span> confirmo el pago
-  <span class="keyword">Then</span> el pago debe procesarse en menos de 2 segundos
-    <span class="keyword">And</span> debo recibir confirmación push inmediata
-    <span class="keyword">And</span> el saldo debe actualizarse a $4000
-    <span class="keyword">And</span> debe generarse log en Serilog con correlation ID
+                 <div class="code-block">
+                <span class="keyword">Caracteristica :</span> [Funcionaliadad o historia de usuario]
 
-<span class="keyword">Scenario:</span> Reintentos con Polly ante fallo temporal
-  <span class="keyword">Given</span> que el servicio de procesamiento está saturado
-  <span class="keyword">When</span> intento procesar un pago
-  <span class="keyword">Then</span> Polly debe reintentar hasta 3 veces
-    <span class="keyword">And</span> usar exponential backoff (2s, 4s, 8s)
-    <span class="keyword">And</span> si falla, encolar en RabbitMQ para proceso asíncrono
+                <span class="keyword">Escenario:</span> [Nombre del escenario]
+                    <span class="keyword">Dado que</span> [precondición]
+                        <span class="keyword">Y </span>[precondición adicional]
+                       
+                    <span class="keyword">Cuando</span> [acción del usuario]
+                  
+                    <span class="keyword">Entonces</span> [resultado esperado]
+                        <span class="keyword">Y </span> [resultado adicional]
+                        <span class="keyword">Y </span> [otro resultado adicional]
+                     
+ 
                 </div>
+
+
+                <div class="code-block">
+                <span class="keyword">Feature:</span> Procesamiento de Pago con QR
+
+                <span class="keyword">Scenario:</span> Pago exitoso con código QR válido
+                    <span class="keyword">Given</span> que soy un cliente con la wallet activa
+                        <span class="keyword">And</span> tengo saldo suficiente de $5000
+                        <span class="keyword">And</span> el comercio tiene un QR válido por $1000
+                    <span class="keyword">When</span> escaneo el código QR
+                        <span class="keyword">And</span> confirmo el pago
+                    <span class="keyword">Then</span> el pago debe procesarse en menos de 2 segundos
+                        <span class="keyword">And</span> debo recibir confirmación push inmediata
+                        <span class="keyword">And</span> el saldo debe actualizarse a $4000
+                        <span class="keyword">And</span> debe generarse log en Serilog con correlation ID
+
+                    <span class="keyword">Scenario:</span> Reintentos con Polly ante fallo temporal
+                    <span class="keyword">Given</span> que el servicio de procesamiento está saturado
+                    <span class="keyword">When</span> intento procesar un pago
+                    <span class="keyword">Then</span> Polly debe reintentar hasta 3 veces
+                        <span class="keyword">And</span> usar exponential backoff (2s, 4s, 8s)
+                        <span class="keyword">And</span> si falla, encolar en RabbitMQ para proceso asíncrono
+                </div>
+
+
+
                 <div class="highlight">
                     <p><strong>Automatización:</strong> Estos escenarios se convierten directamente en tests automatizados usando SpecFlow o similar, garantizando que el comportamiento esperado se mantenga.</p>
                 </div>
@@ -984,7 +1006,7 @@ Scenario: Bloqueo por intentos fallidos
             currentSlide = (n + totalSlides) % totalSlides;
             slides[currentSlide].classList.add('active');
             
-            document.getElementById('slideIndicator').textContent = `${currentSlide + 1} / ${totalSlides}`;
+            document.getElementById('currentSlide').textContent = `${currentSlide + 1}`;
             document.getElementById('prevBtn').disabled = currentSlide === 0;
             document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
             

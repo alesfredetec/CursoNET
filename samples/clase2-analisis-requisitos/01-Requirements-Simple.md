@@ -153,7 +153,7 @@ Lee cada requisito y marca si es **FUNCIONAL** o **NO FUNCIONAL**
 
 ---
 
-## CONSEJOS PARA JUNIORS
+## CONSEJOS 
 
 ### 1. Usa la pregunta mágica
 "¿Esto me dice QUÉ hace o QUÉ TAN BIEN lo hace?"
@@ -221,7 +221,7 @@ Si no entiendes por qué es importante, pregunta al usuario.
 - **Encuestas:** Preguntar a muchos usuarios
 - **Observación:** Ver cómo trabajan actualmente
 
----
+--- 
 
 **TIEMPO:** 30 minutos
 **DIFICULTAD:** Básico

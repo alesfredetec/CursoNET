@@ -523,6 +523,8 @@
             <button class="control-btn" onclick="resetView()">🏠 Solo Cursos</button>
             <button class="control-btn" onclick="expandAll()">🌟 Mostrar Todo</button>
             <button class="control-btn" onclick="collapseAll()">🌑 Contraer</button>
+            <button class="control-btn" id="animationBtn" onclick="toggleAnimation()">▶️ Animar</button>
+            <button class="control-btn" onclick="zoomToFit()">🔍 Ver Todo</button>
         </div>
     </div>
 
@@ -535,8 +537,9 @@
     </div>
 
     <div class="zoom-controls">
-        <button class="zoom-btn" onclick="zoomIn()">+</button>
-        <button class="zoom-btn" onclick="zoomOut()">-</button>
+        <button class="zoom-btn" onclick="zoomIn()" title="Acercar">+</button>
+        <button class="zoom-btn" onclick="zoomOut()" title="Alejar">-</button>
+        <button class="zoom-btn" onclick="zoomToFit()" title="Ver todo el sistema" style="font-size: 12px; padding: 8px;">🔍</button>
     </div>
 
     <script>
@@ -844,6 +847,10 @@
         let width = container.clientWidth;
         let height = container.clientHeight;
         
+        // Control de animación
+        let animationRunning = false;
+        let animationFrameId = null;
+        
         // Configuración responsiva
         const isMobile = window.innerWidth < 768;
         const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
@@ -858,9 +865,9 @@
                 .attr("viewBox", [0, 0, width, height])
                 .style("font", "12px sans-serif");
 
-            // Configurar zoom
+            // Configurar zoom con rango más amplio
             zoom = d3.zoom()
-                .scaleExtent([0.3, 3])
+                .scaleExtent([0.1, 8])  // Zoom out mucho más (0.1) y zoom in más (8)
                 .on("zoom", handleZoom);
 
             svg.call(zoom);
@@ -879,11 +886,11 @@
                 .join("path")
                 .attr("class", "link")
                 .attr("d", d => createOrbitPath(d))
-                .style("stroke", "rgba(255, 255, 255, 0.1)")
-                .style("stroke-width", 1)
+                .style("stroke", "rgba(255, 255, 255, 0.2)")
+                .style("stroke-width", d => d.type === 'orbit' ? 3 : 1) // Órbitas principales más gruesas
                 .style("fill", "none")
-                .style("opacity", 0.3)
-                .style("stroke-dasharray", "5,5");
+                .style("opacity", d => d.type === 'orbit' ? 0.5 : 0.3)
+                .style("stroke-dasharray", d => d.type === 'orbit' ? "8,4" : "5,5");
 
             // Crear nodos con animación de entrada
             node = svg.append("g")
@@ -954,16 +961,11 @@
             animateEntrance();
         }
 
-        // Crear layout tipo sistema solar mejorado
+        // Crear verdadero sistema solar con planetas en órbitas individuales
         function createSolarSystemLayout() {
             const centerX = width / 2;
             const centerY = height / 2;
             const minDimension = Math.min(width, height);
-            
-            // Calcular radios con mejor espaciado
-            const baseRadius = minDimension * 0.15; // Aumentado para mejor espaciado
-            const level1Radius = isMobile ? baseRadius * 1.8 : baseRadius * 2.5; // Más espaciado
-            const level2Radius = isMobile ? baseRadius * 0.6 : baseRadius * 0.8; // Lunas más cerca
             
             // Nodo central (sol) - CursoNET
             const rootNode = {
@@ -973,80 +975,87 @@
                 level: 0,
                 angle: 0,
                 radius: 0,
-                originalX: centerX,
-                originalY: centerY,
+                orbitRadius: 0,
+                rotationSpeed: 0,
                 visible: true
             };
             
             const allNodes = [rootNode];
             const allLinks = [];
             
-            // Calcular posiciones para nivel 1 (planetas - cursos)
+            // Configurar planetas en órbitas individuales
             const level1Nodes = mindMapData.children || [];
-            const level1AngleStep = (2 * Math.PI) / level1Nodes.length;
+            const orbitRadii = calculateOrbitRadii(level1Nodes.length, minDimension);
             
             level1Nodes.forEach((nodeData, i) => {
-                // Distribuir planetas con mejor espaciado
-                const angle = i * level1AngleStep - Math.PI / 2; // Empezar desde arriba
-                const x = centerX + level1Radius * Math.cos(angle);
-                const y = centerY + level1Radius * Math.sin(angle);
+                const orbitRadius = orbitRadii[i];
+                const startAngle = (i * 2 * Math.PI) / level1Nodes.length - Math.PI / 2;
+                const rotationSpeed = 0.02 + (i * 0.005); // Velocidades diferentes
                 
-                const node = {
+                // Posición inicial del planeta
+                const x = centerX + orbitRadius * Math.cos(startAngle);
+                const y = centerY + orbitRadius * Math.sin(startAngle);
+                
+                const planet = {
                     ...nodeData,
                     x: x,
                     y: y,
                     level: 1,
-                    angle: angle,
-                    radius: level1Radius,
-                    originalX: x,
-                    originalY: y,
+                    angle: startAngle,
+                    orbitRadius: orbitRadius,
+                    rotationSpeed: rotationSpeed,
                     visible: true,
-                    planetId: i
+                    planetId: i,
+                    moons: []
                 };
                 
-                allNodes.push(node);
+                allNodes.push(planet);
                 
-                // Crear órbita para el planeta
+                // Crear órbita del planeta
                 allLinks.push({
                     source: rootNode,
-                    target: node,
+                    target: planet,
                     type: 'orbit',
-                    radius: level1Radius
+                    radius: orbitRadius
                 });
                 
-                // Calcular posiciones para nivel 2 (lunas - subtemas)
+                // Configurar lunas del planeta
                 if (nodeData.children) {
                     const moonCount = nodeData.children.length;
-                    const level2AngleStep = (2 * Math.PI) / moonCount;
+                    const planetRadius = getNodeRadius(1);
+                    const moonOrbitRadius = planetRadius * 3.5; // 3.5 veces el tamaño del planeta (mucho más espaciado)
                     
                     nodeData.children.forEach((childData, j) => {
-                        // Distribuir lunas alrededor de su planeta
-                        const moonAngle = j * level2AngleStep;
-                        const childX = x + level2Radius * Math.cos(moonAngle);
-                        const childY = y + level2Radius * Math.sin(moonAngle);
+                        const moonAngle = (j * 2 * Math.PI) / moonCount;
+                        const moonRotationSpeed = 0.08 + (j * 0.01); // Lunas más rápidas
                         
-                        const childNode = {
+                        // Posición inicial de la luna
+                        const moonX = x + moonOrbitRadius * Math.cos(moonAngle);
+                        const moonY = y + moonOrbitRadius * Math.sin(moonAngle);
+                        
+                        const moon = {
                             ...childData,
-                            x: childX,
-                            y: childY,
+                            x: moonX,
+                            y: moonY,
                             level: 2,
                             angle: moonAngle,
-                            radius: level2Radius,
-                            originalX: childX,
-                            originalY: childY,
+                            orbitRadius: moonOrbitRadius,
+                            rotationSpeed: moonRotationSpeed,
                             visible: false, // Inicialmente ocultas
-                            parent: node,
-                            planetId: i
+                            parent: planet,
+                            planetId: i,
+                            moonId: j
                         };
                         
-                        allNodes.push(childNode);
+                        allNodes.push(moon);
+                        planet.moons.push(moon);
                         
                         // Crear órbita de luna
                         allLinks.push({
-                            source: node,
-                            target: childNode,
-                            type: 'moon',
-                            radius: level2Radius
+                            source: planet,
+                            target: moon,
+                            type: 'moon-orbit',
+                            radius: moonOrbitRadius
                         });
                     });
                 }
@@ -1055,31 +1064,60 @@
             return { nodes: allNodes, links: allLinks };
         }
         
+        // Calcular radios orbitales para distribución uniforme con MUCHO más espaciado
+        function calculateOrbitRadii(planetCount, minDimension) {
+            const planetRadius = getNodeRadius(1); // Tamaño del planeta (ahora al doble)
+            const minSeparation = planetRadius * 6;  // Separación mínima = 6 veces el tamaño del planeta
+            
+            const baseRadius = minDimension * 0.35;  // Órbitas mucho más grandes
+            const maxRadius = minDimension * 0.75;   // Órbitas que llegan casi al borde
+            
+            // Calcular espaciado basado en separación mínima
+            const totalCircumference = 2 * Math.PI * ((baseRadius + maxRadius) / 2);
+            const requiredSpacing = planetCount * minSeparation;
+            
+            // Si necesitamos más espacio, expandir las órbitas aún más
+            let adjustedMaxRadius = maxRadius;
+            if (requiredSpacing > totalCircumference) {
+                adjustedMaxRadius = maxRadius * (requiredSpacing / totalCircumference);
+            }
+            
+            // Espaciado progresivo - cada órbita es significativamente más grande
+            const radiusStep = (adjustedMaxRadius - baseRadius) / Math.max(1, planetCount - 1);
+            const progressiveFactor = 1.4; // Factor de crecimiento progresivo
+            
+            return Array.from({ length: planetCount }, (_, i) => {
+                // Espaciado progresivo que crece exponencialmente
+                const progressiveMultiplier = Math.pow(progressiveFactor, i);
+                return baseRadius + (i * radiusStep * progressiveMultiplier);
+            });
+        }
+        
         // Funciones auxiliares responsivas
         function getNodeRadius(level) {
-            const baseSize = isMobile ? 0.8 : 1;
+            const baseSize = isMobile ? 1.6 : 2; // Duplicado el tamaño base
             switch(level) {
-                case 0: return (isMobile ? 40 : 55) * baseSize; // Sol más grande
-                case 1: return (isMobile ? 28 : 40) * baseSize; // Planetas más grandes
-                case 2: return (isMobile ? 16 : 22) * baseSize; // Lunas más pequeñas
-                default: return (isMobile ? 15 : 20) * baseSize;
+                case 0: return (isMobile ? 80 : 110) * baseSize; // Sol al doble
+                case 1: return (isMobile ? 56 : 80) * baseSize; // Planetas al doble
+                case 2: return (isMobile ? 32 : 44) * baseSize; // Lunas al doble
+                default: return (isMobile ? 30 : 40) * baseSize;
             }
         }
         
         function getTextSize(level) {
             if (isMobile) {
                 switch(level) {
-                    case 0: return "12px";
-                    case 1: return "10px";
-                    case 2: return "8px";
-                    default: return "7px";
+                    case 0: return "18px";  // Aumentado para el Sol más grande
+                    case 1: return "14px";  // Aumentado para planetas más grandes
+                    case 2: return "12px";  // Aumentado para lunas más grandes
+                    default: return "10px";
                 }
             } else {
                 switch(level) {
-                    case 0: return "14px";
-                    case 1: return "12px";
-                    case 2: return "10px";
-                    default: return "9px";
+                    case 0: return "24px";  // Aumentado para el Sol más grande
+                    case 1: return "18px";  // Aumentado para planetas más grandes
+                    case 2: return "14px";  // Aumentado para lunas más grandes
+                    default: return "12px";
                 }
             }
         }
@@ -1088,10 +1126,10 @@
             if (isMobile) return "0px"; // Ocultar subtítulos en móvil
             
             switch(level) {
-                case 0: return "11px";
-                case 1: return "9px";
-                case 2: return "8px";
-                default: return "7px";
+                case 0: return "16px";  // Aumentado para el Sol más grande
+                case 1: return "13px";  // Aumentado para planetas más grandes
+                case 2: return "11px";  // Aumentado para lunas más grandes
+                default: return "9px";
             }
         }
         
@@ -1108,17 +1146,14 @@
         }
         
         function createOrbitPath(d) {
-            if (d.type === 'orbit') {
-                // Crear círculo orbital
-                const radius = d.target.radius;
-                const centerX = d.source.x;
-                const centerY = d.source.y;
-                
-                return `M ${centerX + radius},${centerY} A ${radius},${radius} 0 1,1 ${centerX + radius},${centerY - 0.1}`;
-            } else {
-                // Línea simple para lunas
-                return `M ${d.source.x},${d.source.y} L ${d.target.x},${d.target.y}`;
-            }
+            const centerX = d.source.x;
+            const centerY = d.source.y;
+            const radius = d.radius;
+            
+            // Crear órbita circular completa
+            return `M ${centerX + radius},${centerY} 
+                    A ${radius},${radius} 0 0,1 ${centerX - radius},${centerY} 
+                    A ${radius},${radius} 0 0,1 ${centerX + radius},${centerY}`;
         }
         
         function createGradients(defs) {
@@ -1193,69 +1228,191 @@
         }
         
         function animateEntrance() {
-            // Fase 1: Mostrar órbitas principales
+            // Fase 1: Mostrar órbitas planetarias una por una
             link.style("opacity", 0)
                 .transition()
-                .duration(1200)
+                .duration(800)
                 .delay((d, i) => {
-                    if (d.type === 'orbit') return i * 150;
+                    if (d.type === 'orbit') return i * 200;
                     return 0; // Órbitas de lunas permanecen ocultas
                 })
                 .ease(d3.easeQuadOut)
-                .style("opacity", d => d.type === 'orbit' ? 0.4 : 0);
+                .style("opacity", d => d.type === 'orbit' ? 0.3 : 0);
             
-            // Fase 2: Aparecer el Sol (nodo central)
+            // Fase 2: Aparecer el Sol con efecto de ignición
             svg.selectAll('.node.root')
                 .transition()
-                .duration(1000)
-                .delay(300)
+                .duration(1200)
+                .delay(400)
                 .ease(d3.easeElasticOut)
                 .attr("transform", d => `translate(${d.x},${d.y}) scale(1)`)
                 .style("opacity", 1);
             
-            // Fase 3: Aparecer los planetas (cursos)
+            // Fase 3: Los planetas aparecen en sus órbitas
             svg.selectAll('.node.level-1')
                 .transition()
-                .duration(1200)
-                .delay((d, i) => 800 + i * 200)
+                .duration(1000)
+                .delay((d, i) => 1200 + i * 300)
                 .ease(d3.easeElasticOut)
                 .attr("transform", d => `translate(${d.x},${d.y}) scale(1)`)
                 .style("opacity", 1);
             
-            // Fase 4: Las lunas permanecen ocultas hasta expandir
+            // Fase 4: Crear lunas pequeñas orbitando (invisibles)
             svg.selectAll('.node.level-2')
                 .style("opacity", 0)
-                .attr("transform", d => `translate(${d.parent.x},${d.parent.y}) scale(0)`);
+                .attr("transform", d => `translate(${d.parent.x},${d.parent.y}) scale(0.3)`);
             
-            // Efecto de ondas de energía desde el sol
+            // NO iniciar animación automáticamente
+            // setTimeout(() => {
+            //     startOrbitalAnimation();
+            // }, 3000);
+            
+            // Efecto de ignición solar
+            createSolarIgnition();
+        }
+        
+        // Función para crear efecto de ignición solar
+        function createSolarIgnition() {
             const rootNode = svg.select('.node.root');
             if (!rootNode.empty()) {
                 const rootData = rootNode.datum();
                 
-                // Crear ondas expansivas doradas
-                for (let i = 0; i < 4; i++) {
+                // Ondas de ignición desde el centro
+                for (let i = 0; i < 6; i++) {
                     svg.append("circle")
                         .attr("cx", rootData.x)
                         .attr("cy", rootData.y)
-                        .attr("r", 60)
+                        .attr("r", 30)
                         .style("fill", "none")
-                        .style("stroke", "rgba(255, 215, 0, 0.8)")
-                        .style("stroke-width", 3)
+                        .style("stroke", `rgba(255, ${215 - i * 20}, 0, ${0.9 - i * 0.1})`)
+                        .style("stroke-width", 4)
                         .transition()
-                        .duration(3000)
-                        .delay(i * 300 + 1000)
+                        .duration(2000)
+                        .delay(i * 200 + 800)
                         .ease(d3.easeQuadOut)
-                        .attr("r", Math.min(width, height) * 0.7)
+                        .attr("r", Math.min(width, height) * 0.4)
                         .style("opacity", 0)
-                        .style("stroke-width", 0.5)
+                        .style("stroke-width", 1)
                         .remove();
                 }
             }
+        }
+        
+        // Función para iniciar animación orbital continua
+        function startOrbitalAnimation() {
+            if (animationRunning) return; // Evitar duplicados
             
-            // Crear efecto de partículas alrededor del sol
-            setTimeout(() => {
-                createSolarParticles();
-            }, 2000);
+            animationRunning = true;
+            const animationBtn = document.getElementById('animationBtn');
+            if (animationBtn) {
+                animationBtn.textContent = '⏸️ Parar';
+            }
+            
+            function animate() {
+                if (!animationRunning) return;
+                
+                // Animar planetas en sus órbitas
+                nodes.filter(d => d.level === 1 && d.visible).forEach(planet => {
+                    planet.angle += planet.rotationSpeed;
+                    planet.x = width/2 + planet.orbitRadius * Math.cos(planet.angle);
+                    planet.y = height/2 + planet.orbitRadius * Math.sin(planet.angle);
+                    
+                    // Animar lunas si están visibles - LAS LUNAS SIEMPRE ORBITAN SU PLANETA
+                    if (planet.moons) {
+                        planet.moons.forEach(moon => {
+                            moon.angle += moon.rotationSpeed;
+                            // Las lunas siempre orbitan alrededor de su planeta padre
+                            moon.x = planet.x + moon.orbitRadius * Math.cos(moon.angle);
+                            moon.y = planet.y + moon.orbitRadius * Math.sin(moon.angle);
+                        });
+                    }
+                });
+                
+                // Actualizar posiciones en el SVG
+                svg.selectAll('.node.level-1')
+                    .attr("transform", d => `translate(${d.x},${d.y}) scale(1)`);
+                
+                // Actualizar posiciones de lunas (siempre animadas, solo cambia visibilidad)
+                svg.selectAll('.node.level-2')
+                    .attr("transform", d => `translate(${d.x},${d.y}) scale(${d.visible ? 1 : 0.3})`)
+                    .style("opacity", d => d.visible ? 1 : 0);
+                
+                // Actualizar órbitas de lunas para que se muevan con los planetas
+                svg.selectAll('.link')
+                    .filter(d => d.type === 'moon-orbit')
+                    .attr("d", d => createOrbitPath(d));
+                
+                animationFrameId = requestAnimationFrame(animate);
+            }
+            animate();
+        }
+        
+        // Función para parar animación orbital
+        function stopOrbitalAnimation() {
+            animationRunning = false;
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+                animationFrameId = null;
+            }
+            const animationBtn = document.getElementById('animationBtn');
+            if (animationBtn) {
+                animationBtn.textContent = '▶️ Animar';
+            }
+            
+            // Resetear todas las posiciones a momento 0
+            resetToInitialPositions();
+        }
+        
+        // Función para resetear posiciones a momento 0
+        function resetToInitialPositions() {
+            const centerX = width / 2;
+            const centerY = height / 2;
+            
+            // Resetear planetas a sus posiciones iniciales
+            nodes.filter(d => d.level === 1).forEach(planet => {
+                const initialAngle = (planet.planetId * 2 * Math.PI) / nodes.filter(n => n.level === 1).length - Math.PI / 2;
+                planet.angle = initialAngle;
+                planet.x = centerX + planet.orbitRadius * Math.cos(initialAngle);
+                planet.y = centerY + planet.orbitRadius * Math.sin(initialAngle);
+                
+                // Resetear lunas a sus posiciones iniciales
+                if (planet.moons) {
+                    planet.moons.forEach(moon => {
+                        const initialMoonAngle = (moon.moonId * 2 * Math.PI) / planet.moons.length;
+                        moon.angle = initialMoonAngle;
+                        moon.x = planet.x + moon.orbitRadius * Math.cos(initialMoonAngle);
+                        moon.y = planet.y + moon.orbitRadius * Math.sin(initialMoonAngle);
+                    });
+                }
+            });
+            
+            // Actualizar posiciones en el SVG
+            svg.selectAll('.node.level-1')
+                .transition()
+                .duration(500)
+                .attr("transform", d => `translate(${d.x},${d.y}) scale(1)`);
+            
+            svg.selectAll('.node.level-2')
+                .transition()
+                .duration(500)
+                .attr("transform", d => `translate(${d.x},${d.y}) scale(${d.visible ? 1 : 0.3})`)
+                .style("opacity", d => d.visible ? 1 : 0);
+            
+            // Actualizar órbitas de lunas
+            svg.selectAll('.link')
+                .filter(d => d.type === 'moon-orbit')
+                .transition()
+                .duration(500)
+                .attr("d", d => createOrbitPath(d));
+        }
+        
+        // Función para alternar animación
+        function toggleAnimation() {
+            if (animationRunning) {
+                stopOrbitalAnimation();
+            } else {
+                startOrbitalAnimation();
+            }
         }
         
         // Función para crear partículas solares
@@ -1422,27 +1579,44 @@
 
         // Funciones de control mejoradas
         function resetView() {
-            // Ocultar todas las lunas
+            // Parar cualquier animación en progreso para evitar conflictos
+            if (animationRunning) {
+                stopOrbitalAnimation();
+            }
+            
+            // Ocultar todas las lunas de forma síncrona
+            nodes.forEach(node => {
+                if (node.level === 2) {
+                    node.visible = false;
+                }
+            });
+            
+            // Animar la ocultación de lunas
             svg.selectAll('.node.level-2')
                 .transition()
                 .duration(400)
                 .style('opacity', 0)
-                .attr('transform', d => `translate(${d.parent.x},${d.parent.y}) scale(0)`);
+                .attr('transform', d => `translate(${d.parent.x},${d.parent.y}) scale(0.1)`);
             
             // Ocultar órbitas de lunas
             svg.selectAll('.link')
+                .filter(d => d.type === 'moon-orbit')
                 .transition()
                 .duration(400)
-                .style('opacity', d => d.type === 'moon' ? 0 : (d.type === 'orbit' ? 0.4 : 0.6));
+                .style('opacity', 0);
             
-            // Centrar vista en el sistema solar principal
-            svg.transition()
-                .duration(1000)
-                .ease(d3.easeCubicInOut)
-                .call(
-                    zoom.transform,
-                    d3.zoomIdentity.translate(0, 0).scale(1)
-                );
+            // Asegurar visibilidad de órbitas principales
+            svg.selectAll('.link')
+                .filter(d => d.type === 'orbit')
+                .transition()
+                .duration(400)
+                .style('opacity', 0.6)
+                .style('stroke-width', 3);
+            
+            // Centrar vista en el sistema solar principal y ajustar zoom para ver todo
+            setTimeout(() => {
+                zoomToFit();
+            }, 500);
             
             // Efecto de pulso en planetas
             svg.selectAll('.node.level-1')
@@ -1453,130 +1627,199 @@
                 .transition()
                 .duration(400)
                 .attr('transform', d => `translate(${d.x},${d.y}) scale(1)`);
-            
-            // Actualizar visibilidad
-            nodes.forEach(node => {
-                if (node.level === 2) node.visible = false;
-            });
         }
 
         function zoomIn() {
             svg.transition()
                 .duration(400)
                 .ease(d3.easeQuadInOut)
-                .call(zoom.scaleBy, 1.4);
+                .call(zoom.scaleBy, 1.6);  // Zoom más agresivo
         }
 
         function zoomOut() {
             svg.transition()
                 .duration(400)
                 .ease(d3.easeQuadInOut)
-                .call(zoom.scaleBy, 1 / 1.4);
+                .call(zoom.scaleBy, 1 / 1.6);  // Zoom out más agresivo
+        }
+        
+        // Función para ajustar zoom para ver todo el sistema
+        function zoomToFit() {
+            try {
+                // Obtener todos los nodos visibles
+                const visibleNodes = nodes.filter(d => d.level <= 1 || d.visible);
+                
+                if (visibleNodes.length === 0) return;
+                
+                // Calcular bounds basado en las posiciones de los nodos
+                const padding = 100;
+                let minX = Infinity, maxX = -Infinity;
+                let minY = Infinity, maxY = -Infinity;
+                
+                visibleNodes.forEach(node => {
+                    const nodeRadius = getNodeRadius(node.level);
+                    minX = Math.min(minX, node.x - nodeRadius);
+                    maxX = Math.max(maxX, node.x + nodeRadius);
+                    minY = Math.min(minY, node.y - nodeRadius);
+                    maxY = Math.max(maxY, node.y + nodeRadius);
+                });
+                
+                const boundsWidth = maxX - minX + padding * 2;
+                const boundsHeight = maxY - minY + padding * 2;
+                const centerX = (minX + maxX) / 2;
+                const centerY = (minY + maxY) / 2;
+                
+                // Calcular escala para que todo quepa con margen
+                const scale = Math.min(width / boundsWidth, height / boundsHeight) * 0.9;
+                
+                // Limitar escala dentro del rango permitido
+                const finalScale = Math.max(0.1, Math.min(8, scale));
+                
+                // Aplicar transformación para centrar y escalar
+                svg.transition()
+                    .duration(750)
+                    .ease(d3.easeQuadInOut)
+                    .call(zoom.transform, 
+                        d3.zoomIdentity
+                            .translate(width / 2, height / 2)
+                            .scale(finalScale)
+                            .translate(-centerX, -centerY)
+                    );
+            } catch (error) {
+                console.log('Error en zoomToFit:', error);
+                // Fallback: resetear zoom a escala 0.5
+                svg.transition()
+                    .duration(750)
+                    .call(zoom.transform, d3.zoomIdentity.scale(0.5));
+            }
         }
 
         function expandAll() {
-            // Mostrar todas las lunas con efecto de aparición
+            // Parar cualquier animación en progreso para evitar conflictos
+            if (animationRunning) {
+                stopOrbitalAnimation();
+            }
+            
+            // Hacer visibles todas las lunas de forma síncrona
+            nodes.forEach(node => {
+                if (node.level === 2) {
+                    node.visible = true;
+                }
+            });
+            
+            // Mostrar órbitas de lunas
+            svg.selectAll('.link')
+                .transition()
+                .duration(600)
+                .style('opacity', d => {
+                    if (d.type === 'orbit') return 0.6;      // Órbitas principales más visibles
+                    if (d.type === 'moon-orbit') return 0.4; // Órbitas de lunas más sutiles
+                    return 0.8;
+                })
+                .style('stroke-width', d => d.type === 'orbit' ? 4 : 2); // Órbitas principales más gruesas
+            
+            // Mostrar lunas con efecto de aparición
             svg.selectAll('.node.level-2')
                 .transition()
                 .duration(800)
                 .delay((d, i) => d.planetId * 100 + i * 50)
                 .ease(d3.easeElasticOut)
                 .style('opacity', 1)
-                .attr('transform', d => `translate(${d.x},${d.y}) scale(1)`);
+                .attr("transform", d => `translate(${d.x},${d.y}) scale(1)`);
             
-            // Hacer visibles todas las órbitas
-            svg.selectAll('.link')
-                .transition()
-                .duration(600)
-                .delay((d, i) => i * 50)
-                .style('opacity', d => d.type === 'orbit' ? 0.6 : 0.8)
-                .style('stroke-width', d => d.type === 'orbit' ? 2 : 1.5);
-            
-            // Efecto de rotación en planetas principales
-            svg.selectAll('.node.level-1')
-                .transition()
-                .duration(1500)
-                .ease(d3.easeElasticOut)
-                .attr('transform', d => `translate(${d.x},${d.y}) scale(1.1)`)
-                .transition()
-                .duration(2000)
-                .ease(d3.easeLinear)
-                .attrTween('transform', function(d) {
-                    return d3.interpolateString(
-                        `translate(${d.x},${d.y}) rotate(0) scale(1.1)`,
-                        `translate(${d.x},${d.y}) rotate(360) scale(1)`
-                    );
-                });
-            
-            // Actualizar visibilidad
-            nodes.forEach(node => {
-                if (node.level === 2) node.visible = true;
+            // Crear efecto de "despertar" de las lunas
+            setTimeout(() => {
+                createMoonActivation();
+            }, 500);
+        }
+        
+        // Función para crear efecto de activación de lunas
+        function createMoonActivation() {
+            nodes.filter(d => d.level === 1).forEach(planet => {
+                if (planet.moons && planet.moons.length > 0) {
+                    // Crear pulso alrededor del planeta
+                    svg.append("circle")
+                        .attr("cx", planet.x)
+                        .attr("cy", planet.y)
+                        .attr("r", 30)
+                        .style("fill", "none")
+                        .style("stroke", "rgba(78, 205, 196, 0.8)")
+                        .style("stroke-width", 2)
+                        .transition()
+                        .duration(1500)
+                        .ease(d3.easeQuadOut)
+                        .attr("r", 80)
+                        .style("opacity", 0)
+                        .remove();
+                }
             });
         }
 
         function collapseAll() {
-            // Fase 1: Ocultar todas las lunas
+            // Parar cualquier animación en progreso para evitar conflictos
+            if (animationRunning) {
+                stopOrbitalAnimation();
+            }
+            
+            // Fase 1: Ocultar todas las lunas de forma síncrona
+            nodes.forEach(node => {
+                if (node.level === 2) {
+                    node.visible = false;
+                }
+            });
+            
+            // Fase 2: Animar la ocultación de lunas
             svg.selectAll('.node.level-2')
                 .transition()
                 .duration(600)
                 .ease(d3.easeBackIn)
                 .style('opacity', 0)
-                .attr('transform', d => `translate(${d.parent.x},${d.parent.y}) scale(0)`);
+                .attr("transform", d => `translate(${d.parent.x},${d.parent.y}) scale(0.1)`);
             
-            // Fase 2: Ocultar órbitas de lunas
+            // Fase 3: Ocultar órbitas de lunas
             svg.selectAll('.link')
-                .filter(d => d.type === 'moon')
+                .filter(d => d.type === 'moon-orbit')
                 .transition()
                 .duration(400)
                 .style('opacity', 0);
             
-            // Fase 3: Crear efecto de colapso gravitacional
+            // Fase 4: Crear efecto de colapso gravitacional (opcional)
             const rootNode = svg.select('.node.root');
-            const rootData = rootNode.datum();
+            if (!rootNode.empty()) {
+                const rootData = rootNode.datum();
+                
+                // Crear efecto de agujero negro
+                const blackHole = svg.append('circle')
+                    .attr('cx', rootData.x)
+                    .attr('cy', rootData.y)
+                    .attr('r', 0)
+                    .style('fill', 'rgba(0,0,0,0.8)')
+                    .style('opacity', 0);
+                
+                blackHole.transition()
+                    .duration(800)
+                    .delay(200)
+                    .attr('r', 80)
+                    .style('opacity', 0.6)
+                    .transition()
+                    .duration(1000)
+                    .attr('r', 0)
+                    .style('opacity', 0)
+                    .remove();
+            }
             
-            // Colapsar planetas hacia el sol
-            svg.selectAll('.node.level-1')
-                .transition()
-                .duration(1200)
-                .delay(400)
-                .ease(d3.easeBackIn)
-                .attr('transform', `translate(${rootData.x},${rootData.y}) scale(0.2)`)
-                .transition()
-                .duration(600)
-                .ease(d3.easeElasticOut)
-                .attr('transform', d => `translate(${d.x},${d.y}) scale(1)`);
-            
-            // Efecto de agujero negro
-            const blackHole = svg.append('circle')
-                .attr('cx', rootData.x)
-                .attr('cy', rootData.y)
-                .attr('r', 0)
-                .style('fill', 'radial-gradient(circle, #000 0%, #333 100%)')
-                .style('opacity', 0);
-            
-            blackHole.transition()
-                .duration(800)
-                .delay(600)
-                .attr('r', 80)
-                .style('opacity', 0.9)
-                .transition()
-                .duration(1000)
-                .attr('r', 0)
-                .style('opacity', 0)
-                .remove();
-            
-            // Atenuar órbitas principales
+            // Fase 5: Atenuar órbitas principales temporalmente
             svg.selectAll('.link')
                 .filter(d => d.type === 'orbit')
                 .transition()
-                .duration(800)
+                .duration(600)
                 .style('opacity', 0.2)
-                .style('stroke-width', 1);
-            
-            // Actualizar visibilidad
-            nodes.forEach(node => {
-                if (node.level === 2) node.visible = false;
-            });
+                .style('stroke-width', 2)
+                .transition()
+                .duration(800)
+                .delay(600)
+                .style('opacity', 0.6)
+                .style('stroke-width', 3);
         }
 
         // Función removida para evitar duplicación
@@ -1607,19 +1850,7 @@
             }, 500);
         });
 
-        // Agregar información sobre el estado del sistema
-        function addSystemInfo() {
-            const infoDiv = document.createElement('div');
-            infoDiv.id = 'system-info';
-            infoDiv.innerHTML = `
-                <div style="position: fixed; bottom: 20px; left: 20px; background: rgba(0,0,0,0.8); color: white; padding: 10px; border-radius: 10px; font-size: 0.8em; z-index: 50;">
-                    <div>☀️ Sol: CursoNET</div>
-                    <div>🪐 Planetas: 7 Cursos</div>
-                    <div>🌙 Lunas: Subtemas</div>
-                </div>
-            `;
-            document.body.appendChild(infoDiv);
-        }
+        // Función removida - sin referencias del sistema
         
         // Agregar algunos efectos adicionales al cargar
         document.addEventListener('DOMContentLoaded', function() {
@@ -1634,8 +1865,8 @@
                 header.style.transform = 'translateY(0)';
             }, 100);
             
-            // Agregar información del sistema
-            addSystemInfo();
+            // Agregar información del sistema - comentado por ahora
+            // addSystemInfo();
             
             // Inicializar mapa mental
             setTimeout(() => {
