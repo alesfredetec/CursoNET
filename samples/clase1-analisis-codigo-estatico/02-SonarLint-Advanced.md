@@ -446,7 +446,7 @@ namespace PaymentProcessor.Core.Services
             var transactionId = random.Next(1000000, 9999999);
             
             // S2068: Credentials should not be hard-coded
-            var apiKey = "sk_test_4eC39HqLyjWDarjtT1zdp7dc";
+            var apiKey = "acaestariaapike;
             
             // S1541: Methods should not be too complex
             if (cardNumber != null && cardNumber.Length >= 13)
