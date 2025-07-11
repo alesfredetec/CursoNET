@@ -312,7 +312,7 @@ internal class ComplexityWalker : CSharpSyntaxWalker
     }
 }
 ```
-
+ 
 ---
 
 ## Análisis Avanzado de Código Legacy
@@ -367,9 +367,9 @@ public class LegacyPaymentProcessor
             result.ErrorCode = "MISSING_CURRENCY";
             return result;
         }
-        
-        // Hardcoded values - Security smell
-        var secretKey = "sk_test_4eC39HqLyjWDarjtT1zdp7dc";
+          
+        // Hardcoded values - Security smells
+        var secretKey = "s3cr3tk3y"; // Simulated secret key
         var apiUrl = "https://api.stripe.com/v1/charges";
         
         // Complex nested conditions - Complexity smell
