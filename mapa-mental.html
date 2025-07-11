@@ -6,7 +6,7 @@
     <title>CursoNET - Mapa Mental Interactivo</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
         :root {
@@ -14,6 +14,8 @@
             --text-color: #f0f0f0;
             --primary-glow: #6a11cb;
             --secondary-glow: #2575fc;
+            --accent-color: #ffd700;
+            --hover-color: #4ecdc4;
         }
 
         @keyframes gradient-animation {
@@ -33,77 +35,243 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            user-select: none;
         }
 
         .header {
             text-align: center;
-            padding: 20px;
+            padding: 15px 20px;
             width: 100%;
-            background: rgba(0,0,0,0.2);
-            backdrop-filter: blur(5px);
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            z-index: 10;
         }
 
         .header h1 {
-            font-size: 2.5em;
-            font-weight: 600;
+            font-size: 2.2em;
+            font-weight: 700;
             background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 10px rgba(106, 17, 203, 0.3);
+            text-shadow: 0 0 15px rgba(106, 17, 203, 0.4);
+            margin: 0;
+            letter-spacing: 1px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            align-items: center;
+        }
+
+        .control-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .control-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
         }
 
         #mind-map-container {
             width: 100%;
-            height: calc(100vh - 90px);
+            height: calc(100vh - 120px);
             position: relative;
+            overflow: hidden;
         }
 
         svg {
             width: 100%;
             height: 100%;
+            cursor: grab;
+        }
+
+        svg:active {
+            cursor: grabbing;
+        }
+
+        /* Estilos para nodos */
+        .node {
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
         .node circle {
-            stroke: rgba(255, 255, 255, 0.5);
+            stroke: rgba(255, 255, 255, 0.4);
             stroke-width: 2px;
             transition: all 0.3s ease;
+            filter: drop-shadow(0 0 8px rgba(0,0,0,0.3));
         }
 
         .node text {
             fill: var(--text-color);
-            font-size: 14px;
-            font-weight: 400;
+            font-weight: 500;
             text-anchor: middle;
             pointer-events: none;
             transition: all 0.3s ease;
+            text-shadow: 0 0 4px rgba(0,0,0,0.8);
+        }
+
+        /* Estilos específicos por nivel */
+        .node.root circle {
+            stroke: var(--accent-color);
+            stroke-width: 3px;
         }
 
         .node.root text {
-            font-size: 24px;
-            font-weight: 600;
+            font-size: 16px;
+            font-weight: 700;
+            fill: var(--accent-color);
         }
         
-        .node.level-1 text {
-            font-size: 18px;
-            font-weight: 600;
+        .node.level-1 circle {
+            stroke: var(--primary-glow);
+            stroke-width: 2.5px;
         }
 
-        .link {
-            stroke: rgba(255, 255, 255, 0.2);
-            stroke-width: 1.5px;
-            transition: stroke 0.3s ease;
+        .node.level-1 text {
+            font-size: 14px;
+            font-weight: 600;
+            fill: white;
+        }
+
+        .node.level-2 circle {
+            stroke: var(--secondary-glow);
+            stroke-width: 2px;
+        }
+
+        .node.level-2 text {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* Efectos hover con animaciones mejoradas */
+        .node {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .node:hover circle {
-            stroke: var(--secondary-glow);
+            stroke: var(--hover-color);
             stroke-width: 4px;
+            transform: scale(1.15);
+            filter: drop-shadow(0 0 20px rgba(78, 205, 196, 0.8));
+            animation: pulse 2s infinite;
         }
 
         .node:hover text {
-            font-weight: 600;
-            fill: var(--secondary-glow);
+            fill: var(--hover-color);
+            font-weight: 700;
+            text-shadow: 0 0 12px rgba(78, 205, 196, 0.8);
+            transform: scale(1.1);
         }
-        
+
+        .node.clickable:hover circle {
+            stroke: var(--accent-color);
+            stroke-width: 5px;
+            filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.9));
+            animation: glow 1.5s infinite alternate;
+        }
+
+        .node.clickable:hover text {
+            fill: var(--accent-color);
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.9);
+            animation: textGlow 1.5s infinite alternate;
+        }
+
+        /* Animaciones */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        @keyframes glow {
+            from { 
+                filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.9));
+                transform: scale(1.15);
+            }
+            to { 
+                filter: drop-shadow(0 0 35px rgba(255, 215, 0, 1));
+                transform: scale(1.25);
+            }
+        }
+
+        @keyframes textGlow {
+            from { text-shadow: 0 0 15px rgba(255, 215, 0, 0.9); }
+            to { text-shadow: 0 0 25px rgba(255, 215, 0, 1); }
+        }
+
+        @keyframes nodeEnter {
+            from {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .node {
+            animation: nodeEnter 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Enlaces con animaciones mejoradas */
+        .link {
+            stroke: rgba(255, 255, 255, 0.15);
+            stroke-width: 1.5px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: linkAppear 1.2s ease-out;
+        }
+
+        .link.highlighted {
+            stroke: var(--hover-color);
+            stroke-width: 4px;
+            stroke-dasharray: 8,4;
+            animation: linkPulse 1.5s ease-in-out infinite;
+            filter: drop-shadow(0 0 8px rgba(78, 205, 196, 0.6));
+        }
+
+        @keyframes linkAppear {
+            from {
+                stroke-dasharray: 1000;
+                stroke-dashoffset: 1000;
+                opacity: 0;
+            }
+            to {
+                stroke-dasharray: 0;
+                stroke-dashoffset: 0;
+                opacity: 1;
+            }
+        }
+
+        @keyframes linkPulse {
+            0%, 100% { 
+                stroke-dashoffset: 0;
+                opacity: 1;
+            }
+            50% { 
+                stroke-dashoffset: -12;
+                opacity: 0.8;
+            }
+        }
+
+        /* Botones de navegación */
         .home-button {
             position: fixed;
             top: 20px;
@@ -115,164 +283,1365 @@
             padding: 12px 20px;
             border-radius: 50px;
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 600;
             transition: all 0.3s ease;
             z-index: 100;
+            font-size: 0.95em;
         }
         
         .home-button:hover {
             background: rgba(102, 126, 234, 0.3);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
         }
 
+        .info-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            max-width: 300px;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .info-panel.active {
+            transform: translateX(0);
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .info-panel h3 {
+            margin: 0 0 10px 0;
+            color: var(--accent-color);
+            font-size: 1.2em;
+        }
+
+        .info-panel p {
+            margin: 0 0 15px 0;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .info-panel .link-btn {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow));
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85em;
+            transition: all 0.3s ease;
+        }
+
+        .info-panel .link-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(106, 17, 203, 0.4);
+        }
+
+        /* Zoom controls */
+        .zoom-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .zoom-btn {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            color: white;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .zoom-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        /* Responsive Design Mejorado */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.6em;
+                margin-bottom: 10px;
+            }
+            
+            .controls {
+                flex-wrap: wrap;
+                gap: 8px;
+                justify-content: center;
+            }
+            
+            .control-btn {
+                font-size: 0.75em;
+                padding: 8px 12px;
+                min-width: 70px;
+            }
+            
+            .info-panel {
+                max-width: 90%;
+                padding: 12px;
+                bottom: 20px;
+                top: auto;
+                right: 5%;
+                left: 5%;
+                max-height: 200px;
+                overflow-y: auto;
+            }
+            
+            .info-panel h3 {
+                font-size: 1em;
+            }
+            
+            .info-panel p {
+                font-size: 0.85em;
+            }
+            
+            .zoom-controls {
+                bottom: 10px;
+                right: 10px;
+                gap: 8px;
+            }
+            
+            .zoom-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2em;
+            }
+            
+            .home-button {
+                top: 10px;
+                left: 10px;
+                padding: 8px 12px;
+                font-size: 0.8em;
+            }
+            
+            #mind-map-container {
+                height: calc(100vh - 100px);
+            }
+            
+            .header {
+                padding: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.4em;
+            }
+            
+            .control-btn {
+                font-size: 0.7em;
+                padding: 6px 10px;
+                min-width: 60px;
+            }
+            
+            .info-panel {
+                max-width: 95%;
+                padding: 10px;
+                font-size: 0.8em;
+            }
+            
+            .zoom-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 1.1em;
+            }
+            
+            .home-button {
+                padding: 6px 10px;
+                font-size: 0.75em;
+            }
+        }
+        
+        /* Mejoras para tablets */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .info-panel {
+                max-width: 300px;
+                padding: 18px;
+            }
+            
+            .control-btn {
+                font-size: 0.85em;
+                padding: 10px 16px;
+            }
+        }
+        
+        /* Optimizaciones para pantallas táctiles */
+        @media (hover: none) and (pointer: coarse) {
+            .control-btn {
+                min-height: 44px;
+                min-width: 44px;
+            }
+            
+            .zoom-btn {
+                min-width: 44px;
+                min-height: 44px;
+            }
+            
+            .home-button {
+                min-height: 44px;
+                padding: 10px 15px;
+            }
+            
+            .node {
+                cursor: pointer;
+            }
+        }
     </style>
 </head>
 <body>
     <a href="index.html" class="home-button">🏠 Volver al Portal</a>
+    
     <div class="header">
-        <h1>Mapa Mental Interactivo del Curso</h1>
+        <h1>🧠 Mapa Mental Interactivo del Curso</h1>
+        <div class="controls">
+            <button class="control-btn" onclick="resetView()">🏠 Solo Cursos</button>
+            <button class="control-btn" onclick="expandAll()">🌟 Mostrar Todo</button>
+            <button class="control-btn" onclick="collapseAll()">🌑 Contraer</button>
+        </div>
     </div>
+
     <div id="mind-map-container"></div>
 
+    <div class="info-panel" id="info-panel">
+        <h3 id="info-title">Información del Curso</h3>
+        <p id="info-description">Haz clic en cualquier nodo para ver más información</p>
+        <a href="#" id="info-link" class="link-btn" style="display: none;">📚 Ir al Curso</a>
+    </div>
+
+    <div class="zoom-controls">
+        <button class="zoom-btn" onclick="zoomIn()">+</button>
+        <button class="zoom-btn" onclick="zoomOut()">-</button>
+    </div>
+
     <script>
+        // Datos del mapa mental con información detallada
         const mindMapData = {
-            "name": "🚀 CursoNET: Jr → Semi-Sr", "level": 0,
+            "name": "🚀 CursoNET",
+            "subtitle": "Jr → Semi-Sr",
+            "level": 0,
+            "info": {
+                "title": "Curso .NET para Desarrolladores",
+                "description": "Programa completo diseñado para llevar desarrolladores Junior al nivel Semi-Senior mediante prácticas profesionales y arquitectura de software.",
+                "link": "index.html"
+            },
             "children": [
                 {
-                    "name": "🔍 1. Calidad y Análisis Estático", "level": 1,
+                    "name": "🔧 Análisis Estático",
+                    "subtitle": "Calidad de Código",
+                    "level": 1,
+                    "info": {
+                        "title": "Clase 1: Análisis de Código Estático",
+                        "description": "Domina SonarLint, métricas de complejidad ciclomática y técnicas de refactoring para crear código limpio y mantenible.",
+                        "link": "samples/clase1-analisis-codigo-estatico/README.html"
+                    },
                     "children": [
-                        { "name": "Introducción al Análisis Estático", "level": 2 },
-                        { "name": "Métricas (Complejidad Ciclomática)", "level": 2 },
-                        { "name": "Refactoring (Guard Clauses, Extract Method)", "level": 2 }
+                        {
+                            "name": "SonarLint",
+                            "subtitle": "Herramientas",
+                            "level": 2,
+                            "info": {
+                                "title": "Configuración de SonarLint",
+                                "description": "Instalación y configuración de SonarLint para análisis automático de código en Visual Studio.",
+                                "link": "samples/clase1-analisis-codigo-estatico/README.html"
+                            }
+                        },
+                        {
+                            "name": "Complejidad",
+                            "subtitle": "Métricas",
+                            "level": 2,
+                            "info": {
+                                "title": "Complejidad Ciclomática",
+                                "description": "Cálculo y reducción de complejidad ciclomática usando técnicas de refactoring efectivas.",
+                                "link": "samples/clase1-analisis-codigo-estatico/README.html"
+                            }
+                        },
+                        {
+                            "name": "Refactoring",
+                            "subtitle": "Técnicas",
+                            "level": 2,
+                            "info": {
+                                "title": "Técnicas de Refactoring",
+                                "description": "Guard clauses, extract method y otras técnicas para mejorar la calidad del código.",
+                                "link": "samples/clase1-analisis-codigo-estatico/README.html"
+                            }
+                        }
                     ]
                 },
                 {
-                    "name": "📋 2. Requisitos y Metodologías", "level": 1,
+                    "name": "📋 Análisis Requisitos",
+                    "subtitle": "Metodologías",
+                    "level": 1,
+                    "info": {
+                        "title": "Clase 2: Análisis de Requisitos",
+                        "description": "Domina la identificación, documentación y gestión de requisitos funcionales y no funcionales en proyectos empresariales.",
+                        "link": "samples/clase2-analisis-requisitos/README.html"
+                    },
                     "children": [
-                        { "name": "FR vs. NFR", "level": 2 },
-                        { "name": "Historias de Usuario", "level": 2 },
-                        { "name": "Gherkin/BDD", "level": 2 }
+                        {
+                            "name": "Funcionales",
+                            "subtitle": "FR vs NFR",
+                            "level": 2,
+                            "info": {
+                                "title": "Requisitos Funcionales",
+                                "description": "Identificación y documentación de requisitos funcionales vs no funcionales con ejemplos prácticos.",
+                                "link": "samples/clase2-analisis-requisitos/README.html"
+                            }
+                        },
+                        {
+                            "name": "Casos de Uso",
+                            "subtitle": "Modelado",
+                            "level": 2,
+                            "info": {
+                                "title": "Casos de Uso y User Stories",
+                                "description": "Conversión de descripciones informales en casos de uso estructurados y user stories profesionales.",
+                                "link": "samples/clase2-analisis-requisitos/README.html"
+                            }
+                        },
+                        {
+                            "name": "Trazabilidad",
+                            "subtitle": "Gestión",
+                            "level": 2,
+                            "info": {
+                                "title": "Matrices de Trazabilidad",
+                                "description": "Organización y conexión de requisitos mediante matrices de trazabilidad y análisis de dependencias.",
+                                "link": "samples/clase2-analisis-requisitos/README.html"
+                            }
+                        }
                     ]
                 },
                 {
-                    "name": "🚫 3. Técnicas \"No If\"", "level": 1,
+                    "name": "🚫 Técnicas No If",
+                    "subtitle": "Refactoring",
+                    "level": 1,
+                    "info": {
+                        "title": "Clase 3: Técnicas Sin If",
+                        "description": "Patrones de refactoring para eliminar condicionales complejos y mejorar la mantenibilidad del código.",
+                        "link": "samples/clase3-tecnicas-noif/README.html"
+                    },
                     "children": [
-                        { "name": "Reemplazo con Diccionarios", "level": 2 },
-                        { "name": "Patrón Strategy", "level": 2 },
-                        { "name": "Patrón State", "level": 2 },
-                        { "name": "Polimorfismo", "level": 2 }
+                        {
+                            "name": "Dictionary",
+                            "subtitle": "Patrones",
+                            "level": 2,
+                            "info": {
+                                "title": "Patrón Dictionary",
+                                "description": "Reemplazo de switch statements complejos usando diccionarios para mayor flexibilidad.",
+                                "link": "samples/clase3-tecnicas-noif/README.html"
+                            }
+                        },
+                        {
+                            "name": "Strategy",
+                            "subtitle": "Patrones",
+                            "level": 2,
+                            "info": {
+                                "title": "Patrón Strategy",
+                                "description": "Encapsulación de algoritmos intercambiables para eliminar condicionales complejos.",
+                                "link": "samples/clase3-tecnicas-noif/README.html"
+                            }
+                        },
+                        {
+                            "name": "Polimorfismo",
+                            "subtitle": "OOP",
+                            "level": 2,
+                            "info": {
+                                "title": "Polimorfismo",
+                                "description": "Uso de polimorfismo para eliminar condicionales basadas en tipos.",
+                                "link": "samples/clase3-tecnicas-noif/README.html"
+                            }
+                        }
                     ]
                 },
                 {
-                    "name": "🔧 4. Refactoring y SOLID", "level": 1,
+                    "name": "🔧 Refactoring SOLID",
+                    "subtitle": "Principios",
+                    "level": 1,
+                    "info": {
+                        "title": "Clase 4: Refactoring Avanzado",
+                        "description": "Transformación de código procedural a arquitecturas funcionales y orientadas a objetos usando principios SOLID.",
+                        "link": "samples/clase4-refactoring-avanzado/README.html"
+                    },
                     "children": [
-                        { "name": "Principios SOLID", "level": 2 },
-                        { "name": "Patrones (Factory, Builder)", "level": 2 }
+                        {
+                            "name": "SOLID",
+                            "subtitle": "Principios",
+                            "level": 2,
+                            "info": {
+                                "title": "Principios SOLID",
+                                "description": "Aplicación práctica de los principios SOLID en refactoring de código legacy.",
+                                "link": "samples/clase4-refactoring-avanzado/README.html"
+                            }
+                        },
+                        {
+                            "name": "Patrones",
+                            "subtitle": "Design Patterns",
+                            "level": 2,
+                            "info": {
+                                "title": "Patrones de Diseño",
+                                "description": "Implementación de patrones Factory, Builder y otros para mejorar la arquitectura.",
+                                "link": "samples/clase4-refactoring-avanzado/README.html"
+                            }
+                        }
                     ]
                 },
                 {
-                    "name": "🗑️ 5. Gestión de Memoria (GC)", "level": 1,
+                    "name": "🗑️ Gestión Memoria",
+                    "subtitle": "Garbage Collection",
+                    "level": 1,
+                    "info": {
+                        "title": "Clase 5: Garbage Collection",
+                        "description": "Fundamentos de gestión de memoria en .NET, patrón IDisposable y prevención de memory leaks.",
+                        "link": "samples/clase5-garbage-collection/README.html"
+                    },
                     "children": [
-                        { "name": "Fundamentos del GC", "level": 2 },
-                        { "name": "IDisposable y using", "level": 2 },
-                        { "name": "Prevención de Memory Leaks", "level": 2 }
+                        {
+                            "name": "GC Fundamentos",
+                            "subtitle": "Memoria",
+                            "level": 2,
+                            "info": {
+                                "title": "Fundamentos del GC",
+                                "description": "Comprensión del heap, generaciones y algoritmos de garbage collection en .NET.",
+                                "link": "samples/clase5-garbage-collection/README.html"
+                            }
+                        },
+                        {
+                            "name": "IDisposable",
+                            "subtitle": "Patrones",
+                            "level": 2,
+                            "info": {
+                                "title": "Patrón IDisposable",
+                                "description": "Implementación correcta del patrón IDisposable para gestión de recursos no administrados.",
+                                "link": "samples/clase5-garbage-collection/README.html"
+                            }
+                        },
+                        {
+                            "name": "Memory Leaks",
+                            "subtitle": "Prevención",
+                            "level": 2,
+                            "info": {
+                                "title": "Prevención de Memory Leaks",
+                                "description": "Identificación y prevención de memory leaks comunes en aplicaciones .NET.",
+                                "link": "samples/clase5-garbage-collection/README.html"
+                            }
+                        }
                     ]
                 },
                 {
-                    "name": "⚡ 6. Optimización de BD", "level": 1,
+                    "name": "⚡ Optimización SQL",
+                    "subtitle": "Base de Datos",
+                    "level": 1,
+                    "info": {
+                        "title": "Clase 6: Indexación SQL",
+                        "description": "Estrategias de indexación SQL y optimización de performance en EF Core para sistemas de alto tráfico.",
+                        "link": "samples/clase6-indexacion-sql/README.html"
+                    },
                     "children": [
-                        { "name": "Indexación", "level": 2 },
-                        { "name": "Índices Avanzados", "level": 2 },
-                        { "name": "Planes de Ejecución", "level": 2 }
+                        {
+                            "name": "Indexación",
+                            "subtitle": "SQL",
+                            "level": 2,
+                            "info": {
+                                "title": "Estrategias de Indexación",
+                                "description": "Diseño e implementación de índices para optimización de consultas SQL.",
+                                "link": "samples/clase6-indexacion-sql/README.html"
+                            }
+                        },
+                        {
+                            "name": "EF Core",
+                            "subtitle": "Performance",
+                            "level": 2,
+                            "info": {
+                                "title": "EF Core Performance",
+                                "description": "Optimización de consultas y configuración de EF Core para aplicaciones empresariales.",
+                                "link": "samples/clase6-indexacion-sql/README.html"
+                            }
+                        },
+                        {
+                            "name": "Planes Ejecución",
+                            "subtitle": "Análisis",
+                            "level": 2,
+                            "info": {
+                                "title": "Planes de Ejecución",
+                                "description": "Análisis y optimización de planes de ejecución SQL para mejorar performance.",
+                                "link": "samples/clase6-indexacion-sql/README.html"
+                            }
+                        }
                     ]
                 },
                 {
-                    "name": "🏗️ 7. Diseño Avanzado de BD", "level": 1,
+                    "name": "🏗️ Diseño BD",
+                    "subtitle": "Arquitectura",
+                    "level": 1,
+                    "info": {
+                        "title": "Clase 7: Diseño Avanzado BD",
+                        "description": "Arquitecturas de base de datos metadata-driven y patrones EAV para sistemas empresariales flexibles.",
+                        "link": "samples/clase7-diseno-bd-metadatos/README.html"
+                    },
                     "children": [
-                        { "name": "Diseño por Metadatos", "level": 2 },
-                        { "name": "Modelo Híbrido con JSON", "level": 2 },
-                        { "name": "Meta-Modelos", "level": 2 }
+                        {
+                            "name": "Metadatos",
+                            "subtitle": "Diseño",
+                            "level": 2,
+                            "info": {
+                                "title": "Diseño por Metadatos",
+                                "description": "Implementación de arquitecturas metadata-driven para sistemas flexibles y escalables.",
+                                "link": "samples/clase7-diseno-bd-metadatos/README.html"
+                            }
+                        },
+                        {
+                            "name": "EAV Pattern",
+                            "subtitle": "Patrones",
+                            "level": 2,
+                            "info": {
+                                "title": "Patrón EAV",
+                                "description": "Entity-Attribute-Value pattern para esquemas de base de datos dinámicos.",
+                                "link": "samples/clase7-diseno-bd-metadatos/README.html"
+                            }
+                        },
+                        {
+                            "name": "JSON Híbrido",
+                            "subtitle": "Modelos",
+                            "level": 2,
+                            "info": {
+                                "title": "Modelos Híbridos",
+                                "description": "Combinación de esquemas relacionales con JSON para flexibilidad y performance.",
+                                "link": "samples/clase7-diseno-bd-metadatos/README.html"
+                            }
+                        }
                     ]
                 }
             ]
         };
 
+        // Variables globales
+        let svg, simulation, nodes, links, node, link, zoom, transform = d3.zoomIdentity;
         const container = document.getElementById('mind-map-container');
-        const width = container.clientWidth;
-        const height = container.clientHeight;
+        let width = container.clientWidth;
+        let height = container.clientHeight;
+        
+        // Configuración responsiva
+        const isMobile = window.innerWidth < 768;
+        const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
 
-        const svg = d3.select(container).append("svg").attr("viewBox", [-width / 2, -height / 2, width, height]);
+        // Inicializar el mapa con diseño tipo sistema solar
+        function initMindMap() {
+            // Actualizar dimensiones
+            width = container.clientWidth;
+            height = container.clientHeight;
+            
+            svg = d3.select(container).append("svg")
+                .attr("viewBox", [0, 0, width, height])
+                .style("font", "12px sans-serif");
 
-        const root = d3.hierarchy(mindMapData);
-        const links = root.links();
-        const nodes = root.descendants();
+            // Configurar zoom
+            zoom = d3.zoom()
+                .scaleExtent([0.3, 3])
+                .on("zoom", handleZoom);
 
-        const simulation = d3.forceSimulation(nodes)
-            .force("link", d3.forceLink(links).id(d => d.id).distance(d => (d.source.data.level === 0 ? 150 : 80)).strength(1))
-            .force("charge", d3.forceManyBody().strength(-400))
-            .force("center", d3.forceCenter());
+            svg.call(zoom);
 
-        const link = svg.append("g")
-            .attr("class", "links")
-            .selectAll("line")
-            .data(links)
-            .join("line")
-            .attr("class", "link");
+            // Crear datos del sistema solar
+            const solarSystemData = createSolarSystemLayout();
+            
+            nodes = solarSystemData.nodes;
+            links = solarSystemData.links;
 
-        const node = svg.append("g")
-            .attr("class", "nodes")
-            .selectAll("g")
-            .data(nodes)
-            .join("g")
-            .attr("class", d => `node ${d.data.level === 0 ? 'root' : 'level-' + d.data.level}`)
-            .call(drag(simulation));
+            // Crear enlaces (órbitas)
+            link = svg.append("g")
+                .attr("class", "links")
+                .selectAll("path")
+                .data(links)
+                .join("path")
+                .attr("class", "link")
+                .attr("d", d => createOrbitPath(d))
+                .style("stroke", "rgba(255, 255, 255, 0.1)")
+                .style("stroke-width", 1)
+                .style("fill", "none")
+                .style("opacity", 0.3)
+                .style("stroke-dasharray", "5,5");
 
-        const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+            // Crear nodos con animación de entrada
+            node = svg.append("g")
+                .attr("class", "nodes")
+                .selectAll("g")
+                .data(nodes)
+                .join("g")
+                .attr("class", d => `node ${d.level === 0 ? 'root' : `level-${d.level}`} ${d.info ? 'clickable' : ''}`)
+                .attr("transform", d => `translate(${d.x},${d.y}) scale(0)`)
+                .style("opacity", d => d.visible ? 0 : 0) // Todas empiezan invisible para la animación
+                .on("click", handleNodeClick)
+                .on("mouseover", handleMouseOver)
+                .on("mouseout", handleMouseOut);
 
-        node.append("circle")
-            .attr("r", d => d.data.level === 0 ? 40 : (d.data.level === 1 ? 25 : 15))
-            .attr("fill", d => d.children ? colorScale(d.data.name) : '#302b63')
-            .style("filter", d => `drop-shadow(0 0 10px ${colorScale(d.data.name)})`);
+            // Añadir círculos con gradientes
+            const defs = svg.append("defs");
+            createGradients(defs);
 
-        node.append("text")
-            .text(d => d.data.name)
-            .attr("dy", d => d.data.level === 0 ? 60 : (d.data.level === 1 ? 40 : 25));
+            node.append("circle")
+                .attr("r", d => getNodeRadius(d.level))
+                .style("fill", d => `url(#gradient-${d.level})`)
+                .style("stroke", d => getNodeStroke(d.level))
+                .style("stroke-width", d => d.level === 0 ? 4 : 2)
+                .style("filter", d => d.level === 0 ? "url(#glow)" : "none");
 
-        simulation.on("tick", () => {
-            link
-                .attr("x1", d => d.source.x)
-                .attr("y1", d => d.source.y)
-                .attr("x2", d => d.target.x)
-                .attr("y2", d => d.target.y);
+            // Añadir texto principal con ajuste responsivo
+            node.append("text")
+                .attr("dy", "-0.2em")
+                .attr("text-anchor", "middle")
+                .style("font-size", d => getTextSize(d.level))
+                .style("font-weight", d => d.level <= 1 ? "bold" : "normal")
+                .style("fill", "white")
+                .text(d => adjustTextForScreen(d.name));
 
-            node.attr("transform", d => `translate(${d.x}, ${d.y})`);
-        });
+            // Añadir subtítulo
+            node.append("text")
+                .attr("dy", "0.8em")
+                .attr("text-anchor", "middle")
+                .style("font-size", d => getSubtitleSize(d.level))
+                .style("font-weight", "normal")
+                .style("fill", "rgba(255,255,255,0.7)")
+                .text(d => isMobile ? "" : (d.subtitle || ""));
 
-        function drag(simulation) {
-            function dragstarted(event, d) {
-                if (!event.active) simulation.alphaTarget(0.3).restart();
-                d.fx = d.x;
-                d.fy = d.y;
-            }
+            // Añadir indicador de enlace
+            node.filter(d => d.info)
+                .append("circle")
+                .attr("r", isMobile ? 6 : 8)
+                .attr("cx", d => getNodeRadius(d.level) * 0.7)
+                .attr("cy", d => -getNodeRadius(d.level) * 0.7)
+                .style("fill", "#ffd700")
+                .style("stroke", "#fff")
+                .style("stroke-width", 2);
 
-            function dragged(event, d) {
-                d.fx = event.x;
-                d.fy = event.y;
-            }
-
-            function dragended(event, d) {
-                if (!event.active) simulation.alphaTarget(0);
-                d.fx = null;
-                d.fy = null;
-            }
-
-            return d3.drag()
-                .on("start", dragstarted)
-                .on("drag", dragged)
-                .on("end", dragended);
+            node.filter(d => d.info)
+                .append("text")
+                .attr("x", d => getNodeRadius(d.level) * 0.7)
+                .attr("y", d => -getNodeRadius(d.level) * 0.7 + 3)
+                .attr("text-anchor", "middle")
+                .style("font-size", isMobile ? "8px" : "10px")
+                .style("font-weight", "bold")
+                .style("fill", "#333")
+                .text("🔗");
+            
+            // Crear efectos especiales
+            createSpecialEffects(defs);
+            
+            // Animación de entrada espectacular
+            animateEntrance();
         }
 
+        // Crear layout tipo sistema solar mejorado
+        function createSolarSystemLayout() {
+            const centerX = width / 2;
+            const centerY = height / 2;
+            const minDimension = Math.min(width, height);
+            
+            // Calcular radios con mejor espaciado
+            const baseRadius = minDimension * 0.15; // Aumentado para mejor espaciado
+            const level1Radius = isMobile ? baseRadius * 1.8 : baseRadius * 2.5; // Más espaciado
+            const level2Radius = isMobile ? baseRadius * 0.6 : baseRadius * 0.8; // Lunas más cerca
+            
+            // Nodo central (sol) - CursoNET
+            const rootNode = {
+                ...mindMapData,
+                x: centerX,
+                y: centerY,
+                level: 0,
+                angle: 0,
+                radius: 0,
+                originalX: centerX,
+                originalY: centerY,
+                visible: true
+            };
+            
+            const allNodes = [rootNode];
+            const allLinks = [];
+            
+            // Calcular posiciones para nivel 1 (planetas - cursos)
+            const level1Nodes = mindMapData.children || [];
+            const level1AngleStep = (2 * Math.PI) / level1Nodes.length;
+            
+            level1Nodes.forEach((nodeData, i) => {
+                // Distribuir planetas con mejor espaciado
+                const angle = i * level1AngleStep - Math.PI / 2; // Empezar desde arriba
+                const x = centerX + level1Radius * Math.cos(angle);
+                const y = centerY + level1Radius * Math.sin(angle);
+                
+                const node = {
+                    ...nodeData,
+                    x: x,
+                    y: y,
+                    level: 1,
+                    angle: angle,
+                    radius: level1Radius,
+                    originalX: x,
+                    originalY: y,
+                    visible: true,
+                    planetId: i
+                };
+                
+                allNodes.push(node);
+                
+                // Crear órbita para el planeta
+                allLinks.push({
+                    source: rootNode,
+                    target: node,
+                    type: 'orbit',
+                    radius: level1Radius
+                });
+                
+                // Calcular posiciones para nivel 2 (lunas - subtemas)
+                if (nodeData.children) {
+                    const moonCount = nodeData.children.length;
+                    const level2AngleStep = (2 * Math.PI) / moonCount;
+                    
+                    nodeData.children.forEach((childData, j) => {
+                        // Distribuir lunas alrededor de su planeta
+                        const moonAngle = j * level2AngleStep;
+                        const childX = x + level2Radius * Math.cos(moonAngle);
+                        const childY = y + level2Radius * Math.sin(moonAngle);
+                        
+                        const childNode = {
+                            ...childData,
+                            x: childX,
+                            y: childY,
+                            level: 2,
+                            angle: moonAngle,
+                            radius: level2Radius,
+                            originalX: childX,
+                            originalY: childY,
+                            visible: false, // Inicialmente ocultas
+                            parent: node,
+                            planetId: i
+                        };
+                        
+                        allNodes.push(childNode);
+                        
+                        // Crear órbita de luna
+                        allLinks.push({
+                            source: node,
+                            target: childNode,
+                            type: 'moon',
+                            radius: level2Radius
+                        });
+                    });
+                }
+            });
+            
+            return { nodes: allNodes, links: allLinks };
+        }
+        
+        // Funciones auxiliares responsivas
+        function getNodeRadius(level) {
+            const baseSize = isMobile ? 0.8 : 1;
+            switch(level) {
+                case 0: return (isMobile ? 40 : 55) * baseSize; // Sol más grande
+                case 1: return (isMobile ? 28 : 40) * baseSize; // Planetas más grandes
+                case 2: return (isMobile ? 16 : 22) * baseSize; // Lunas más pequeñas
+                default: return (isMobile ? 15 : 20) * baseSize;
+            }
+        }
+        
+        function getTextSize(level) {
+            if (isMobile) {
+                switch(level) {
+                    case 0: return "12px";
+                    case 1: return "10px";
+                    case 2: return "8px";
+                    default: return "7px";
+                }
+            } else {
+                switch(level) {
+                    case 0: return "14px";
+                    case 1: return "12px";
+                    case 2: return "10px";
+                    default: return "9px";
+                }
+            }
+        }
+        
+        function getSubtitleSize(level) {
+            if (isMobile) return "0px"; // Ocultar subtítulos en móvil
+            
+            switch(level) {
+                case 0: return "11px";
+                case 1: return "9px";
+                case 2: return "8px";
+                default: return "7px";
+            }
+        }
+        
+        function adjustTextForScreen(text) {
+            if (isMobile && text.length > 10) {
+                return text.split(' ')[0] + '...';
+            }
+            return text;
+        }
+        
+        function getNodeStroke(level) {
+            const colors = { 0: "#ffd700", 1: "#6a11cb", 2: "#2575fc" };
+            return colors[level] || "#999";
+        }
+        
+        function createOrbitPath(d) {
+            if (d.type === 'orbit') {
+                // Crear círculo orbital
+                const radius = d.target.radius;
+                const centerX = d.source.x;
+                const centerY = d.source.y;
+                
+                return `M ${centerX + radius},${centerY} A ${radius},${radius} 0 1,1 ${centerX + radius},${centerY - 0.1}`;
+            } else {
+                // Línea simple para lunas
+                return `M ${d.source.x},${d.source.y} L ${d.target.x},${d.target.y}`;
+            }
+        }
+        
+        function createGradients(defs) {
+            // Gradiente para nodo central
+            const grad0 = defs.append("radialGradient")
+                .attr("id", "gradient-0")
+                .attr("cx", "50%")
+                .attr("cy", "30%")
+                .attr("r", "70%");
+            
+            grad0.append("stop")
+                .attr("offset", "0%")
+                .attr("stop-color", "#ffd700")
+                .attr("stop-opacity", 1);
+            
+            grad0.append("stop")
+                .attr("offset", "100%")
+                .attr("stop-color", "#ff8c00")
+                .attr("stop-opacity", 1);
+            
+            // Gradiente para nivel 1
+            const grad1 = defs.append("radialGradient")
+                .attr("id", "gradient-1")
+                .attr("cx", "50%")
+                .attr("cy", "30%")
+                .attr("r", "70%");
+            
+            grad1.append("stop")
+                .attr("offset", "0%")
+                .attr("stop-color", "#667eea")
+                .attr("stop-opacity", 1);
+            
+            grad1.append("stop")
+                .attr("offset", "100%")
+                .attr("stop-color", "#764ba2")
+                .attr("stop-opacity", 1);
+            
+            // Gradiente para nivel 2
+            const grad2 = defs.append("radialGradient")
+                .attr("id", "gradient-2")
+                .attr("cx", "50%")
+                .attr("cy", "30%")
+                .attr("r", "70%");
+            
+            grad2.append("stop")
+                .attr("offset", "0%")
+                .attr("stop-color", "#4ecdc4")
+                .attr("stop-opacity", 1);
+            
+            grad2.append("stop")
+                .attr("offset", "100%")
+                .attr("stop-color", "#44a08d")
+                .attr("stop-opacity", 1);
+        }
+        
+        function createSpecialEffects(defs) {
+            // Filtro de resplandor
+            const glow = defs.append("filter")
+                .attr("id", "glow")
+                .attr("x", "-50%")
+                .attr("y", "-50%")
+                .attr("width", "200%")
+                .attr("height", "200%");
+            
+            glow.append("feGaussianBlur")
+                .attr("stdDeviation", "4")
+                .attr("result", "coloredBlur");
+            
+            const feMerge = glow.append("feMerge");
+            feMerge.append("feMergeNode").attr("in", "coloredBlur");
+            feMerge.append("feMergeNode").attr("in", "SourceGraphic");
+        }
+        
+        function animateEntrance() {
+            // Fase 1: Mostrar órbitas principales
+            link.style("opacity", 0)
+                .transition()
+                .duration(1200)
+                .delay((d, i) => {
+                    if (d.type === 'orbit') return i * 150;
+                    return 0; // Órbitas de lunas permanecen ocultas
+                })
+                .ease(d3.easeQuadOut)
+                .style("opacity", d => d.type === 'orbit' ? 0.4 : 0);
+            
+            // Fase 2: Aparecer el Sol (nodo central)
+            svg.selectAll('.node.root')
+                .transition()
+                .duration(1000)
+                .delay(300)
+                .ease(d3.easeElasticOut)
+                .attr("transform", d => `translate(${d.x},${d.y}) scale(1)`)
+                .style("opacity", 1);
+            
+            // Fase 3: Aparecer los planetas (cursos)
+            svg.selectAll('.node.level-1')
+                .transition()
+                .duration(1200)
+                .delay((d, i) => 800 + i * 200)
+                .ease(d3.easeElasticOut)
+                .attr("transform", d => `translate(${d.x},${d.y}) scale(1)`)
+                .style("opacity", 1);
+            
+            // Fase 4: Las lunas permanecen ocultas hasta expandir
+            svg.selectAll('.node.level-2')
+                .style("opacity", 0)
+                .attr("transform", d => `translate(${d.parent.x},${d.parent.y}) scale(0)`);
+            
+            // Efecto de ondas de energía desde el sol
+            const rootNode = svg.select('.node.root');
+            if (!rootNode.empty()) {
+                const rootData = rootNode.datum();
+                
+                // Crear ondas expansivas doradas
+                for (let i = 0; i < 4; i++) {
+                    svg.append("circle")
+                        .attr("cx", rootData.x)
+                        .attr("cy", rootData.y)
+                        .attr("r", 60)
+                        .style("fill", "none")
+                        .style("stroke", "rgba(255, 215, 0, 0.8)")
+                        .style("stroke-width", 3)
+                        .transition()
+                        .duration(3000)
+                        .delay(i * 300 + 1000)
+                        .ease(d3.easeQuadOut)
+                        .attr("r", Math.min(width, height) * 0.7)
+                        .style("opacity", 0)
+                        .style("stroke-width", 0.5)
+                        .remove();
+                }
+            }
+            
+            // Crear efecto de partículas alrededor del sol
+            setTimeout(() => {
+                createSolarParticles();
+            }, 2000);
+        }
+        
+        // Función para crear partículas solares
+        function createSolarParticles() {
+            const rootNode = svg.select('.node.root');
+            if (!rootNode.empty()) {
+                const rootData = rootNode.datum();
+                
+                for (let i = 0; i < 8; i++) {
+                    const angle = (i * Math.PI * 2) / 8;
+                    const startRadius = 60;
+                    const endRadius = 120;
+                    
+                    svg.append("circle")
+                        .attr("cx", rootData.x + startRadius * Math.cos(angle))
+                        .attr("cy", rootData.y + startRadius * Math.sin(angle))
+                        .attr("r", 2)
+                        .style("fill", "#ffd700")
+                        .style("opacity", 0.8)
+                        .transition()
+                        .duration(2000)
+                        .ease(d3.easeQuadOut)
+                        .attr("cx", rootData.x + endRadius * Math.cos(angle))
+                        .attr("cy", rootData.y + endRadius * Math.sin(angle))
+                        .attr("r", 1)
+                        .style("opacity", 0)
+                        .remove();
+                }
+            }
+        }
+
+        // Función para crear paths curvos
+        function linkPath(d) {
+            const sourceX = d.source.x;
+            const sourceY = d.source.y;
+            const targetX = d.target.x;
+            const targetY = d.target.y;
+            
+            const midX = (sourceX + targetX) / 2;
+            const midY = (sourceY + targetY) / 2;
+            
+            return `M${sourceX},${sourceY} Q${midX},${midY - 30} ${targetX},${targetY}`;
+        }
+
+        // Manejadores de eventos
+        function handleZoom(event) {
+            const { transform } = event;
+            svg.selectAll('.nodes, .links').attr('transform', transform);
+        }
+
+        function handleNodeClick(event, d) {
+            if (d.info && d.info.link) {
+                window.open(d.info.link, '_blank');
+            }
+        }
+
+        function handleMouseOver(event, d) {
+            // Highlight enlaces relacionados con animación
+            link.transition()
+                .duration(200)
+                .style("opacity", l => l.source === d || l.target === d ? 1 : 0.1)
+                .style("stroke-width", l => l.source === d || l.target === d ? 3 : 1);
+            
+            // Destacar nodos relacionados
+            node.transition()
+                .duration(200)
+                .style("opacity", n => {
+                    if (n === d) return 1;
+                    // Verificar si es padre o hijo
+                    const isRelated = links.some(l => 
+                        (l.source === d && l.target === n) || 
+                        (l.target === d && l.source === n)
+                    );
+                    return isRelated ? 1 : 0.4;
+                });
+            
+            // Efecto de ondas en el nodo actual
+            d3.select(event.target.parentNode)
+                .select('circle')
+                .transition()
+                .duration(300)
+                .ease(d3.easeElasticOut)
+                .attr('r', d => getNodeRadius(d.level) * 1.3);
+            
+            // Mostrar información con delay
+            setTimeout(() => {
+                if (d.info) {
+                    showInfo(d.info);
+                }
+            }, 200);
+        }
+
+        function handleMouseOut(event, d) {
+            // Restaurar opacidad de enlaces
+            link.transition()
+                .duration(300)
+                .style("opacity", d => d.type === 'orbit' ? 0.3 : 0.6)
+                .style("stroke-width", 1);
+            
+            // Restaurar opacidad de nodos
+            node.transition()
+                .duration(300)
+                .style("opacity", 1);
+            
+            // Restaurar tamaño del nodo
+            d3.select(event.target.parentNode)
+                .select('circle')
+                .transition()
+                .duration(400)
+                .ease(d3.easeElasticOut)
+                .attr('r', d => getNodeRadius(d.level));
+            
+            // Ocultar información con delay
+            setTimeout(() => {
+                hideInfo();
+            }, 300);
+        }
+
+        // Funciones de información mejoradas
+        function showInfo(info) {
+            const panel = document.getElementById('info-panel');
+            const title = document.getElementById('info-title');
+            const description = document.getElementById('info-description');
+            const link = document.getElementById('info-link');
+            
+            // Actualizar contenido
+            title.textContent = info.title;
+            description.textContent = info.description;
+            
+            if (info.link) {
+                link.href = info.link;
+                link.style.display = 'inline-block';
+            } else {
+                link.style.display = 'none';
+            }
+            
+            // Animación de entrada suave
+            panel.style.transform = 'translateX(100%) scale(0.9)';
+            panel.style.opacity = '0';
+            panel.classList.add('active');
+            
+            // Forzar repaint
+            panel.offsetHeight;
+            
+            // Animación de entrada
+            panel.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+            panel.style.transform = 'translateX(0) scale(1)';
+            panel.style.opacity = '1';
+        }
+
+        function hideInfo() {
+            const panel = document.getElementById('info-panel');
+            
+            // Animación de salida
+            panel.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+            panel.style.transform = 'translateX(100%) scale(0.9)';
+            panel.style.opacity = '0';
+            
+            // Remover clase después de la animación
+            setTimeout(() => {
+                panel.classList.remove('active');
+            }, 300);
+        }
+
+        // Funciones de control mejoradas
+        function resetView() {
+            // Ocultar todas las lunas
+            svg.selectAll('.node.level-2')
+                .transition()
+                .duration(400)
+                .style('opacity', 0)
+                .attr('transform', d => `translate(${d.parent.x},${d.parent.y}) scale(0)`);
+            
+            // Ocultar órbitas de lunas
+            svg.selectAll('.link')
+                .transition()
+                .duration(400)
+                .style('opacity', d => d.type === 'moon' ? 0 : (d.type === 'orbit' ? 0.4 : 0.6));
+            
+            // Centrar vista en el sistema solar principal
+            svg.transition()
+                .duration(1000)
+                .ease(d3.easeCubicInOut)
+                .call(
+                    zoom.transform,
+                    d3.zoomIdentity.translate(0, 0).scale(1)
+                );
+            
+            // Efecto de pulso en planetas
+            svg.selectAll('.node.level-1')
+                .transition()
+                .duration(800)
+                .ease(d3.easeElasticOut)
+                .attr('transform', d => `translate(${d.x},${d.y}) scale(1.2)`)
+                .transition()
+                .duration(400)
+                .attr('transform', d => `translate(${d.x},${d.y}) scale(1)`);
+            
+            // Actualizar visibilidad
+            nodes.forEach(node => {
+                if (node.level === 2) node.visible = false;
+            });
+        }
+
+        function zoomIn() {
+            svg.transition()
+                .duration(400)
+                .ease(d3.easeQuadInOut)
+                .call(zoom.scaleBy, 1.4);
+        }
+
+        function zoomOut() {
+            svg.transition()
+                .duration(400)
+                .ease(d3.easeQuadInOut)
+                .call(zoom.scaleBy, 1 / 1.4);
+        }
+
+        function expandAll() {
+            // Mostrar todas las lunas con efecto de aparición
+            svg.selectAll('.node.level-2')
+                .transition()
+                .duration(800)
+                .delay((d, i) => d.planetId * 100 + i * 50)
+                .ease(d3.easeElasticOut)
+                .style('opacity', 1)
+                .attr('transform', d => `translate(${d.x},${d.y}) scale(1)`);
+            
+            // Hacer visibles todas las órbitas
+            svg.selectAll('.link')
+                .transition()
+                .duration(600)
+                .delay((d, i) => i * 50)
+                .style('opacity', d => d.type === 'orbit' ? 0.6 : 0.8)
+                .style('stroke-width', d => d.type === 'orbit' ? 2 : 1.5);
+            
+            // Efecto de rotación en planetas principales
+            svg.selectAll('.node.level-1')
+                .transition()
+                .duration(1500)
+                .ease(d3.easeElasticOut)
+                .attr('transform', d => `translate(${d.x},${d.y}) scale(1.1)`)
+                .transition()
+                .duration(2000)
+                .ease(d3.easeLinear)
+                .attrTween('transform', function(d) {
+                    return d3.interpolateString(
+                        `translate(${d.x},${d.y}) rotate(0) scale(1.1)`,
+                        `translate(${d.x},${d.y}) rotate(360) scale(1)`
+                    );
+                });
+            
+            // Actualizar visibilidad
+            nodes.forEach(node => {
+                if (node.level === 2) node.visible = true;
+            });
+        }
+
+        function collapseAll() {
+            // Fase 1: Ocultar todas las lunas
+            svg.selectAll('.node.level-2')
+                .transition()
+                .duration(600)
+                .ease(d3.easeBackIn)
+                .style('opacity', 0)
+                .attr('transform', d => `translate(${d.parent.x},${d.parent.y}) scale(0)`);
+            
+            // Fase 2: Ocultar órbitas de lunas
+            svg.selectAll('.link')
+                .filter(d => d.type === 'moon')
+                .transition()
+                .duration(400)
+                .style('opacity', 0);
+            
+            // Fase 3: Crear efecto de colapso gravitacional
+            const rootNode = svg.select('.node.root');
+            const rootData = rootNode.datum();
+            
+            // Colapsar planetas hacia el sol
+            svg.selectAll('.node.level-1')
+                .transition()
+                .duration(1200)
+                .delay(400)
+                .ease(d3.easeBackIn)
+                .attr('transform', `translate(${rootData.x},${rootData.y}) scale(0.2)`)
+                .transition()
+                .duration(600)
+                .ease(d3.easeElasticOut)
+                .attr('transform', d => `translate(${d.x},${d.y}) scale(1)`);
+            
+            // Efecto de agujero negro
+            const blackHole = svg.append('circle')
+                .attr('cx', rootData.x)
+                .attr('cy', rootData.y)
+                .attr('r', 0)
+                .style('fill', 'radial-gradient(circle, #000 0%, #333 100%)')
+                .style('opacity', 0);
+            
+            blackHole.transition()
+                .duration(800)
+                .delay(600)
+                .attr('r', 80)
+                .style('opacity', 0.9)
+                .transition()
+                .duration(1000)
+                .attr('r', 0)
+                .style('opacity', 0)
+                .remove();
+            
+            // Atenuar órbitas principales
+            svg.selectAll('.link')
+                .filter(d => d.type === 'orbit')
+                .transition()
+                .duration(800)
+                .style('opacity', 0.2)
+                .style('stroke-width', 1);
+            
+            // Actualizar visibilidad
+            nodes.forEach(node => {
+                if (node.level === 2) node.visible = false;
+            });
+        }
+
+        // Función removida para evitar duplicación
+
+        // Redimensionar al cambiar el tamaño de la ventana
+        let resizeTimeout;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                const newWidth = container.clientWidth;
+                const newHeight = container.clientHeight;
+                
+                // Actualizar dimensiones del SVG
+                svg.attr("viewBox", [0, 0, newWidth, newHeight]);
+                
+                // Recalcular posiciones si hay cambio significativo
+                if (Math.abs(newWidth - width) > 200 || Math.abs(newHeight - height) > 200) {
+                    // Limpiar SVG anterior
+                    svg.selectAll("*").remove();
+                    
+                    // Actualizar variables globales
+                    width = newWidth;
+                    height = newHeight;
+                    
+                    // Reinicializar con nueva configuración
+                    initMindMap();
+                }
+            }, 500);
+        });
+
+        // Agregar información sobre el estado del sistema
+        function addSystemInfo() {
+            const infoDiv = document.createElement('div');
+            infoDiv.id = 'system-info';
+            infoDiv.innerHTML = `
+                <div style="position: fixed; bottom: 20px; left: 20px; background: rgba(0,0,0,0.8); color: white; padding: 10px; border-radius: 10px; font-size: 0.8em; z-index: 50;">
+                    <div>☀️ Sol: CursoNET</div>
+                    <div>🪐 Planetas: 7 Cursos</div>
+                    <div>🌙 Lunas: Subtemas</div>
+                </div>
+            `;
+            document.body.appendChild(infoDiv);
+        }
+        
+        // Agregar algunos efectos adicionales al cargar
+        document.addEventListener('DOMContentLoaded', function() {
+            // Efecto de carga del header
+            const header = document.querySelector('.header');
+            header.style.opacity = '0';
+            header.style.transform = 'translateY(-20px)';
+            
+            setTimeout(() => {
+                header.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+                header.style.opacity = '1';
+                header.style.transform = 'translateY(0)';
+            }, 100);
+            
+            // Agregar información del sistema
+            addSystemInfo();
+            
+            // Inicializar mapa mental
+            setTimeout(() => {
+                initMindMap();
+            }, 300);
+        });
     </script>
 </body>
 </html>

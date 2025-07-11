@@ -13,13 +13,13 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             color: #333;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
         }
@@ -28,7 +28,7 @@
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
             border-radius: 20px;
-            padding: 30px;
+            padding: 40px;
             margin-bottom: 30px;
             border: 1px solid rgba(255, 255, 255, 0.2);
             text-align: center;
@@ -36,81 +36,176 @@
 
         .header h1 {
             color: white;
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+            font-size: 3rem;
+            margin-bottom: 15px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
         .header .subtitle {
             color: rgba(255, 255, 255, 0.9);
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             font-weight: 300;
+            margin-bottom: 20px;
         }
 
-        .content-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+        .header .stats {
+            display: flex;
+            justify-content: center;
             gap: 30px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            color: white;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .level-selector {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
             margin-bottom: 30px;
         }
 
-        .section {
+        .level-card {
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
             border-radius: 15px;
-            padding: 25px;
+            padding: 30px;
             border: 1px solid rgba(255, 255, 255, 0.2);
+            flex: 1;
+            max-width: 500px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
-        .section h2 {
+        .level-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .level-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ffd700, #ffed4a);
+        }
+
+        .level-card.simple::before {
+            background: linear-gradient(90deg, #4ade80, #22c55e);
+        }
+
+        .level-card.advanced::before {
+            background: linear-gradient(90deg, #f59e0b, #d97706);
+        }
+
+        .level-title {
             color: white;
             font-size: 1.8rem;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .section h3 {
-            color: #ffd700;
-            font-size: 1.3rem;
-            margin: 20px 0 10px 0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .level-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+            margin-bottom: 20px;
+            font-style: italic;
         }
 
-        .section p, .section li {
+        .level-features {
+            list-style: none;
             color: rgba(255, 255, 255, 0.9);
-            line-height: 1.6;
-            margin-bottom: 10px;
         }
 
-        .section ul {
-            padding-left: 20px;
-        }
-
-        .section li {
+        .level-features li {
             margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
         }
 
-        .icon {
-            font-size: 1.2em;
+        .level-features li::before {
+            content: '✨';
+            position: absolute;
+            left: 0;
+        }
+
+        .level-card.advanced .level-features li::before {
+            content: '🚀';
+        }
+
+        .level-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .level-stat {
+            text-align: center;
+            color: white;
+        }
+
+        .level-stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        .level-stat-label {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .exercises-section {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .exercises-section h2 {
+            color: white;
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            text-align: center;
         }
 
         .exercises-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
         }
 
         .exercise-card {
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 20px;
+            border-radius: 15px;
+            padding: 25px;
             border: 1px solid rgba(255, 255, 255, 0.15);
             transition: all 0.3s ease;
+            position: relative;
         }
 
         .exercise-card:hover {
@@ -118,44 +213,149 @@
             background: rgba(255, 255, 255, 0.2);
         }
 
-        .exercise-card h4 {
-            color: #ffd700;
-            font-size: 1.1rem;
-            margin-bottom: 10px;
+        .exercise-number {
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background: linear-gradient(45deg, #ffd700, #ffed4a);
+            color: #333;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
         }
 
-        .exercise-card .file-name {
+        .exercise-title {
+            color: white;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            padding-right: 50px;
+        }
+
+        .exercise-description {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .file-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .file-item {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .file-item h4 {
+            color: #ffd700;
+            font-size: 1rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .file-name {
             color: #90ee90;
             font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+        }
+
+        .file-description {
+            color: rgba(255, 255, 255, 0.8);
             font-size: 0.9rem;
-            margin-bottom: 10px;
+            line-height: 1.4;
         }
 
-        .metrics {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            margin-top: 30px;
+        .difficulty-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-top: 10px;
         }
 
-        .metric-card {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 15px;
+        .difficulty-simple {
+            background: rgba(34, 197, 94, 0.3);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.5);
+        }
+
+        .difficulty-advanced {
+            background: rgba(245, 158, 11, 0.3);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.5);
+        }
+
+        .comparison-table {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .comparison-table h2 {
+            color: white;
+            font-size: 2.2rem;
+            margin-bottom: 20px;
             text-align: center;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .comparison-column {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
             border: 1px solid rgba(255, 255, 255, 0.15);
         }
 
-        .metric-card .number {
-            color: #ffd700;
-            font-size: 2rem;
-            font-weight: bold;
-            display: block;
+        .comparison-column h3 {
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .metric-card .label {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.9rem;
+        .comparison-list {
+            list-style: none;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .comparison-list li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .comparison-list li::before {
+            content: '✨';
+            position: absolute;
+            left: 0;
+        }
+
+        .comparison-column.advanced .comparison-list li::before {
+            content: '🚀';
         }
 
         .navigation {
@@ -170,14 +370,15 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.3);
             color: white;
-            padding: 12px 25px;
+            padding: 15px 30px;
             border-radius: 25px;
             text-decoration: none;
             font-weight: 500;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            font-size: 1rem;
         }
 
         .nav-button:hover {
@@ -185,12 +386,51 @@
             transform: translateY(-2px);
         }
 
+        .nav-button.primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        @media (max-width: 1200px) {
+            .level-selector {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .level-card {
+                max-width: 600px;
+            }
+        }
+
         @media (max-width: 768px) {
-            .content-grid {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .header .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .header .stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .exercises-grid {
                 grid-template-columns: 1fr;
             }
-            .metrics {
-                grid-template-columns: repeat(2, 1fr);
+            
+            .file-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                align-items: center;
             }
         }
     </style>
@@ -199,108 +439,245 @@
     <div class="container">
         <div class="header">
             <h1>📋 CLASE 2: Análisis de Requisitos</h1>
-            <p class="subtitle">Técnicas avanzadas para capturar, clasificar y gestionar requisitos funcionales y no funcionales</p>
-        </div>
-
-        <div class="content-grid">
-            <div class="section">
-                <h2><span class="icon">🎯</span> Objetivos de Aprendizaje</h2>
-                <ul>
-                    <li><strong>Clasificar</strong> requisitos funcionales vs no funcionales</li>
-                    <li><strong>Crear</strong> matrices de trazabilidad</li>
-                    <li><strong>Gestionar</strong> dependencias entre requisitos</li>
-                    <li><strong>Documentar</strong> casos de uso detallados</li>
-                    <li><strong>Validar</strong> completitud y consistencia</li>
-                </ul>
-            </div>
-
-            <div class="section">
-                <h2><span class="icon">🔧</span> Técnicas Utilizadas</h2>
-                <h3><span class="icon">📊</span> Matriz de Trazabilidad</h3>
-                <p>Seguimiento de requisitos desde origen hasta implementación</p>
-                
-                <h3><span class="icon">🔗</span> Análisis de Dependencias</h3>
-                <p>Identificación de relaciones críticas entre requisitos</p>
-                
-                <h3><span class="icon">📝</span> Casos de Uso</h3>
-                <p>Documentación detallada de interacciones usuario-sistema</p>
-            </div>
-
-            <div class="section">
-                <h2><span class="icon">📚</span> Conceptos Clave</h2>
-                <h3><span class="icon">⚙️</span> Requisitos Funcionales</h3>
-                <p>Qué debe hacer el sistema - funcionalidades específicas y comportamientos esperados.</p>
-                
-                <h3><span class="icon">🏗️</span> Requisitos No Funcionales</h3>
-                <p>Cómo debe funcionar el sistema - performance, seguridad, usabilidad, escalabilidad.</p>
-                
-                <h3><span class="icon">🔄</span> Gestión de Cambios</h3>
-                <p>Control de versiones y evolución de requisitos durante el proyecto.</p>
-            </div>
-
-            <div class="section">
-                <h2><span class="icon">⚙️</span> Metodologías Aplicadas</h2>
-                <ul>
-                    <li><strong>Elicitación de requisitos</strong> - Técnicas de captura</li>
-                    <li><strong>Priorización MoSCoW</strong> - Must, Should, Could, Won't</li>
-                    <li><strong>User Stories</strong> - Formato ágil de requisitos</li>
-                    <li><strong>Acceptance Criteria</strong> - Criterios de aceptación</li>
-                    <li><strong>Impact Analysis</strong> - Análisis de impacto de cambios</li>
-                </ul>
+            <p class="subtitle">Domina la identificación, documentación y gestión de requisitos funcionales y no funcionales</p>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number">13</div>
+                    <div class="stat-label">Archivos de Ejercicios</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">2</div>
+                    <div class="stat-label">Niveles de Dificultad</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">Ejercicios Prácticos</div>
+                </div>
             </div>
         </div>
 
-        <div class="section">
-            <h2><span class="icon">💻</span> Ejercicios Prácticos</h2>
+        <div class="level-selector">
+            <div class="level-card simple" onclick="toggleLevel('simple')">
+                <div class="level-title">
+                    <span>🌟</span>
+                    NIVEL SIMPLE
+                </div>
+                <div class="level-subtitle">Para Desarrolladores Junior</div>
+                <ul class="level-features">
+                    <li>Explicaciones simples y directas</li>
+                    <li>Analogías cotidianas fáciles de entender</li>
+                    <li>Ejercicios interactivos con guías</li>
+                    <li>Conceptos fundamentales sin complejidad</li>
+                    <li>Ejemplos prácticos paso a paso</li>
+                </ul>
+                <div class="level-stats">
+                    <div class="level-stat">
+                        <div class="level-stat-number">6</div>
+                        <div class="level-stat-label">Archivos</div>
+                    </div>
+                    <div class="level-stat">
+                        <div class="level-stat-number">30-45</div>
+                        <div class="level-stat-label">Min/Ejercicio</div>
+                    </div>
+                    <div class="level-stat">
+                        <div class="level-stat-number">Básico</div>
+                        <div class="level-stat-label">Nivel</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="level-card advanced" onclick="toggleLevel('advanced')">
+                <div class="level-title">
+                    <span>🚀</span>
+                    NIVEL AVANZADO
+                </div>
+                <div class="level-subtitle">Para Desarrolladores Semi-Senior</div>
+                <ul class="level-features">
+                    <li>Terminología técnica profesional</li>
+                    <li>Casos reales de sistemas financieros</li>
+                    <li>Escenarios complejos con múltiples stakeholders</li>
+                    <li>Arquitectura empresarial y mejores prácticas</li>
+                    <li>Herramientas profesionales (Jira, Confluence)</li>
+                </ul>
+                <div class="level-stats">
+                    <div class="level-stat">
+                        <div class="level-stat-number">9</div>
+                        <div class="level-stat-label">Archivos</div>
+                    </div>
+                    <div class="level-stat">
+                        <div class="level-stat-number">60-90</div>
+                        <div class="level-stat-label">Min/Ejercicio</div>
+                    </div>
+                    <div class="level-stat">
+                        <div class="level-stat-number">Avanzado</div>
+                        <div class="level-stat-label">Nivel</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="exercises-section">
+            <h2>🎯 Ejercicios Prácticos</h2>
+            
             <div class="exercises-grid">
                 <div class="exercise-card">
-                    <h4>📝 Requisitos Mal Definidos</h4>
-                    <div class="file-name">01-Requirements-Analysis-Before.md</div>
-                    <p>Ejemplo real de requisitos ambiguos, incompletos y mal estructurados que causan problemas en el desarrollo.</p>
-                    <p><strong>Problemas:</strong> Ambigüedad, falta de priorización, dependencias no identificadas</p>
-                    <p><strong>Issues:</strong> 15+ problemas documentados</p>
+                    <div class="exercise-number">1</div>
+                    <div class="exercise-title">Identificación de Tipos de Requisitos</div>
+                    <div class="exercise-description">
+                        Aprende a distinguir entre requisitos funcionales y no funcionales a través de ejemplos prácticos del mundo real.
+                    </div>
+                    <div class="file-grid">
+                        <div class="file-item">
+                            <h4>🌟 Versión Simple</h4>
+                            <div class="file-name">01-Requirements-Simple.md</div>
+                            <div class="file-description">15 requisitos básicos para clasificar con preguntas guía</div>
+                            <span class="difficulty-badge difficulty-simple">Básico</span>
+                        </div>
+                        <div class="file-item">
+                            <h4>🚀 Versión Avanzada</h4>
+                            <div class="file-name">01-Requirements-Analysis-Before.md</div>
+                            <div class="file-description">30 requisitos complejos de múltiples stakeholders</div>
+                            <span class="difficulty-badge difficulty-advanced">Avanzado</span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="exercise-card">
-                    <h4>✅ Especificación Completa</h4>
-                    <div class="file-name">01-Requirements-Analysis-After.md</div>
-                    <p>Transformación completa aplicando técnicas profesionales de análisis de requisitos con matriz de trazabilidad.</p>
-                    <p><strong>Mejoras:</strong> Clasificación clara, dependencias mapeadas, casos de uso detallados</p>
-                    <p><strong>Cobertura:</strong> 100% requisitos trazables</p>
+                    <div class="exercise-number">2</div>
+                    <div class="exercise-title">Casos de Uso y User Stories</div>
+                    <div class="exercise-description">
+                        Convierte descripciones informales en casos de uso estructurados y user stories profesionales.
+                    </div>
+                    <div class="file-grid">
+                        <div class="file-item">
+                            <h4>🌟 Versión Simple</h4>
+                            <div class="file-name">02-UseCase-Simple-Before.md</div>
+                            <div class="file-description">Identificar usuarios y acciones básicas del sistema</div>
+                            <span class="difficulty-badge difficulty-simple">Básico</span>
+                        </div>
+                        <div class="file-item">
+                            <h4>🚀 Versión Avanzada</h4>
+                            <div class="file-name">02-UseCase-Example-Before.md</div>
+                            <div class="file-description">Casos de uso formales con flujos de excepción</div>
+                            <span class="difficulty-badge difficulty-advanced">Avanzado</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exercise-card">
+                    <div class="exercise-number">3</div>
+                    <div class="exercise-title">Especificaciones No Funcionales</div>
+                    <div class="exercise-description">
+                        Define requisitos de calidad medibles: velocidad, seguridad, disponibilidad y usabilidad.
+                    </div>
+                    <div class="file-grid">
+                        <div class="file-item">
+                            <h4>🌟 Versión Simple</h4>
+                            <div class="file-name">03-NFR-Simple.md</div>
+                            <div class="file-description">4 categorías básicas con ejemplos cotidianos</div>
+                            <span class="difficulty-badge difficulty-simple">Básico</span>
+                        </div>
+                        <div class="file-item">
+                            <h4>🚀 Versión Avanzada</h4>
+                            <div class="file-name">03-NonFunctional-Requirements.md</div>
+                            <div class="file-description">17 NFRs con métricas específicas y estándares</div>
+                            <span class="difficulty-badge difficulty-advanced">Avanzado</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exercise-card">
+                    <div class="exercise-number">4</div>
+                    <div class="exercise-title">Trazabilidad y Dependencias</div>
+                    <div class="exercise-description">
+                        Organiza y conecta todos los requisitos mediante matrices de trazabilidad y análisis de dependencias.
+                    </div>
+                    <div class="file-grid">
+                        <div class="file-item">
+                            <h4>🌟 Versión Simple</h4>
+                            <div class="file-name">04-Trazabilidad-Simple.md</div>
+                            <div class="file-description">Tabla básica de conexiones entre requisitos</div>
+                            <span class="difficulty-badge difficulty-simple">Básico</span>
+                        </div>
+                        <div class="file-item">
+                            <h4>🚀 Versión Avanzada</h4>
+                            <div class="file-name">04-Traceability-Matrix.md</div>
+                            <div class="file-description">Matriz completa con análisis de impacto</div>
+                            <span class="difficulty-badge difficulty-advanced">Avanzado</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="metrics">
-            <div class="metric-card">
-                <span class="number">2</span>
-                <span class="label">Documentos de Análisis</span>
-            </div>
-            <div class="metric-card">
-                <span class="number">35+</span>
-                <span class="label">Requisitos Documentados</span>
-            </div>
-            <div class="metric-card">
-                <span class="number">100%</span>
-                <span class="label">Trazabilidad</span>
-            </div>
-            <div class="metric-card">
-                <span class="number">15→0</span>
-                <span class="label">Ambigüedades Eliminadas</span>
+        <div class="comparison-table">
+            <h2>🔍 Comparación de Niveles</h2>
+            <div class="comparison-grid">
+                <div class="comparison-column">
+                    <h3><span>🌟</span> Nivel Simple</h3>
+                    <ul class="comparison-list">
+                        <li><strong>Público:</strong> Desarrolladores Junior y estudiantes</li>
+                        <li><strong>Prerrequisitos:</strong> Conocimientos básicos de programación</li>
+                        <li><strong>Metodología:</strong> Aprendizaje guiado paso a paso</li>
+                        <li><strong>Herramientas:</strong> Excel, Google Docs, papel y lápiz</li>
+                        <li><strong>Contexto:</strong> Ejemplos cotidianos y analogías</li>
+                        <li><strong>Evaluación:</strong> Ejercicios de completar espacios</li>
+                        <li><strong>Objetivo:</strong> Comprender conceptos fundamentales</li>
+                    </ul>
+                </div>
+                
+                <div class="comparison-column advanced">
+                    <h3><span>🚀</span> Nivel Avanzado</h3>
+                    <ul class="comparison-list">
+                        <li><strong>Público:</strong> Desarrolladores Semi-Senior y profesionales</li>
+                        <li><strong>Prerrequisitos:</strong> 2+ años de experiencia</li>
+                        <li><strong>Metodología:</strong> Casos de estudio complejos</li>
+                        <li><strong>Herramientas:</strong> Jira, Confluence, Enterprise Architect</li>
+                        <li><strong>Contexto:</strong> Sistemas financieros y FinTech</li>
+                        <li><strong>Evaluación:</strong> Análisis de impacto y trazabilidad</li>
+                        <li><strong>Objetivo:</strong> Dominar prácticas profesionales</li>
+                    </ul>
+                </div>
             </div>
         </div>
 
         <div class="navigation">
             <a href="../../index.html" class="nav-button">
-                <span>🏠</span> Volver al Portal Principal
+                <span>🏠</span> Portal Principal
             </a>
             <a href="../index.html" class="nav-button">
-                <span>📁</span> Ver Todos los Ejercicios
+                <span>📁</span> Todos los Ejercicios
             </a>
-            <a href="../clase3-tecnicas-noif/README.html" class="nav-button">
+            <a href="../clase1-analisis-codigo-estatico/README.html" class="nav-button">
+                <span>⬅️</span> Clase Anterior
+            </a>
+            <a href="../clase3-tecnicas-noif/README.html" class="nav-button primary">
                 <span>➡️</span> Siguiente Clase
             </a>
         </div>
     </div>
+
+    <script>
+        function toggleLevel(level) {
+            // Mostrar información adicional según el nivel seleccionado
+            const levelCards = document.querySelectorAll('.level-card');
+            levelCards.forEach(card => {
+                card.style.transform = 'scale(0.95)';
+                card.style.opacity = '0.7';
+            });
+            
+            const selectedCard = document.querySelector('.level-card.' + level);
+            selectedCard.style.transform = 'scale(1.05)';
+            selectedCard.style.opacity = '1';
+            
+            // Resetear después de 2 segundos
+            setTimeout(() => {
+                levelCards.forEach(card => {
+                    card.style.transform = 'scale(1)';
+                    card.style.opacity = '1';
+                });
+            }, 2000);
+        }
+    </script>
 </body>
 </html>
