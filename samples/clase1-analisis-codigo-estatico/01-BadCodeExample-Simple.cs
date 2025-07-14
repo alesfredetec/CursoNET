@@ -7,7 +7,7 @@ namespace AnalisisEstatico.Ejercicios.Simple
     /// 
     /// INSTRUCCIONES:
     /// 1. Copia este código en Visual Studio
-    /// 2. Instala SonarLint (Extensions -> SonarLint for Visual Studio)
+    /// 2. Instala Sonar  (Extensions -> Sonar for Visual Studio)
     /// 3. Observa las líneas subrayadas de colores
     /// 4. Ve a View -> Error List para ver los problemas
     /// 5. Arregla cada problema uno por uno
@@ -157,9 +157,10 @@ namespace AnalisisEstatico.Ejercicios.Simple
     /*
     EJERCICIO PASO A PASO:
     
-    1. INSTALAR SONARLINT:
+    1. INSTALAR SONAR :
        - Ve a Extensions -> Manage Extensions
-       - Busca "SonarLint" 
+       - Busca "SonarLint" o SonarQube
+       - Descarga e instala la extensión 
        - Instala y reinicia Visual Studio
     
     2. VER LOS PROBLEMAS:
