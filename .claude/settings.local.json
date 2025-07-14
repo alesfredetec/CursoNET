@@ -8,7 +8,8 @@
       "Bash(csc:*)",
       "Bash(grep:*)",
       "Bash(ls:*)",
-      "Bash(rg:*)"
+      "Bash(rg:*)",
+      "mcp__sequential__sequentialthinking"
     ],
     "deny": []
   }
