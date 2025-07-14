@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -518,7 +517,6 @@
 
         <div class="exercises-section">
             <h2>🎯 Ejercicios Prácticos</h2>
-            
             <div class="exercises-grid">
                 <div class="exercise-card">
                     <div class="exercise-number">1</div>
@@ -532,12 +530,16 @@
                             <div class="file-name">01-Requirements-Simple.md</div>
                             <div class="file-description">15 requisitos básicos para clasificar con preguntas guía</div>
                             <span class="difficulty-badge difficulty-simple">Básico</span>
+                            <markdown-modal-button src="./01-Requirements-Simple.md" label="👁️ Ver"></markdown-modal-button>
+                            <markdown-download-button src="./01-Requirements-Simple.md" label="⬇️ Descargar"></markdown-download-button>
                         </div>
                         <div class="file-item">
                             <h4>🚀 Versión Avanzada</h4>
                             <div class="file-name">01-Requirements-Analysis-Before.md</div>
                             <div class="file-description">30 requisitos complejos de múltiples stakeholders</div>
                             <span class="difficulty-badge difficulty-advanced">Avanzado</span>
+                            <markdown-modal-button src="./01-Requirements-Analysis-Before.md" label="👁️ Ver"></markdown-modal-button>
+                            <markdown-download-button src="./01-Requirements-Analysis-Before.md" label="⬇️ Descargar"></markdown-download-button>
                         </div>
                     </div>
                 </div>
@@ -576,12 +578,16 @@
                             <div class="file-name">03-NFR-Simple.md</div>
                             <div class="file-description">4 categorías básicas con ejemplos cotidianos</div>
                             <span class="difficulty-badge difficulty-simple">Básico</span>
+                            <markdown-modal-button src="./03-NFR-Simple.md" label="👁️ Ver"></markdown-modal-button>
+                            <markdown-download-button src="./03-NFR-Simple.md" label="⬇️ Descargar"></markdown-download-button>
                         </div>
                         <div class="file-item">
                             <h4>🚀 Versión Avanzada</h4>
                             <div class="file-name">03-NonFunctional-Requirements.md</div>
                             <div class="file-description">17 NFRs con métricas específicas y estándares</div>
                             <span class="difficulty-badge difficulty-advanced">Avanzado</span>
+                            <markdown-modal-button src="./03-NonFunctional-Requirements.md" label="👁️ Ver"></markdown-modal-button>
+                            <markdown-download-button src="./03-NonFunctional-Requirements.md" label="⬇️ Descargar"></markdown-download-button>
                         </div>
                     </div>
                 </div>
@@ -598,12 +604,16 @@
                             <div class="file-name">04-Trazabilidad-Simple.md</div>
                             <div class="file-description">Tabla básica de conexiones entre requisitos</div>
                             <span class="difficulty-badge difficulty-simple">Básico</span>
+                            <markdown-modal-button src="./04-Trazabilidad-Simple.md" label="👁️ Ver"></markdown-modal-button>
+                            <markdown-download-button src="./04-Trazabilidad-Simple.md"  ></markdown-download-button>
                         </div>
                         <div class="file-item">
                             <h4>🚀 Versión Avanzada</h4>
                             <div class="file-name">04-Traceability-Matrix.md</div>
                             <div class="file-description">Matriz completa con análisis de impacto</div>
                             <span class="difficulty-badge difficulty-advanced">Avanzado</span>
+                            <markdown-modal-button src="./04-Traceability-Matrix.md" label="👁️ Ver"></markdown-modal-button>
+                            <markdown-download-button src="./04-Traceability-Matrix.md" ></markdown-download-button>
                         </div>
                     </div>
                 </div>
@@ -656,6 +666,14 @@
             </a>
         </div>
     </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="../MarkdownViewer.js"></script>
+    <script src="../MarkdownModalViewer.js"></script>
+    <script src="../MarkdownModalButton.js"></script>
+    <script src="../MarkdownDownloadButton.js"></script>
+ 
 
     <script>
         function toggleLevel(level) {

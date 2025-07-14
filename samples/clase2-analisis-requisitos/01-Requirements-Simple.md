@@ -23,25 +23,28 @@ Cuando pides una pizza:
 ## LISTA DE REQUISITOS PARA CLASIFICAR
 
 ### Instrucciones:
-Lee cada requisito y marca si es **FUNCIONAL** o **NO FUNCIONAL**
 
-| # | Requisito | Funcional | No Funcional |
-|---|-----------|-----------|-------------|
-| 1 | Los usuarios pueden registrar su negocio | ⬜ | ⬜ |
-| 2 | La página debe cargar en menos de 3 segundos | ⬜ | ⬜ |
-| 3 | Los usuarios pueden pagar con tarjeta de crédito | ⬜ | ⬜ |
-| 4 | El sistema debe estar disponible 24 horas al día | ⬜ | ⬜ |
-| 5 | Los usuarios pueden ver sus ventas del día | ⬜ | ⬜ |
-| 6 | Los datos deben estar protegidos con cifrado | ⬜ | ⬜ |
-| 7 | Los usuarios pueden devolver dinero a clientes | ⬜ | ⬜ |
-| 8 | El sistema debe soportar 1000 usuarios simultáneos | ⬜ | ⬜ |
-| 9 | Los usuarios pueden descargar reportes en Excel | ⬜ | ⬜ |
-| 10 | La interfaz debe ser fácil de usar | ⬜ | ⬜ |
-| 11 | Los usuarios pueden buscar transacciones por fecha | ⬜ | ⬜ |
-| 12 | El sistema debe cumplir con las leyes de privacidad | ⬜ | ⬜ |
-| 13 | Los usuarios pueden recibir notificaciones por email | ⬜ | ⬜ |
-| 14 | El sistema debe funcionar en Chrome, Firefox y Safari | ⬜ | ⬜ |
-| 15 | Los usuarios pueden cancelar transacciones | ⬜ | ⬜ |
+> **📝 TABLA DE CLASIFICACIÓN DE REQUISITOS**
+>
+> Marca con una X (☑️) si el requisito es **Funcional** o **No Funcional**:
+
+| Nº  | Requisito                                          | Funcional | No Funcional |
+|:---:|:---------------------------------------------- ----|:---------:|:------------:|
+|  1  | Los usuarios pueden registrar su negocio           |    ⬜     |      ⬜      |
+|  2  | La página debe cargar en menos de 3 segundos       |    ⬜     |      ⬜      |
+|  3  | Los usuarios pueden pagar con tarjeta de crédito   |    ⬜     |      ⬜      |
+|  4  | El sistema debe estar disponible 24 horas al día   |    ⬜     |      ⬜      |
+|  5  | Los usuarios pueden ver sus ventas del día         |    ⬜     |      ⬜      |
+|  6  | Los datos deben estar protegidos con cifrado       |    ⬜     |      ⬜      |
+|  7  | Los usuarios pueden devolver dinero a clientes     |    ⬜     |      ⬜      |
+|  8  | El sistema debe soportar 1000 usuarios simultáneos |    ⬜     |      ⬜      |
+|  9  | Los usuarios pueden descargar reportes en Excel    |    ⬜     |      ⬜      |
+| 10  | La interfaz debe ser fácil de usar                 |    ⬜     |      ⬜      |
+| 11  | Los usuarios pueden buscar transacciones por fecha |    ⬜     |      ⬜      |
+| 12  | El sistema debe cumplir con las leyes de privacidad|    ⬜     |      ⬜      |
+| 13  | Los usuarios pueden recibir notificaciones x email |    ⬜     |      ⬜      |
+| 14  | El sistema debe funcionar en Chrome, Firefox Safari|    ⬜     |      ⬜      |
+| 15  | Los usuarios pueden cancelar transacciones         |    ⬜     |      ⬜      |
 
 ---
 
@@ -120,36 +123,43 @@ Lee cada requisito y marca si es **FUNCIONAL** o **NO FUNCIONAL**
 
 ---
 
+
+
 ## TU TURNO - CLASIFICACIÓN AVANZADA
 
-### Para cada requisito NO FUNCIONAL, identifica la categoría:
+> **Para cada requisito NO FUNCIONAL, identifica la categoría:**
 
-| Requisito | Categoría |
-|-----------|-----------|
-| "La página debe cargar en menos de 3 segundos" | _________ |
-| "Los datos deben estar protegidos con cifrado" | _________ |
-| "El sistema debe estar disponible 24 horas al día" | _________ |
-| "La interfaz debe ser fácil de usar" | _________ |
-| "Debe funcionar en Chrome, Firefox y Safari" | _________ |
-| "Debe cumplir con las leyes de privacidad" | _________ |
+| Requisito                                      | Categoría   |
+|------------------------------------------------|:-----------:|
+| La página debe cargar en menos de 3 segundos   | _________   |
+| Los datos deben estar protegidos con cifrado   | _________   |
+| El sistema debe estar disponible 24 hs   al día| _________   |
+| La interfaz debe ser fácil de usar             | _________   |
+| Debe funcionar en Chrome, Firefox y Safari     | _________   |
+| Debe cumplir con las leyes de privacidad       | _________   |
+
 
 ---
 
 ## ERRORES COMUNES
 
-### ❌ Error 1: Confundir acciones con calidad
-**Incorrecto:** "El sistema debe ser seguro" (muy vago)
-**Correcto:** "Los números de tarjeta deben estar cifrados"
 
-### ❌ Error 2: Mezclar funcional con no funcional
-**Incorrecto:** "Los usuarios pueden pagar rápidamente"
-**Correcto:** 
-- **Funcional:** "Los usuarios pueden pagar"
-- **No funcional:** "El pago debe completarse en menos de 5 segundos"
+> **❌ Error 1: Confundir acciones con calidad**
+>
+> - **Incorrecto:** "El sistema debe ser seguro" _(muy vago)_
+> - **Correcto:** "Los números de tarjeta deben estar cifrados"
 
-### ❌ Error 3: Ser demasiado técnico
-**Incorrecto:** "Debe usar AES-256 encryption"
-**Correcto:** "Los datos sensibles deben estar protegidos"
+> **❌ Error 2: Mezclar funcional con no funcional**
+>
+> - **Incorrecto:** "Los usuarios pueden pagar rápidamente"
+> - **Correcto:**
+>   - **Funcional:** "Los usuarios pueden pagar"
+>   - **No funcional:** "El pago debe completarse en menos de 5 segundos"
+
+> **❌ Error 3: Ser demasiado técnico**
+>
+> - **Incorrecto:** "Debe usar AES-256 encryption"
+> - **Correcto:** "Los datos sensibles deben estar protegidos"
 
 ---
 

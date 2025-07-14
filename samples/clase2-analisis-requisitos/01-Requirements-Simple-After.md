@@ -9,23 +9,26 @@ Aquí están las respuestas correctas con explicaciones.
 
 ## RESPUESTAS CORRECTAS
 
-| # | Requisito | Tipo | Explicación |
-|---|-----------|------|-------------|
-| 1 | Los usuarios pueden registrar su negocio | ✅ **FUNCIONAL** | Describe QUÉ puede hacer el usuario |
-| 2 | La página debe cargar en menos de 3 segundos | ✅ **NO FUNCIONAL** | Describe QUÉ TAN BIEN (velocidad) |
-| 3 | Los usuarios pueden pagar con tarjeta de crédito | ✅ **FUNCIONAL** | Describe QUÉ puede hacer el usuario |
-| 4 | El sistema debe estar disponible 24 horas al día | ✅ **NO FUNCIONAL** | Describe QUÉ TAN BIEN (disponibilidad) |
-| 5 | Los usuarios pueden ver sus ventas del día | ✅ **FUNCIONAL** | Describe QUÉ puede hacer el usuario |
-| 6 | Los datos deben estar protegidos con cifrado | ✅ **NO FUNCIONAL** | Describe QUÉ TAN BIEN (seguridad) |
-| 7 | Los usuarios pueden devolver dinero a clientes | ✅ **FUNCIONAL** | Describe QUÉ puede hacer el usuario |
-| 8 | El sistema debe soportar 1000 usuarios simultáneos | ✅ **NO FUNCIONAL** | Describe QUÉ TAN BIEN (capacidad) |
-| 9 | Los usuarios pueden descargar reportes en Excel | ✅ **FUNCIONAL** | Describe QUÉ puede hacer el usuario |
-| 10 | La interfaz debe ser fácil de usar | ✅ **NO FUNCIONAL** | Describe QUÉ TAN BIEN (usabilidad) |
-| 11 | Los usuarios pueden buscar transacciones por fecha | ✅ **FUNCIONAL** | Describe QUÉ puede hacer el usuario |
-| 12 | El sistema debe cumplir con las leyes de privacidad | ✅ **NO FUNCIONAL** | Describe QUÉ TAN BIEN (cumplimiento) |
-| 13 | Los usuarios pueden recibir notificaciones por email | ✅ **FUNCIONAL** | Describe QUÉ puede hacer el usuario |
-| 14 | El sistema debe funcionar en Chrome, Firefox y Safari | ✅ **NO FUNCIONAL** | Describe QUÉ TAN BIEN (compatibilidad) |
-| 15 | Los usuarios pueden cancelar transacciones | ✅ **FUNCIONAL** | Describe QUÉ puede hacer el usuario |
+
+> **🟦 TABLA DE RESPUESTAS CORRECTAS**
+
+| Nº  | Requisito                                          | Tipo                   | Explicación                                |
+|:---:|:---------------------------------------- ----------|:---------------------:|:--------------------------------------------|
+|  1  | Los usuarios pueden registrar su negocio           | 🟢 **FUNCIONAL**      | Describe QUÉ puede hacer el usuario         |
+|  2  | La página debe cargar en menos de 3 segundos       | 🔵 **NO FUNCIONAL**   | Describe QUÉ TAN BIEN (velocidad)           |
+|  3  | Los usuarios pueden pagar con tarjeta de crédito   | 🟢 **FUNCIONAL**      | Describe QUÉ puede hacer el usuario         |
+|  4  | El sistema debe estar disponible 24 horas al día   | 🔵 **NO FUNCIONAL**   | Describe QUÉ TAN BIEN (disponibilidad)      |
+|  5  | Los usuarios pueden ver sus ventas del día         | 🟢 **FUNCIONAL**      | Describe QUÉ puede hacer el usuario         |
+|  6  | Los datos deben estar protegidos con cifrado       | 🔵 **NO FUNCIONAL**   | Describe QUÉ TAN BIEN (seguridad)           |
+|  7  | Los usuarios pueden devolver dinero a clientes     | 🟢 **FUNCIONAL**      | Describe QUÉ puede hacer el usuario         |
+|  8  | El sistema debe soportar 1000 usuarios simultáneos | 🔵 **NO FUNCIONAL**   | Describe QUÉ TAN BIEN (capacidad)           |
+|  9  | Los usuarios pueden descargar reportes en Excel    | 🟢 **FUNCIONAL**      | Describe QUÉ puede hacer el usuario         |
+| 10  | La interfaz debe ser fácil de usar                 | 🔵 **NO FUNCIONAL**   | Describe QUÉ TAN BIEN (usabilidad)          |
+| 11  | Los usuarios pueden buscar transacciones por fecha | 🟢 **FUNCIONAL**      | Describe QUÉ puede hacer el usuario         |
+| 12  | El sistema debe cumplir con las leyes de privacidad| 🔵 **NO FUNCIONAL**   | Describe QUÉ TAN BIEN (cumplimiento)        |
+| 13  | Los usuarios pueden recibir notificaciones    email| 🟢 **FUNCIONAL**      | Describe QUÉ puede hacer el usuario         |
+| 14  | El sistema debe funcionar en Chrome, Firefox Safari| 🔵 **NO FUNCIONAL**   | Describe QUÉ TAN BIEN (compatibilidad)      |
+| 15  | Los usuarios pueden cancelar transacciones         | 🟢 **FUNCIONAL**      | Describe QUÉ puede hacer el usuario         |
 
 ---
 
@@ -55,14 +58,17 @@ Aquí están las respuestas correctas con explicaciones.
 
 ### Clasificación correcta:
 
-| Requisito | Categoría | Explicación |
-|-----------|-----------|-------------|
-| "La página debe cargar en menos de 3 segundos" | **VELOCIDAD/RENDIMIENTO** | Habla de tiempo de respuesta |
-| "Los datos deben estar protegidos con cifrado" | **SEGURIDAD** | Habla de protección de información |
-| "El sistema debe estar disponible 24 horas al día" | **DISPONIBILIDAD** | Habla de tiempo de funcionamiento |
-| "La interfaz debe ser fácil de usar" | **USABILIDAD** | Habla de facilidad de uso |
-| "Debe funcionar en Chrome, Firefox y Safari" | **COMPATIBILIDAD** | Habla de navegadores soportados |
-| "Debe cumplir con las leyes de privacidad" | **CUMPLIMIENTO** | Habla de regulaciones legales |
+
+> **🟦 CLASIFICACIÓN DE REQUISITOS NO FUNCIONALES**
+
+| Requisito                                      | Categoría                     | Explicación                        |
+|:-----------------------------------------------|:-----------------------------:|:-----------------------------------|
+| "La página debe cargar en menos de 3 segundos" | 🟠 **VELOCIDAD/RENDIMIENTO**  | Habla de tiempo de respuesta      |
+| "Los datos deben estar protegidos con cifrado" | 🔴 **SEGURIDAD**              | Habla de protección de información|
+| "El sistema debe estar disponible 24 hs al día"| 🟣 **DISPONIBILIDAD**         | Habla de tiempo de funcionamiento |
+| "La interfaz debe ser fácil de usar"           | 🟡 **USABILIDAD**             | Habla de facilidad de uso         |
+| "Debe funcionar en Chrome, Firefox y Safari"   | 🟤 **COMPATIBILIDAD**         | Habla de navegadores soportados   |
+| "Debe cumplir con las leyes de privacidad"     | 🟢 **CUMPLIMIENTO**           | Habla de regulaciones legales     |
 
 ---
 
