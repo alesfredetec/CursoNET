@@ -1,0 +1,109 @@
+# Fintexa Core Configuration v1.0
+# Financial technology framework configuration for enterprise payment systems
+
+## Fintexa_Philosophy_v1
+Core_Values: "Compliance>Performance | Security>Convenience | Audit>Optimization | Quality>Speed"
+Financial_Principles: "Zero fund loss | 100% regulatory compliance | Complete audit trail | Customer trust"
+Technology_Approach: "Proven patterns>innovation | Incremental delivery | Risk-based testing | Evidence-based decisions"
+Communication: "Regulatory impact | Risk assessment | Compliance status | Performance metrics"
+
+## Technology_Stack_v1
+Primary_Stack: ".NET Core 6/8/9 | SQL Server | Azure AKS | MassTransit | RabbitMQ | Redis"
+Security_Stack: "Azure Key Vault | HSM | Tokenization | End-to-end encryption"
+Monitoring_Stack: "Application Insights | Elasticsearch | Grafana | Prometheus"
+Testing_Stack: "xUnit | SpecFlow | Testcontainers | K6 | Playwright"
+
+## Regulatory_Framework_v1
+Primary_Regulations:
+  Argentina: "BCRA | UIF | AFIP | CNV regulations"
+  International: "PCI DSS L1 | ISO 27001 | SOC 2 Type II"
+  Card_Networks: "Visa | Mastercard | American Express rules"
+  Payment_Standards: "ISO 20022 | ACH | SWIFT messaging"
+
+Compliance_Requirements:
+  Data_Protection: "GDPR compliance for EU customers | Local data residency"
+  Financial_Reporting: "Real-time regulatory reporting | Audit trail maintenance"
+  Security_Standards: "PCI DSS certification | Penetration testing | Vulnerability management"
+  
+## Fintexa_Architecture_v1
+Microservices_Design:
+  Domain_Boundaries: "Bounded contexts | Event-driven communication | Independent deployment"
+  Data_Architecture: "Database per service | Event sourcing | CQRS pattern"
+  Integration_Patterns: "API-first | Event streaming | Saga orchestration"
+  
+Security_Architecture:
+  Zero_Trust: "Never trust, always verify | Least privilege access | Continuous monitoring"
+  Data_Security: "Encryption at rest and transit | Tokenization | Data masking"
+  Network_Security: "Private networks | VPN access | Network segmentation"
+  
+Performance_Requirements:
+  Transaction_Processing: "10,000+ TPS | <100ms API response | 99.99% uptime"
+  Scalability: "Horizontal scaling | Auto-scaling | Load balancing"
+  Resilience: "Circuit breakers | Retry patterns | Graceful degradation"
+
+## Payment_Ecosystems_v1
+Bind_Aceptador:
+  Services: "60+ microservices | Card processing | POS integration"
+  Patterns: "Event sourcing | CQRS | Saga orchestration"
+  Integrations: "Visa | Mastercard | Coelsa | Local acquirers"
+  
+Wallet_Service:
+  Services: "45+ microservices | Account management | Investment services"
+  Patterns: "Account hierarchy | Transaction orchestration | Real-time processing"
+  Integrations: "Banking APIs | Investment platforms | Crypto services"
+  
+CVU_Collect:
+  Services: "8+ microservices | Collection processing | Bulk operations"
+  Patterns: "Batch processing | File processing | Reconciliation"
+  Integrations: "Bank APIs | Payment networks | Regulatory systems"
+
+## Evidence_Standards_v1
+Financial_Evidence: "Transaction logs | Audit trails | Compliance reports | Performance metrics"
+Security_Evidence: "Security assessments | Penetration test reports | Vulnerability scans | Access logs"
+Quality_Evidence: "Test coverage reports | Performance benchmarks | Code quality metrics | User acceptance"
+Regulatory_Evidence: "Compliance documentation | Audit findings | Remediation tracking | Certification status"
+
+## Token_Optimization_v1
+Financial_Context: "Regulatory requirements | Compliance status | Risk assessment | Performance metrics"
+Compression_Priorities: "Critical compliance info | Key risk factors | Essential metrics | Action items"
+Ultra_Mode_Triggers: "Regulatory deadlines | Incident response | Audit preparation | Performance issues"
+Symbol_Usage: "₿(transaction) | ⚖(compliance) | 🔒(security) | 📊(analytics) | 🏦(banking)"
+
+## Quality_Standards_v1
+Code_Quality:
+  Coverage: ">90% unit test coverage | >80% integration test coverage"
+  Complexity: "Cyclomatic complexity <10 | Function length <50 lines"
+  Security: "Static analysis | Dependency scanning | Secret detection"
+  
+Financial_Quality:
+  Accuracy: "100% calculation accuracy | Zero fund loss | Complete reconciliation"
+  Performance: "<100ms API response | <1s transaction processing | 99.99% uptime"
+  Security: "Zero security incidents | 100% PCI compliance | Complete audit trail"
+
+## Integration_Standards_v1
+API_Design:
+  RESTful: "OpenAPI specification | Versioning strategy | Error handling"
+  Security: "OAuth 2.0 | Rate limiting | Input validation | Output encoding"
+  Monitoring: "Request/response logging | Performance metrics | Error tracking"
+  
+Event_Driven:
+  Messaging: "CloudEvents standard | Schema registry | Message versioning"
+  Reliability: "At-least-once delivery | Idempotency | Dead letter queues"
+  Monitoring: "Message tracking | Processing metrics | Error handling"
+
+## Development_Standards_v1
+Branching_Strategy: "GitFlow | Feature branches | Protected main | Code review required"
+Deployment_Strategy: "Blue-green deployment | Canary releases | Rollback capability"
+Testing_Strategy: "TDD approach | Automated testing | Performance testing | Security testing"
+Documentation_Strategy: "API documentation | Architecture decisions | Runbooks | Incident playbooks"
+
+## Monitoring_Standards_v1
+Application_Monitoring:
+  Metrics: "Request rate | Response time | Error rate | Throughput"
+  Logging: "Structured logging | Correlation IDs | Security events | Audit trails"
+  Alerting: "SLA violations | Security incidents | System failures | Performance degradation"
+  
+Business_Monitoring:
+  Financial_Metrics: "Transaction success rate | Settlement accuracy | Fraud detection rate"
+  Compliance_Metrics: "Regulatory adherence | Audit findings | Control effectiveness"
+  Customer_Metrics: "User satisfaction | Transaction completion | Support tickets"

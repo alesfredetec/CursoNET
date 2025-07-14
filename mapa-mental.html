@@ -3,1875 +3,817 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CursoNET - Mapa Mental Interactivo</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <title>CursoNET - Mapa Mental del Curso</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-color: #0f0c29;
-            --text-color: #f0f0f0;
-            --primary-glow: #6a11cb;
-            --secondary-glow: #2575fc;
-            --accent-color: #ffd700;
-            --hover-color: #4ecdc4;
-        }
-
-        @keyframes gradient-animation {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #16213e);
-            background-size: 400% 400%;
-            animation: gradient-animation 15s ease infinite;
-            color: var(--text-color);
-            margin: 0;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            user-select: none;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            overflow-x: auto;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
         }
 
         .header {
             text-align: center;
-            padding: 15px 20px;
-            width: 100%;
-            background: rgba(0,0,0,0.3);
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            z-index: 10;
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .header h1 {
-            font-size: 2.2em;
+            font-size: 2.5em;
             font-weight: 700;
-            background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 15px rgba(106, 17, 203, 0.4);
-            margin: 0;
-            letter-spacing: 1px;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
         }
 
-        .controls {
+        .header p {
+            font-size: 1.2em;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 300;
+        }
+
+        .nav-buttons {
             display: flex;
+            justify-content: center;
             gap: 15px;
-            margin-top: 10px;
-            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
         }
 
-        .control-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
             color: white;
-            padding: 8px 16px;
+            padding: 12px 24px;
             border-radius: 25px;
+            font-weight: 500;
             cursor: pointer;
-            font-size: 0.9em;
             transition: all 0.3s ease;
             backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
-        .control-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
-        .control-btn:active {
-            transform: translateY(0);
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+        .home-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            text-decoration: none;
+            z-index: 1000;
         }
 
-        #mind-map-container {
-            width: 100%;
-            height: calc(100vh - 120px);
+        .home-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .mind-map {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             position: relative;
             overflow: hidden;
         }
 
-        svg {
-            width: 100%;
-            height: 100%;
-            cursor: grab;
+        .mind-map::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.05) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+            z-index: 1;
         }
 
-        svg:active {
-            cursor: grabbing;
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        /* Estilos para nodos */
-        .node {
-            cursor: pointer;
-            transition: all 0.3s ease;
+        .mind-map-content {
+            position: relative;
+            z-index: 2;
         }
 
-        .node circle {
-            stroke: rgba(255, 255, 255, 0.4);
-            stroke-width: 2px;
-            transition: all 0.3s ease;
-            filter: drop-shadow(0 0 8px rgba(0,0,0,0.3));
+        .center-node {
+            text-align: center;
+            margin-bottom: 50px;
         }
 
-        .node text {
-            fill: var(--text-color);
-            font-weight: 500;
-            text-anchor: middle;
-            pointer-events: none;
-            transition: all 0.3s ease;
-            text-shadow: 0 0 4px rgba(0,0,0,0.8);
-        }
-
-        /* Estilos específicos por nivel */
-        .node.root circle {
-            stroke: var(--accent-color);
-            stroke-width: 3px;
-        }
-
-        .node.root text {
-            font-size: 16px;
-            font-weight: 700;
-            fill: var(--accent-color);
-        }
-        
-        .node.level-1 circle {
-            stroke: var(--primary-glow);
-            stroke-width: 2.5px;
-        }
-
-        .node.level-1 text {
-            font-size: 14px;
-            font-weight: 600;
-            fill: white;
-        }
-
-        .node.level-2 circle {
-            stroke: var(--secondary-glow);
-            stroke-width: 2px;
-        }
-
-        .node.level-2 text {
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        /* Efectos hover con animaciones mejoradas */
-        .node {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .node:hover circle {
-            stroke: var(--hover-color);
-            stroke-width: 4px;
-            transform: scale(1.15);
-            filter: drop-shadow(0 0 20px rgba(78, 205, 196, 0.8));
+        .center-circle {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
             animation: pulse 2s infinite;
+            position: relative;
+            overflow: hidden;
         }
 
-        .node:hover text {
-            fill: var(--hover-color);
-            font-weight: 700;
-            text-shadow: 0 0 12px rgba(78, 205, 196, 0.8);
-            transform: scale(1.1);
+        .center-circle::before {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 20%;
+            width: 60%;
+            height: 60%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
         }
 
-        .node.clickable:hover circle {
-            stroke: var(--accent-color);
-            stroke-width: 5px;
-            filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.9));
-            animation: glow 1.5s infinite alternate;
-        }
-
-        .node.clickable:hover text {
-            fill: var(--accent-color);
-            text-shadow: 0 0 15px rgba(255, 215, 0, 0.9);
-            animation: textGlow 1.5s infinite alternate;
-        }
-
-        /* Animaciones */
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-
-        @keyframes glow {
-            from { 
-                filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.9));
-                transform: scale(1.15);
-            }
-            to { 
-                filter: drop-shadow(0 0 35px rgba(255, 215, 0, 1));
-                transform: scale(1.25);
-            }
-        }
-
-        @keyframes textGlow {
-            from { text-shadow: 0 0 15px rgba(255, 215, 0, 0.9); }
-            to { text-shadow: 0 0 25px rgba(255, 215, 0, 1); }
-        }
-
-        @keyframes nodeEnter {
-            from {
-                opacity: 0;
-                transform: scale(0.5);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        .node {
-            animation: nodeEnter 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* Enlaces con animaciones mejoradas */
-        .link {
-            stroke: rgba(255, 255, 255, 0.15);
-            stroke-width: 1.5px;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            animation: linkAppear 1.2s ease-out;
-        }
-
-        .link.highlighted {
-            stroke: var(--hover-color);
-            stroke-width: 4px;
-            stroke-dasharray: 8,4;
-            animation: linkPulse 1.5s ease-in-out infinite;
-            filter: drop-shadow(0 0 8px rgba(78, 205, 196, 0.6));
-        }
-
-        @keyframes linkAppear {
-            from {
-                stroke-dasharray: 1000;
-                stroke-dashoffset: 1000;
-                opacity: 0;
-            }
-            to {
-                stroke-dasharray: 0;
-                stroke-dashoffset: 0;
-                opacity: 1;
-            }
-        }
-
-        @keyframes linkPulse {
-            0%, 100% { 
-                stroke-dashoffset: 0;
-                opacity: 1;
-            }
-            50% { 
-                stroke-dashoffset: -12;
-                opacity: 0.8;
-            }
-        }
-
-        /* Botones de navegación */
-        .home-button {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        .center-circle h2 {
             color: white;
-            padding: 12px 20px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            z-index: 100;
-            font-size: 0.95em;
+            font-size: 1.8em;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            z-index: 1;
+            position: relative;
         }
-        
-        .home-button:hover {
-            background: rgba(102, 126, 234, 0.3);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .branches {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .branch {
+            position: relative;
+            animation: slideIn 0.8s ease-out;
+        }
+
+        .branch:nth-child(1) { animation-delay: 0.1s; }
+        .branch:nth-child(2) { animation-delay: 0.2s; }
+        .branch:nth-child(3) { animation-delay: 0.3s; }
+        .branch:nth-child(4) { animation-delay: 0.4s; }
+        .branch:nth-child(5) { animation-delay: 0.5s; }
+        .branch:nth-child(6) { animation-delay: 0.6s; }
+        .branch:nth-child(7) { animation-delay: 0.7s; }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .branch::before {
+            content: '';
+            position: absolute;
+            top: 30px;
+            left: -30px;
+            width: 60px;
+            height: 4px;
+            background: var(--branch-color);
+            border-radius: 2px;
+            z-index: 1;
+        }
+
+        .branch-node {
+            background: var(--branch-color);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .branch-node::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .branch-node:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .branch-node h3 {
+            color: white;
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .branch-node p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9em;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .subtopics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .subtopic {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 10px;
+            text-align: center;
+            font-size: 0.8em;
+            color: white;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .subtopic:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        /* Colores para cada clase */
+        .branch:nth-child(1) { --branch-color: #3498db; }
+        .branch:nth-child(2) { --branch-color: #9b59b6; }
+        .branch:nth-child(3) { --branch-color: #e74c3c; }
+        .branch:nth-child(4) { --branch-color: #f39c12; }
+        .branch:nth-child(5) { --branch-color: #1abc9c; }
+        .branch:nth-child(6) { --branch-color: #34495e; }
+        .branch:nth-child(7) { --branch-color: #e67e22; }
+
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            height: 8px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            transition: width 2s ease;
+        }
+
+        .class-number {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--branch-color);
+            font-size: 1.2em;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
         }
 
         .info-panel {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 15px;
-            padding: 20px;
-            max-width: 300px;
-            transform: translateX(100%);
-            transition: transform 0.3s ease;
-            z-index: 100;
-            opacity: 0;
-            pointer-events: none;
+            top: 50%;
+            right: -400px;
+            width: 350px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transition: all 0.4s ease;
+            transform: translateY(-50%);
+            z-index: 1000;
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         .info-panel.active {
-            transform: translateX(0);
-            opacity: 1;
-            pointer-events: all;
+            right: 20px;
         }
 
         .info-panel h3 {
-            margin: 0 0 10px 0;
-            color: var(--accent-color);
-            font-size: 1.2em;
+            color: #333;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            font-weight: 600;
         }
 
         .info-panel p {
-            margin: 0 0 15px 0;
-            font-size: 0.9em;
-            line-height: 1.4;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
         }
 
-        .info-panel .link-btn {
+        .info-link {
             display: inline-block;
-            background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow));
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
+            padding: 12px 24px;
+            border-radius: 25px;
             text-decoration: none;
-            font-weight: 600;
-            font-size: 0.85em;
+            font-weight: 500;
             transition: all 0.3s ease;
         }
 
-        .info-panel .link-btn:hover {
+        .info-link:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(106, 17, 203, 0.4);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
         }
 
-        /* Zoom controls */
-        .zoom-controls {
-            position: fixed;
-            bottom: 20px;
+        .close-info {
+            position: absolute;
+            top: 15px;
             right: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            z-index: 100;
-        }
-
-        .zoom-btn {
-            width: 50px;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            color: white;
+            background: none;
+            border: none;
             font-size: 1.5em;
             cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            color: #999;
+            transition: color 0.3s ease;
         }
 
-        .zoom-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.1);
+        .close-info:hover {
+            color: #333;
         }
 
-        /* Responsive Design Mejorado */
+        .floating-icons {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .floating-icon {
+            position: absolute;
+            font-size: 2em;
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .floating-icon:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+        .floating-icon:nth-child(2) { top: 60%; left: 80%; animation-delay: 1s; }
+        .floating-icon:nth-child(3) { top: 30%; left: 70%; animation-delay: 2s; }
+        .floating-icon:nth-child(4) { top: 80%; left: 20%; animation-delay: 3s; }
+        .floating-icon:nth-child(5) { top: 10%; left: 50%; animation-delay: 4s; }
+
+        /* Responsive Design */
         @media (max-width: 768px) {
-            .header h1 {
-                font-size: 1.6em;
-                margin-bottom: 10px;
-            }
-            
-            .controls {
-                flex-wrap: wrap;
-                gap: 8px;
-                justify-content: center;
-            }
-            
-            .control-btn {
-                font-size: 0.75em;
-                padding: 8px 12px;
-                min-width: 70px;
-            }
-            
-            .info-panel {
-                max-width: 90%;
-                padding: 12px;
-                bottom: 20px;
-                top: auto;
-                right: 5%;
-                left: 5%;
-                max-height: 200px;
-                overflow-y: auto;
-            }
-            
-            .info-panel h3 {
-                font-size: 1em;
-            }
-            
-            .info-panel p {
-                font-size: 0.85em;
-            }
-            
-            .zoom-controls {
-                bottom: 10px;
-                right: 10px;
-                gap: 8px;
-            }
-            
-            .zoom-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 1.2em;
-            }
-            
-            .home-button {
-                top: 10px;
-                left: 10px;
-                padding: 8px 12px;
-                font-size: 0.8em;
-            }
-            
-            #mind-map-container {
-                height: calc(100vh - 100px);
-            }
-            
-            .header {
-                padding: 15px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .header h1 {
-                font-size: 1.4em;
-            }
-            
-            .control-btn {
-                font-size: 0.7em;
-                padding: 6px 10px;
-                min-width: 60px;
-            }
-            
-            .info-panel {
-                max-width: 95%;
+            .container {
                 padding: 10px;
-                font-size: 0.8em;
             }
-            
-            .zoom-btn {
-                width: 35px;
-                height: 35px;
-                font-size: 1.1em;
-            }
-            
-            .home-button {
-                padding: 6px 10px;
-                font-size: 0.75em;
-            }
-        }
-        
-        /* Mejoras para tablets */
-        @media (min-width: 769px) and (max-width: 1024px) {
+
             .header h1 {
                 font-size: 2em;
             }
-            
-            .info-panel {
-                max-width: 300px;
-                padding: 18px;
+
+            .mind-map {
+                padding: 20px;
             }
-            
-            .control-btn {
-                font-size: 0.85em;
-                padding: 10px 16px;
+
+            .center-circle {
+                width: 150px;
+                height: 150px;
+            }
+
+            .center-circle h2 {
+                font-size: 1.4em;
+            }
+
+            .branches {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .branch::before {
+                display: none;
+            }
+
+            .info-panel {
+                width: 90%;
+                right: -100%;
+            }
+
+            .info-panel.active {
+                right: 5%;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .nav-btn {
+                width: 200px;
             }
         }
-        
-        /* Optimizaciones para pantallas táctiles */
-        @media (hover: none) and (pointer: coarse) {
-            .control-btn {
-                min-height: 44px;
-                min-width: 44px;
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 20px;
             }
-            
-            .zoom-btn {
-                min-width: 44px;
-                min-height: 44px;
+
+            .header h1 {
+                font-size: 1.8em;
             }
-            
-            .home-button {
-                min-height: 44px;
-                padding: 10px 15px;
+
+            .mind-map {
+                padding: 15px;
             }
-            
-            .node {
-                cursor: pointer;
+
+            .center-circle {
+                width: 120px;
+                height: 120px;
+            }
+
+            .center-circle h2 {
+                font-size: 1.2em;
+            }
+
+            .branch-node {
+                padding: 20px;
+            }
+
+            .subtopics {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
-    <a href="index.html" class="home-button">🏠 Volver al Portal</a>
-    
-    <div class="header">
-        <h1>🧠 Mapa Mental Interactivo del Curso</h1>
-        <div class="controls">
-            <button class="control-btn" onclick="resetView()">🏠 Solo Cursos</button>
-            <button class="control-btn" onclick="expandAll()">🌟 Mostrar Todo</button>
-            <button class="control-btn" onclick="collapseAll()">🌑 Contraer</button>
-            <button class="control-btn" id="animationBtn" onclick="toggleAnimation()">▶️ Animar</button>
-            <button class="control-btn" onclick="zoomToFit()">🔍 Ver Todo</button>
+    <div class="floating-icons">
+        <div class="floating-icon">🚀</div>
+        <div class="floating-icon">💻</div>
+        <div class="floating-icon">🎯</div>
+        <div class="floating-icon">✨</div>
+        <div class="floating-icon">🔧</div>
+    </div>
+
+    <a href="index.html" class="home-btn">🏠 Portal Principal</a>
+
+    <div class="container">
+        <div class="header">
+            <h1>🧠 Mapa Mental CursoNET</h1>
+            <p>Programa completo de desarrollo Jr → Semi-Sr</p>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="nav-btn" onclick="showAll()">👁️ Mostrar Todo</button>
+            <button class="nav-btn" onclick="showBasics()">🎯 Solo Básicos</button>
+            <button class="nav-btn" onclick="showAdvanced()">🚀 Avanzados</button>
+            <button class="nav-btn" onclick="resetView()">🔄 Reiniciar</button>
+        </div>
+
+        <div class="mind-map">
+            <div class="mind-map-content">
+                <div class="center-node">
+                    <div class="center-circle">
+                        <h2>CursoNET<br>Jr → Semi-Sr</h2>
+                    </div>
+                </div>
+
+                <div class="branches">
+                    <div class="branch" data-class="1" data-level="basic">
+                        <div class="class-number">1</div>
+                        <div class="branch-node" onclick="showInfo('clase1')">
+                            <h3>🔧 Análisis Código Estático</h3>
+                            <p>Domina SonarLint, métricas de complejidad y técnicas de refactoring para código limpio y mantenible.</p>
+                            <div class="subtopics">
+                                <div class="subtopic">SonarLint</div>
+                                <div class="subtopic">Complejidad</div>
+                                <div class="subtopic">Refactoring</div>
+                                <div class="subtopic">Métricas</div>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="branch" data-class="2" data-level="basic">
+                        <div class="class-number">2</div>
+                        <div class="branch-node" onclick="showInfo('clase2')">
+                            <h3>📋 Análisis de Requisitos</h3>
+                            <p>Metodología moderna para identificar, documentar y gestionar requisitos funcionales y no funcionales.</p>
+                            <div class="subtopics">
+                                <div class="subtopic">FR vs NFR</div>
+                                <div class="subtopic">Casos de Uso</div>
+                                <div class="subtopic">User Stories</div>
+                                <div class="subtopic">Trazabilidad</div>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="branch" data-class="3" data-level="intermediate">
+                        <div class="class-number">3</div>
+                        <div class="branch-node" onclick="showInfo('clase3')">
+                            <h3>🚫 Técnicas "No If"</h3>
+                            <p>Patrones avanzados para eliminar condicionales complejas y mejorar la mantenibilidad del código.</p>
+                            <div class="subtopics">
+                                <div class="subtopic">Dictionary</div>
+                                <div class="subtopic">Strategy</div>
+                                <div class="subtopic">State</div>
+                                <div class="subtopic">Polimorfismo</div>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="branch" data-class="4" data-level="advanced">
+                        <div class="class-number">4</div>
+                        <div class="branch-node" onclick="showInfo('clase4')">
+                            <h3>🔧 Refactoring SOLID</h3>
+                            <p>Transformación de código procedural a arquitecturas funcionales y OOP usando principios SOLID.</p>
+                            <div class="subtopics">
+                                <div class="subtopic">SOLID</div>
+                                <div class="subtopic">Patrones</div>
+                                <div class="subtopic">Factory</div>
+                                <div class="subtopic">Builder</div>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="branch" data-class="5" data-level="advanced">
+                        <div class="class-number">5</div>
+                        <div class="branch-node" onclick="showInfo('clase5')">
+                            <h3>🗑️ Garbage Collection</h3>
+                            <p>Fundamentos de gestión de memoria en .NET, patrón IDisposable y prevención de memory leaks.</p>
+                            <div class="subtopics">
+                                <div class="subtopic">GC Basics</div>
+                                <div class="subtopic">IDisposable</div>
+                                <div class="subtopic">Memory Leaks</div>
+                                <div class="subtopic">Performance</div>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="branch" data-class="6" data-level="advanced">
+                        <div class="class-number">6</div>
+                        <div class="branch-node" onclick="showInfo('clase6')">
+                            <h3>⚡ Optimización SQL</h3>
+                            <p>Estrategias de indexación SQL y optimización de performance en EF Core para sistemas de alto tráfico.</p>
+                            <div class="subtopics">
+                                <div class="subtopic">Indexación</div>
+                                <div class="subtopic">EF Core</div>
+                                <div class="subtopic">Performance</div>
+                                <div class="subtopic">Planes</div>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="branch" data-class="7" data-level="advanced">
+                        <div class="class-number">7</div>
+                        <div class="branch-node" onclick="showInfo('clase7')">
+                            <h3>🏗️ Diseño BD Avanzado</h3>
+                            <p>Arquitecturas de base de datos metadata-driven y patrones EAV para sistemas empresariales flexibles.</p>
+                            <div class="subtopics">
+                                <div class="subtopic">Metadatos</div>
+                                <div class="subtopic">EAV Pattern</div>
+                                <div class="subtopic">JSON Híbrido</div>
+                                <div class="subtopic">Flexibilidad</div>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div id="mind-map-container"></div>
-
     <div class="info-panel" id="info-panel">
+        <button class="close-info" onclick="hideInfo()">×</button>
         <h3 id="info-title">Información del Curso</h3>
-        <p id="info-description">Haz clic en cualquier nodo para ver más información</p>
-        <a href="#" id="info-link" class="link-btn" style="display: none;">📚 Ir al Curso</a>
-    </div>
-
-    <div class="zoom-controls">
-        <button class="zoom-btn" onclick="zoomIn()" title="Acercar">+</button>
-        <button class="zoom-btn" onclick="zoomOut()" title="Alejar">-</button>
-        <button class="zoom-btn" onclick="zoomToFit()" title="Ver todo el sistema" style="font-size: 12px; padding: 8px;">🔍</button>
+        <p id="info-description">Selecciona una clase para ver información detallada</p>
+        <a href="#" id="info-link" class="info-link">📚 Ir a los Ejercicios</a>
     </div>
 
     <script>
-        // Datos del mapa mental con información detallada
-        const mindMapData = {
-            "name": "🚀 CursoNET",
-            "subtitle": "Jr → Semi-Sr",
-            "level": 0,
-            "info": {
-                "title": "Curso .NET para Desarrolladores",
-                "description": "Programa completo diseñado para llevar desarrolladores Junior al nivel Semi-Senior mediante prácticas profesionales y arquitectura de software.",
-                "link": "index.html"
+        // Datos de información para cada clase
+        const classInfo = {
+            clase1: {
+                title: "Clase 1: Análisis de Código Estático",
+                description: "Aprende a usar SonarLint para análisis automático de código, calcular y reducir complejidad ciclomática, y aplicar técnicas de refactoring como Guard Clauses y Extract Method. Incluye integración con CI/CD y métricas de calidad.",
+                link: "samples/clase1-analisis-codigo-estatico/README.html"
             },
-            "children": [
-                {
-                    "name": "🔧 Análisis Estático",
-                    "subtitle": "Calidad de Código",
-                    "level": 1,
-                    "info": {
-                        "title": "Clase 1: Análisis de Código Estático",
-                        "description": "Domina SonarLint, métricas de complejidad ciclomática y técnicas de refactoring para crear código limpio y mantenible.",
-                        "link": "samples/clase1-analisis-codigo-estatico/README.html"
-                    },
-                    "children": [
-                        {
-                            "name": "SonarLint",
-                            "subtitle": "Herramientas",
-                            "level": 2,
-                            "info": {
-                                "title": "Configuración de SonarLint",
-                                "description": "Instalación y configuración de SonarLint para análisis automático de código en Visual Studio.",
-                                "link": "samples/clase1-analisis-codigo-estatico/README.html"
-                            }
-                        },
-                        {
-                            "name": "Complejidad",
-                            "subtitle": "Métricas",
-                            "level": 2,
-                            "info": {
-                                "title": "Complejidad Ciclomática",
-                                "description": "Cálculo y reducción de complejidad ciclomática usando técnicas de refactoring efectivas.",
-                                "link": "samples/clase1-analisis-codigo-estatico/README.html"
-                            }
-                        },
-                        {
-                            "name": "Refactoring",
-                            "subtitle": "Técnicas",
-                            "level": 2,
-                            "info": {
-                                "title": "Técnicas de Refactoring",
-                                "description": "Guard clauses, extract method y otras técnicas para mejorar la calidad del código.",
-                                "link": "samples/clase1-analisis-codigo-estatico/README.html"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "name": "📋 Análisis Requisitos",
-                    "subtitle": "Metodologías",
-                    "level": 1,
-                    "info": {
-                        "title": "Clase 2: Análisis de Requisitos",
-                        "description": "Domina la identificación, documentación y gestión de requisitos funcionales y no funcionales en proyectos empresariales.",
-                        "link": "samples/clase2-analisis-requisitos/README.html"
-                    },
-                    "children": [
-                        {
-                            "name": "Funcionales",
-                            "subtitle": "FR vs NFR",
-                            "level": 2,
-                            "info": {
-                                "title": "Requisitos Funcionales",
-                                "description": "Identificación y documentación de requisitos funcionales vs no funcionales con ejemplos prácticos.",
-                                "link": "samples/clase2-analisis-requisitos/README.html"
-                            }
-                        },
-                        {
-                            "name": "Casos de Uso",
-                            "subtitle": "Modelado",
-                            "level": 2,
-                            "info": {
-                                "title": "Casos de Uso y User Stories",
-                                "description": "Conversión de descripciones informales en casos de uso estructurados y user stories profesionales.",
-                                "link": "samples/clase2-analisis-requisitos/README.html"
-                            }
-                        },
-                        {
-                            "name": "Trazabilidad",
-                            "subtitle": "Gestión",
-                            "level": 2,
-                            "info": {
-                                "title": "Matrices de Trazabilidad",
-                                "description": "Organización y conexión de requisitos mediante matrices de trazabilidad y análisis de dependencias.",
-                                "link": "samples/clase2-analisis-requisitos/README.html"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "name": "🚫 Técnicas No If",
-                    "subtitle": "Refactoring",
-                    "level": 1,
-                    "info": {
-                        "title": "Clase 3: Técnicas Sin If",
-                        "description": "Patrones de refactoring para eliminar condicionales complejos y mejorar la mantenibilidad del código.",
-                        "link": "samples/clase3-tecnicas-noif/README.html"
-                    },
-                    "children": [
-                        {
-                            "name": "Dictionary",
-                            "subtitle": "Patrones",
-                            "level": 2,
-                            "info": {
-                                "title": "Patrón Dictionary",
-                                "description": "Reemplazo de switch statements complejos usando diccionarios para mayor flexibilidad.",
-                                "link": "samples/clase3-tecnicas-noif/README.html"
-                            }
-                        },
-                        {
-                            "name": "Strategy",
-                            "subtitle": "Patrones",
-                            "level": 2,
-                            "info": {
-                                "title": "Patrón Strategy",
-                                "description": "Encapsulación de algoritmos intercambiables para eliminar condicionales complejos.",
-                                "link": "samples/clase3-tecnicas-noif/README.html"
-                            }
-                        },
-                        {
-                            "name": "Polimorfismo",
-                            "subtitle": "OOP",
-                            "level": 2,
-                            "info": {
-                                "title": "Polimorfismo",
-                                "description": "Uso de polimorfismo para eliminar condicionales basadas en tipos.",
-                                "link": "samples/clase3-tecnicas-noif/README.html"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "name": "🔧 Refactoring SOLID",
-                    "subtitle": "Principios",
-                    "level": 1,
-                    "info": {
-                        "title": "Clase 4: Refactoring Avanzado",
-                        "description": "Transformación de código procedural a arquitecturas funcionales y orientadas a objetos usando principios SOLID.",
-                        "link": "samples/clase4-refactoring-avanzado/README.html"
-                    },
-                    "children": [
-                        {
-                            "name": "SOLID",
-                            "subtitle": "Principios",
-                            "level": 2,
-                            "info": {
-                                "title": "Principios SOLID",
-                                "description": "Aplicación práctica de los principios SOLID en refactoring de código legacy.",
-                                "link": "samples/clase4-refactoring-avanzado/README.html"
-                            }
-                        },
-                        {
-                            "name": "Patrones",
-                            "subtitle": "Design Patterns",
-                            "level": 2,
-                            "info": {
-                                "title": "Patrones de Diseño",
-                                "description": "Implementación de patrones Factory, Builder y otros para mejorar la arquitectura.",
-                                "link": "samples/clase4-refactoring-avanzado/README.html"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "name": "🗑️ Gestión Memoria",
-                    "subtitle": "Garbage Collection",
-                    "level": 1,
-                    "info": {
-                        "title": "Clase 5: Garbage Collection",
-                        "description": "Fundamentos de gestión de memoria en .NET, patrón IDisposable y prevención de memory leaks.",
-                        "link": "samples/clase5-garbage-collection/README.html"
-                    },
-                    "children": [
-                        {
-                            "name": "GC Fundamentos",
-                            "subtitle": "Memoria",
-                            "level": 2,
-                            "info": {
-                                "title": "Fundamentos del GC",
-                                "description": "Comprensión del heap, generaciones y algoritmos de garbage collection en .NET.",
-                                "link": "samples/clase5-garbage-collection/README.html"
-                            }
-                        },
-                        {
-                            "name": "IDisposable",
-                            "subtitle": "Patrones",
-                            "level": 2,
-                            "info": {
-                                "title": "Patrón IDisposable",
-                                "description": "Implementación correcta del patrón IDisposable para gestión de recursos no administrados.",
-                                "link": "samples/clase5-garbage-collection/README.html"
-                            }
-                        },
-                        {
-                            "name": "Memory Leaks",
-                            "subtitle": "Prevención",
-                            "level": 2,
-                            "info": {
-                                "title": "Prevención de Memory Leaks",
-                                "description": "Identificación y prevención de memory leaks comunes en aplicaciones .NET.",
-                                "link": "samples/clase5-garbage-collection/README.html"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "name": "⚡ Optimización SQL",
-                    "subtitle": "Base de Datos",
-                    "level": 1,
-                    "info": {
-                        "title": "Clase 6: Indexación SQL",
-                        "description": "Estrategias de indexación SQL y optimización de performance en EF Core para sistemas de alto tráfico.",
-                        "link": "samples/clase6-indexacion-sql/README.html"
-                    },
-                    "children": [
-                        {
-                            "name": "Indexación",
-                            "subtitle": "SQL",
-                            "level": 2,
-                            "info": {
-                                "title": "Estrategias de Indexación",
-                                "description": "Diseño e implementación de índices para optimización de consultas SQL.",
-                                "link": "samples/clase6-indexacion-sql/README.html"
-                            }
-                        },
-                        {
-                            "name": "EF Core",
-                            "subtitle": "Performance",
-                            "level": 2,
-                            "info": {
-                                "title": "EF Core Performance",
-                                "description": "Optimización de consultas y configuración de EF Core para aplicaciones empresariales.",
-                                "link": "samples/clase6-indexacion-sql/README.html"
-                            }
-                        },
-                        {
-                            "name": "Planes Ejecución",
-                            "subtitle": "Análisis",
-                            "level": 2,
-                            "info": {
-                                "title": "Planes de Ejecución",
-                                "description": "Análisis y optimización de planes de ejecución SQL para mejorar performance.",
-                                "link": "samples/clase6-indexacion-sql/README.html"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "name": "🏗️ Diseño BD",
-                    "subtitle": "Arquitectura",
-                    "level": 1,
-                    "info": {
-                        "title": "Clase 7: Diseño Avanzado BD",
-                        "description": "Arquitecturas de base de datos metadata-driven y patrones EAV para sistemas empresariales flexibles.",
-                        "link": "samples/clase7-diseno-bd-metadatos/README.html"
-                    },
-                    "children": [
-                        {
-                            "name": "Metadatos",
-                            "subtitle": "Diseño",
-                            "level": 2,
-                            "info": {
-                                "title": "Diseño por Metadatos",
-                                "description": "Implementación de arquitecturas metadata-driven para sistemas flexibles y escalables.",
-                                "link": "samples/clase7-diseno-bd-metadatos/README.html"
-                            }
-                        },
-                        {
-                            "name": "EAV Pattern",
-                            "subtitle": "Patrones",
-                            "level": 2,
-                            "info": {
-                                "title": "Patrón EAV",
-                                "description": "Entity-Attribute-Value pattern para esquemas de base de datos dinámicos.",
-                                "link": "samples/clase7-diseno-bd-metadatos/README.html"
-                            }
-                        },
-                        {
-                            "name": "JSON Híbrido",
-                            "subtitle": "Modelos",
-                            "level": 2,
-                            "info": {
-                                "title": "Modelos Híbridos",
-                                "description": "Combinación de esquemas relacionales con JSON para flexibilidad y performance.",
-                                "link": "samples/clase7-diseno-bd-metadatos/README.html"
-                            }
-                        }
-                    ]
-                }
-            ]
+            clase2: {
+                title: "Clase 2: Análisis de Requisitos",
+                description: "Domina la metodología moderna para capturar requisitos funcionales vs no funcionales, crear casos de uso estructurados, escribir user stories con formato Connextra, y gestionar trazabilidad con matrices de dependencias.",
+                link: "samples/clase2-analisis-requisitos/README.html"
+            },
+            clase3: {
+                title: "Clase 3: Técnicas Sin If",
+                description: "Elimina condicionales complejas usando Dictionary patterns, Strategy pattern para algoritmos intercambiables, State pattern para máquinas de estado, y polimorfismo para comportamientos basados en tipos.",
+                link: "samples/clase3-tecnicas-noif/README.html"
+            },
+            clase4: {
+                title: "Clase 4: Refactoring Avanzado",
+                description: "Transforma código procedural en arquitecturas funcionales y OOP. Aplica principios SOLID, implementa patrones Factory y Builder, y maneja código legacy con técnicas sistemáticas de refactoring.",
+                link: "samples/clase4-refactoring-avanzado/README.html"
+            },
+            clase5: {
+                title: "Clase 5: Garbage Collection",
+                description: "Comprende el funcionamiento del GC en .NET, maneja generaciones de memoria, implementa correctamente IDisposable, y prevé memory leaks en aplicaciones enterprise. Incluye técnicas de profiling y optimización.",
+                link: "samples/clase5-garbage-collection/README.html"
+            },
+            clase6: {
+                title: "Clase 6: Optimización SQL",
+                description: "Diseña estrategias de indexación efectivas, optimiza consultas SQL complejas, configura EF Core para performance, y analiza planes de ejecución para sistemas de alto tráfico. Incluye monitoring y troubleshooting.",
+                link: "samples/clase6-indexacion-sql/README.html"
+            },
+            clase7: {
+                title: "Clase 7: Diseño BD Avanzado",
+                description: "Implementa arquitecturas metadata-driven, domina el patrón EAV para esquemas flexibles, combina modelos relacionales con JSON, y diseña sistemas de base de datos evolutivos para plataformas empresariales.",
+                link: "samples/clase7-diseno-bd-metadatos/README.html"
+            }
         };
 
-        // Variables globales
-        let svg, simulation, nodes, links, node, link, zoom, transform = d3.zoomIdentity;
-        const container = document.getElementById('mind-map-container');
-        let width = container.clientWidth;
-        let height = container.clientHeight;
-        
-        // Control de animación
-        let animationRunning = false;
-        let animationFrameId = null;
-        
-        // Configuración responsiva
-        const isMobile = window.innerWidth < 768;
-        const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
-
-        // Inicializar el mapa con diseño tipo sistema solar
-        function initMindMap() {
-            // Actualizar dimensiones
-            width = container.clientWidth;
-            height = container.clientHeight;
-            
-            svg = d3.select(container).append("svg")
-                .attr("viewBox", [0, 0, width, height])
-                .style("font", "12px sans-serif");
-
-            // Configurar zoom con rango más amplio
-            zoom = d3.zoom()
-                .scaleExtent([0.1, 8])  // Zoom out mucho más (0.1) y zoom in más (8)
-                .on("zoom", handleZoom);
-
-            svg.call(zoom);
-
-            // Crear datos del sistema solar
-            const solarSystemData = createSolarSystemLayout();
-            
-            nodes = solarSystemData.nodes;
-            links = solarSystemData.links;
-
-            // Crear enlaces (órbitas)
-            link = svg.append("g")
-                .attr("class", "links")
-                .selectAll("path")
-                .data(links)
-                .join("path")
-                .attr("class", "link")
-                .attr("d", d => createOrbitPath(d))
-                .style("stroke", "rgba(255, 255, 255, 0.2)")
-                .style("stroke-width", d => d.type === 'orbit' ? 3 : 1) // Órbitas principales más gruesas
-                .style("fill", "none")
-                .style("opacity", d => d.type === 'orbit' ? 0.5 : 0.3)
-                .style("stroke-dasharray", d => d.type === 'orbit' ? "8,4" : "5,5");
-
-            // Crear nodos con animación de entrada
-            node = svg.append("g")
-                .attr("class", "nodes")
-                .selectAll("g")
-                .data(nodes)
-                .join("g")
-                .attr("class", d => `node ${d.level === 0 ? 'root' : `level-${d.level}`} ${d.info ? 'clickable' : ''}`)
-                .attr("transform", d => `translate(${d.x},${d.y}) scale(0)`)
-                .style("opacity", d => d.visible ? 0 : 0) // Todas empiezan invisible para la animación
-                .on("click", handleNodeClick)
-                .on("mouseover", handleMouseOver)
-                .on("mouseout", handleMouseOut);
-
-            // Añadir círculos con gradientes
-            const defs = svg.append("defs");
-            createGradients(defs);
-
-            node.append("circle")
-                .attr("r", d => getNodeRadius(d.level))
-                .style("fill", d => `url(#gradient-${d.level})`)
-                .style("stroke", d => getNodeStroke(d.level))
-                .style("stroke-width", d => d.level === 0 ? 4 : 2)
-                .style("filter", d => d.level === 0 ? "url(#glow)" : "none");
-
-            // Añadir texto principal con ajuste responsivo
-            node.append("text")
-                .attr("dy", "-0.2em")
-                .attr("text-anchor", "middle")
-                .style("font-size", d => getTextSize(d.level))
-                .style("font-weight", d => d.level <= 1 ? "bold" : "normal")
-                .style("fill", "white")
-                .text(d => adjustTextForScreen(d.name));
-
-            // Añadir subtítulo
-            node.append("text")
-                .attr("dy", "0.8em")
-                .attr("text-anchor", "middle")
-                .style("font-size", d => getSubtitleSize(d.level))
-                .style("font-weight", "normal")
-                .style("fill", "rgba(255,255,255,0.7)")
-                .text(d => isMobile ? "" : (d.subtitle || ""));
-
-            // Añadir indicador de enlace
-            node.filter(d => d.info)
-                .append("circle")
-                .attr("r", isMobile ? 6 : 8)
-                .attr("cx", d => getNodeRadius(d.level) * 0.7)
-                .attr("cy", d => -getNodeRadius(d.level) * 0.7)
-                .style("fill", "#ffd700")
-                .style("stroke", "#fff")
-                .style("stroke-width", 2);
-
-            node.filter(d => d.info)
-                .append("text")
-                .attr("x", d => getNodeRadius(d.level) * 0.7)
-                .attr("y", d => -getNodeRadius(d.level) * 0.7 + 3)
-                .attr("text-anchor", "middle")
-                .style("font-size", isMobile ? "8px" : "10px")
-                .style("font-weight", "bold")
-                .style("fill", "#333")
-                .text("🔗");
-            
-            // Crear efectos especiales
-            createSpecialEffects(defs);
-            
-            // Animación de entrada espectacular
-            animateEntrance();
-        }
-
-        // Crear verdadero sistema solar con planetas en órbitas individuales
-        function createSolarSystemLayout() {
-            const centerX = width / 2;
-            const centerY = height / 2;
-            const minDimension = Math.min(width, height);
-            
-            // Nodo central (sol) - CursoNET
-            const rootNode = {
-                ...mindMapData,
-                x: centerX,
-                y: centerY,
-                level: 0,
-                angle: 0,
-                radius: 0,
-                orbitRadius: 0,
-                rotationSpeed: 0,
-                visible: true
-            };
-            
-            const allNodes = [rootNode];
-            const allLinks = [];
-            
-            // Configurar planetas en órbitas individuales
-            const level1Nodes = mindMapData.children || [];
-            const orbitRadii = calculateOrbitRadii(level1Nodes.length, minDimension);
-            
-            level1Nodes.forEach((nodeData, i) => {
-                const orbitRadius = orbitRadii[i];
-                const startAngle = (i * 2 * Math.PI) / level1Nodes.length - Math.PI / 2;
-                const rotationSpeed = 0.02 + (i * 0.005); // Velocidades diferentes
-                
-                // Posición inicial del planeta
-                const x = centerX + orbitRadius * Math.cos(startAngle);
-                const y = centerY + orbitRadius * Math.sin(startAngle);
-                
-                const planet = {
-                    ...nodeData,
-                    x: x,
-                    y: y,
-                    level: 1,
-                    angle: startAngle,
-                    orbitRadius: orbitRadius,
-                    rotationSpeed: rotationSpeed,
-                    visible: true,
-                    planetId: i,
-                    moons: []
-                };
-                
-                allNodes.push(planet);
-                
-                // Crear órbita del planeta
-                allLinks.push({
-                    source: rootNode,
-                    target: planet,
-                    type: 'orbit',
-                    radius: orbitRadius
-                });
-                
-                // Configurar lunas del planeta
-                if (nodeData.children) {
-                    const moonCount = nodeData.children.length;
-                    const planetRadius = getNodeRadius(1);
-                    const moonOrbitRadius = planetRadius * 3.5; // 3.5 veces el tamaño del planeta (mucho más espaciado)
-                    
-                    nodeData.children.forEach((childData, j) => {
-                        const moonAngle = (j * 2 * Math.PI) / moonCount;
-                        const moonRotationSpeed = 0.08 + (j * 0.01); // Lunas más rápidas
-                        
-                        // Posición inicial de la luna
-                        const moonX = x + moonOrbitRadius * Math.cos(moonAngle);
-                        const moonY = y + moonOrbitRadius * Math.sin(moonAngle);
-                        
-                        const moon = {
-                            ...childData,
-                            x: moonX,
-                            y: moonY,
-                            level: 2,
-                            angle: moonAngle,
-                            orbitRadius: moonOrbitRadius,
-                            rotationSpeed: moonRotationSpeed,
-                            visible: false, // Inicialmente ocultas
-                            parent: planet,
-                            planetId: i,
-                            moonId: j
-                        };
-                        
-                        allNodes.push(moon);
-                        planet.moons.push(moon);
-                        
-                        // Crear órbita de luna
-                        allLinks.push({
-                            source: planet,
-                            target: moon,
-                            type: 'moon-orbit',
-                            radius: moonOrbitRadius
-                        });
-                    });
-                }
-            });
-            
-            return { nodes: allNodes, links: allLinks };
-        }
-        
-        // Calcular radios orbitales para distribución uniforme con MUCHO más espaciado
-        function calculateOrbitRadii(planetCount, minDimension) {
-            const planetRadius = getNodeRadius(1); // Tamaño del planeta (ahora al doble)
-            const minSeparation = planetRadius * 6;  // Separación mínima = 6 veces el tamaño del planeta
-            
-            const baseRadius = minDimension * 0.35;  // Órbitas mucho más grandes
-            const maxRadius = minDimension * 0.75;   // Órbitas que llegan casi al borde
-            
-            // Calcular espaciado basado en separación mínima
-            const totalCircumference = 2 * Math.PI * ((baseRadius + maxRadius) / 2);
-            const requiredSpacing = planetCount * minSeparation;
-            
-            // Si necesitamos más espacio, expandir las órbitas aún más
-            let adjustedMaxRadius = maxRadius;
-            if (requiredSpacing > totalCircumference) {
-                adjustedMaxRadius = maxRadius * (requiredSpacing / totalCircumference);
-            }
-            
-            // Espaciado progresivo - cada órbita es significativamente más grande
-            const radiusStep = (adjustedMaxRadius - baseRadius) / Math.max(1, planetCount - 1);
-            const progressiveFactor = 1.4; // Factor de crecimiento progresivo
-            
-            return Array.from({ length: planetCount }, (_, i) => {
-                // Espaciado progresivo que crece exponencialmente
-                const progressiveMultiplier = Math.pow(progressiveFactor, i);
-                return baseRadius + (i * radiusStep * progressiveMultiplier);
-            });
-        }
-        
-        // Funciones auxiliares responsivas
-        function getNodeRadius(level) {
-            const baseSize = isMobile ? 1.6 : 2; // Duplicado el tamaño base
-            switch(level) {
-                case 0: return (isMobile ? 80 : 110) * baseSize; // Sol al doble
-                case 1: return (isMobile ? 56 : 80) * baseSize; // Planetas al doble
-                case 2: return (isMobile ? 32 : 44) * baseSize; // Lunas al doble
-                default: return (isMobile ? 30 : 40) * baseSize;
-            }
-        }
-        
-        function getTextSize(level) {
-            if (isMobile) {
-                switch(level) {
-                    case 0: return "18px";  // Aumentado para el Sol más grande
-                    case 1: return "14px";  // Aumentado para planetas más grandes
-                    case 2: return "12px";  // Aumentado para lunas más grandes
-                    default: return "10px";
-                }
-            } else {
-                switch(level) {
-                    case 0: return "24px";  // Aumentado para el Sol más grande
-                    case 1: return "18px";  // Aumentado para planetas más grandes
-                    case 2: return "14px";  // Aumentado para lunas más grandes
-                    default: return "12px";
-                }
-            }
-        }
-        
-        function getSubtitleSize(level) {
-            if (isMobile) return "0px"; // Ocultar subtítulos en móvil
-            
-            switch(level) {
-                case 0: return "16px";  // Aumentado para el Sol más grande
-                case 1: return "13px";  // Aumentado para planetas más grandes
-                case 2: return "11px";  // Aumentado para lunas más grandes
-                default: return "9px";
-            }
-        }
-        
-        function adjustTextForScreen(text) {
-            if (isMobile && text.length > 10) {
-                return text.split(' ')[0] + '...';
-            }
-            return text;
-        }
-        
-        function getNodeStroke(level) {
-            const colors = { 0: "#ffd700", 1: "#6a11cb", 2: "#2575fc" };
-            return colors[level] || "#999";
-        }
-        
-        function createOrbitPath(d) {
-            const centerX = d.source.x;
-            const centerY = d.source.y;
-            const radius = d.radius;
-            
-            // Crear órbita circular completa
-            return `M ${centerX + radius},${centerY} 
-                    A ${radius},${radius} 0 0,1 ${centerX - radius},${centerY} 
-                    A ${radius},${radius} 0 0,1 ${centerX + radius},${centerY}`;
-        }
-        
-        function createGradients(defs) {
-            // Gradiente para nodo central
-            const grad0 = defs.append("radialGradient")
-                .attr("id", "gradient-0")
-                .attr("cx", "50%")
-                .attr("cy", "30%")
-                .attr("r", "70%");
-            
-            grad0.append("stop")
-                .attr("offset", "0%")
-                .attr("stop-color", "#ffd700")
-                .attr("stop-opacity", 1);
-            
-            grad0.append("stop")
-                .attr("offset", "100%")
-                .attr("stop-color", "#ff8c00")
-                .attr("stop-opacity", 1);
-            
-            // Gradiente para nivel 1
-            const grad1 = defs.append("radialGradient")
-                .attr("id", "gradient-1")
-                .attr("cx", "50%")
-                .attr("cy", "30%")
-                .attr("r", "70%");
-            
-            grad1.append("stop")
-                .attr("offset", "0%")
-                .attr("stop-color", "#667eea")
-                .attr("stop-opacity", 1);
-            
-            grad1.append("stop")
-                .attr("offset", "100%")
-                .attr("stop-color", "#764ba2")
-                .attr("stop-opacity", 1);
-            
-            // Gradiente para nivel 2
-            const grad2 = defs.append("radialGradient")
-                .attr("id", "gradient-2")
-                .attr("cx", "50%")
-                .attr("cy", "30%")
-                .attr("r", "70%");
-            
-            grad2.append("stop")
-                .attr("offset", "0%")
-                .attr("stop-color", "#4ecdc4")
-                .attr("stop-opacity", 1);
-            
-            grad2.append("stop")
-                .attr("offset", "100%")
-                .attr("stop-color", "#44a08d")
-                .attr("stop-opacity", 1);
-        }
-        
-        function createSpecialEffects(defs) {
-            // Filtro de resplandor
-            const glow = defs.append("filter")
-                .attr("id", "glow")
-                .attr("x", "-50%")
-                .attr("y", "-50%")
-                .attr("width", "200%")
-                .attr("height", "200%");
-            
-            glow.append("feGaussianBlur")
-                .attr("stdDeviation", "4")
-                .attr("result", "coloredBlur");
-            
-            const feMerge = glow.append("feMerge");
-            feMerge.append("feMergeNode").attr("in", "coloredBlur");
-            feMerge.append("feMergeNode").attr("in", "SourceGraphic");
-        }
-        
-        function animateEntrance() {
-            // Fase 1: Mostrar órbitas planetarias una por una
-            link.style("opacity", 0)
-                .transition()
-                .duration(800)
-                .delay((d, i) => {
-                    if (d.type === 'orbit') return i * 200;
-                    return 0; // Órbitas de lunas permanecen ocultas
-                })
-                .ease(d3.easeQuadOut)
-                .style("opacity", d => d.type === 'orbit' ? 0.3 : 0);
-            
-            // Fase 2: Aparecer el Sol con efecto de ignición
-            svg.selectAll('.node.root')
-                .transition()
-                .duration(1200)
-                .delay(400)
-                .ease(d3.easeElasticOut)
-                .attr("transform", d => `translate(${d.x},${d.y}) scale(1)`)
-                .style("opacity", 1);
-            
-            // Fase 3: Los planetas aparecen en sus órbitas
-            svg.selectAll('.node.level-1')
-                .transition()
-                .duration(1000)
-                .delay((d, i) => 1200 + i * 300)
-                .ease(d3.easeElasticOut)
-                .attr("transform", d => `translate(${d.x},${d.y}) scale(1)`)
-                .style("opacity", 1);
-            
-            // Fase 4: Crear lunas pequeñas orbitando (invisibles)
-            svg.selectAll('.node.level-2')
-                .style("opacity", 0)
-                .attr("transform", d => `translate(${d.parent.x},${d.parent.y}) scale(0.3)`);
-            
-            // NO iniciar animación automáticamente
-            // setTimeout(() => {
-            //     startOrbitalAnimation();
-            // }, 3000);
-            
-            // Efecto de ignición solar
-            createSolarIgnition();
-        }
-        
-        // Función para crear efecto de ignición solar
-        function createSolarIgnition() {
-            const rootNode = svg.select('.node.root');
-            if (!rootNode.empty()) {
-                const rootData = rootNode.datum();
-                
-                // Ondas de ignición desde el centro
-                for (let i = 0; i < 6; i++) {
-                    svg.append("circle")
-                        .attr("cx", rootData.x)
-                        .attr("cy", rootData.y)
-                        .attr("r", 30)
-                        .style("fill", "none")
-                        .style("stroke", `rgba(255, ${215 - i * 20}, 0, ${0.9 - i * 0.1})`)
-                        .style("stroke-width", 4)
-                        .transition()
-                        .duration(2000)
-                        .delay(i * 200 + 800)
-                        .ease(d3.easeQuadOut)
-                        .attr("r", Math.min(width, height) * 0.4)
-                        .style("opacity", 0)
-                        .style("stroke-width", 1)
-                        .remove();
-                }
-            }
-        }
-        
-        // Función para iniciar animación orbital continua
-        function startOrbitalAnimation() {
-            if (animationRunning) return; // Evitar duplicados
-            
-            animationRunning = true;
-            const animationBtn = document.getElementById('animationBtn');
-            if (animationBtn) {
-                animationBtn.textContent = '⏸️ Parar';
-            }
-            
-            function animate() {
-                if (!animationRunning) return;
-                
-                // Animar planetas en sus órbitas
-                nodes.filter(d => d.level === 1 && d.visible).forEach(planet => {
-                    planet.angle += planet.rotationSpeed;
-                    planet.x = width/2 + planet.orbitRadius * Math.cos(planet.angle);
-                    planet.y = height/2 + planet.orbitRadius * Math.sin(planet.angle);
-                    
-                    // Animar lunas si están visibles - LAS LUNAS SIEMPRE ORBITAN SU PLANETA
-                    if (planet.moons) {
-                        planet.moons.forEach(moon => {
-                            moon.angle += moon.rotationSpeed;
-                            // Las lunas siempre orbitan alrededor de su planeta padre
-                            moon.x = planet.x + moon.orbitRadius * Math.cos(moon.angle);
-                            moon.y = planet.y + moon.orbitRadius * Math.sin(moon.angle);
-                        });
-                    }
-                });
-                
-                // Actualizar posiciones en el SVG
-                svg.selectAll('.node.level-1')
-                    .attr("transform", d => `translate(${d.x},${d.y}) scale(1)`);
-                
-                // Actualizar posiciones de lunas (siempre animadas, solo cambia visibilidad)
-                svg.selectAll('.node.level-2')
-                    .attr("transform", d => `translate(${d.x},${d.y}) scale(${d.visible ? 1 : 0.3})`)
-                    .style("opacity", d => d.visible ? 1 : 0);
-                
-                // Actualizar órbitas de lunas para que se muevan con los planetas
-                svg.selectAll('.link')
-                    .filter(d => d.type === 'moon-orbit')
-                    .attr("d", d => createOrbitPath(d));
-                
-                animationFrameId = requestAnimationFrame(animate);
-            }
-            animate();
-        }
-        
-        // Función para parar animación orbital
-        function stopOrbitalAnimation() {
-            animationRunning = false;
-            if (animationFrameId) {
-                cancelAnimationFrame(animationFrameId);
-                animationFrameId = null;
-            }
-            const animationBtn = document.getElementById('animationBtn');
-            if (animationBtn) {
-                animationBtn.textContent = '▶️ Animar';
-            }
-            
-            // Resetear todas las posiciones a momento 0
-            resetToInitialPositions();
-        }
-        
-        // Función para resetear posiciones a momento 0
-        function resetToInitialPositions() {
-            const centerX = width / 2;
-            const centerY = height / 2;
-            
-            // Resetear planetas a sus posiciones iniciales
-            nodes.filter(d => d.level === 1).forEach(planet => {
-                const initialAngle = (planet.planetId * 2 * Math.PI) / nodes.filter(n => n.level === 1).length - Math.PI / 2;
-                planet.angle = initialAngle;
-                planet.x = centerX + planet.orbitRadius * Math.cos(initialAngle);
-                planet.y = centerY + planet.orbitRadius * Math.sin(initialAngle);
-                
-                // Resetear lunas a sus posiciones iniciales
-                if (planet.moons) {
-                    planet.moons.forEach(moon => {
-                        const initialMoonAngle = (moon.moonId * 2 * Math.PI) / planet.moons.length;
-                        moon.angle = initialMoonAngle;
-                        moon.x = planet.x + moon.orbitRadius * Math.cos(initialMoonAngle);
-                        moon.y = planet.y + moon.orbitRadius * Math.sin(initialMoonAngle);
-                    });
-                }
-            });
-            
-            // Actualizar posiciones en el SVG
-            svg.selectAll('.node.level-1')
-                .transition()
-                .duration(500)
-                .attr("transform", d => `translate(${d.x},${d.y}) scale(1)`);
-            
-            svg.selectAll('.node.level-2')
-                .transition()
-                .duration(500)
-                .attr("transform", d => `translate(${d.x},${d.y}) scale(${d.visible ? 1 : 0.3})`)
-                .style("opacity", d => d.visible ? 1 : 0);
-            
-            // Actualizar órbitas de lunas
-            svg.selectAll('.link')
-                .filter(d => d.type === 'moon-orbit')
-                .transition()
-                .duration(500)
-                .attr("d", d => createOrbitPath(d));
-        }
-        
-        // Función para alternar animación
-        function toggleAnimation() {
-            if (animationRunning) {
-                stopOrbitalAnimation();
-            } else {
-                startOrbitalAnimation();
-            }
-        }
-        
-        // Función para crear partículas solares
-        function createSolarParticles() {
-            const rootNode = svg.select('.node.root');
-            if (!rootNode.empty()) {
-                const rootData = rootNode.datum();
-                
-                for (let i = 0; i < 8; i++) {
-                    const angle = (i * Math.PI * 2) / 8;
-                    const startRadius = 60;
-                    const endRadius = 120;
-                    
-                    svg.append("circle")
-                        .attr("cx", rootData.x + startRadius * Math.cos(angle))
-                        .attr("cy", rootData.y + startRadius * Math.sin(angle))
-                        .attr("r", 2)
-                        .style("fill", "#ffd700")
-                        .style("opacity", 0.8)
-                        .transition()
-                        .duration(2000)
-                        .ease(d3.easeQuadOut)
-                        .attr("cx", rootData.x + endRadius * Math.cos(angle))
-                        .attr("cy", rootData.y + endRadius * Math.sin(angle))
-                        .attr("r", 1)
-                        .style("opacity", 0)
-                        .remove();
-                }
-            }
-        }
-
-        // Función para crear paths curvos
-        function linkPath(d) {
-            const sourceX = d.source.x;
-            const sourceY = d.source.y;
-            const targetX = d.target.x;
-            const targetY = d.target.y;
-            
-            const midX = (sourceX + targetX) / 2;
-            const midY = (sourceY + targetY) / 2;
-            
-            return `M${sourceX},${sourceY} Q${midX},${midY - 30} ${targetX},${targetY}`;
-        }
-
-        // Manejadores de eventos
-        function handleZoom(event) {
-            const { transform } = event;
-            svg.selectAll('.nodes, .links').attr('transform', transform);
-        }
-
-        function handleNodeClick(event, d) {
-            if (d.info && d.info.link) {
-                window.open(d.info.link, '_blank');
-            }
-        }
-
-        function handleMouseOver(event, d) {
-            // Highlight enlaces relacionados con animación
-            link.transition()
-                .duration(200)
-                .style("opacity", l => l.source === d || l.target === d ? 1 : 0.1)
-                .style("stroke-width", l => l.source === d || l.target === d ? 3 : 1);
-            
-            // Destacar nodos relacionados
-            node.transition()
-                .duration(200)
-                .style("opacity", n => {
-                    if (n === d) return 1;
-                    // Verificar si es padre o hijo
-                    const isRelated = links.some(l => 
-                        (l.source === d && l.target === n) || 
-                        (l.target === d && l.source === n)
-                    );
-                    return isRelated ? 1 : 0.4;
-                });
-            
-            // Efecto de ondas en el nodo actual
-            d3.select(event.target.parentNode)
-                .select('circle')
-                .transition()
-                .duration(300)
-                .ease(d3.easeElasticOut)
-                .attr('r', d => getNodeRadius(d.level) * 1.3);
-            
-            // Mostrar información con delay
-            setTimeout(() => {
-                if (d.info) {
-                    showInfo(d.info);
-                }
-            }, 200);
-        }
-
-        function handleMouseOut(event, d) {
-            // Restaurar opacidad de enlaces
-            link.transition()
-                .duration(300)
-                .style("opacity", d => d.type === 'orbit' ? 0.3 : 0.6)
-                .style("stroke-width", 1);
-            
-            // Restaurar opacidad de nodos
-            node.transition()
-                .duration(300)
-                .style("opacity", 1);
-            
-            // Restaurar tamaño del nodo
-            d3.select(event.target.parentNode)
-                .select('circle')
-                .transition()
-                .duration(400)
-                .ease(d3.easeElasticOut)
-                .attr('r', d => getNodeRadius(d.level));
-            
-            // Ocultar información con delay
-            setTimeout(() => {
-                hideInfo();
-            }, 300);
-        }
-
-        // Funciones de información mejoradas
-        function showInfo(info) {
+        // Función para mostrar información
+        function showInfo(className) {
             const panel = document.getElementById('info-panel');
             const title = document.getElementById('info-title');
             const description = document.getElementById('info-description');
             const link = document.getElementById('info-link');
             
-            // Actualizar contenido
-            title.textContent = info.title;
-            description.textContent = info.description;
-            
-            if (info.link) {
+            const info = classInfo[className];
+            if (info) {
+                title.textContent = info.title;
+                description.textContent = info.description;
                 link.href = info.link;
-                link.style.display = 'inline-block';
-            } else {
-                link.style.display = 'none';
+                panel.classList.add('active');
             }
-            
-            // Animación de entrada suave
-            panel.style.transform = 'translateX(100%) scale(0.9)';
-            panel.style.opacity = '0';
-            panel.classList.add('active');
-            
-            // Forzar repaint
-            panel.offsetHeight;
-            
-            // Animación de entrada
-            panel.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
-            panel.style.transform = 'translateX(0) scale(1)';
-            panel.style.opacity = '1';
         }
 
+        // Función para ocultar información
         function hideInfo() {
             const panel = document.getElementById('info-panel');
-            
-            // Animación de salida
-            panel.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-            panel.style.transform = 'translateX(100%) scale(0.9)';
-            panel.style.opacity = '0';
-            
-            // Remover clase después de la animación
-            setTimeout(() => {
-                panel.classList.remove('active');
-            }, 300);
+            panel.classList.remove('active');
         }
 
-        // Funciones de control mejoradas
+        // Funciones de filtrado
+        function showAll() {
+            const branches = document.querySelectorAll('.branch');
+            branches.forEach(branch => {
+                branch.style.display = 'block';
+                branch.style.opacity = '1';
+            });
+        }
+
+        function showBasics() {
+            const branches = document.querySelectorAll('.branch');
+            branches.forEach(branch => {
+                if (branch.dataset.level === 'basic') {
+                    branch.style.display = 'block';
+                    branch.style.opacity = '1';
+                } else {
+                    branch.style.display = 'none';
+                    branch.style.opacity = '0.3';
+                }
+            });
+        }
+
+        function showAdvanced() {
+            const branches = document.querySelectorAll('.branch');
+            branches.forEach(branch => {
+                if (branch.dataset.level === 'advanced') {
+                    branch.style.display = 'block';
+                    branch.style.opacity = '1';
+                } else {
+                    branch.style.display = 'none';
+                    branch.style.opacity = '0.3';
+                }
+            });
+        }
+
         function resetView() {
-            // Parar cualquier animación en progreso para evitar conflictos
-            if (animationRunning) {
-                stopOrbitalAnimation();
-            }
-            
-            // Ocultar todas las lunas de forma síncrona
-            nodes.forEach(node => {
-                if (node.level === 2) {
-                    node.visible = false;
-                }
-            });
-            
-            // Animar la ocultación de lunas
-            svg.selectAll('.node.level-2')
-                .transition()
-                .duration(400)
-                .style('opacity', 0)
-                .attr('transform', d => `translate(${d.parent.x},${d.parent.y}) scale(0.1)`);
-            
-            // Ocultar órbitas de lunas
-            svg.selectAll('.link')
-                .filter(d => d.type === 'moon-orbit')
-                .transition()
-                .duration(400)
-                .style('opacity', 0);
-            
-            // Asegurar visibilidad de órbitas principales
-            svg.selectAll('.link')
-                .filter(d => d.type === 'orbit')
-                .transition()
-                .duration(400)
-                .style('opacity', 0.6)
-                .style('stroke-width', 3);
-            
-            // Centrar vista en el sistema solar principal y ajustar zoom para ver todo
+            showAll();
+            hideInfo();
+        }
+
+        // Animaciones de entrada
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animar barras de progreso
             setTimeout(() => {
-                zoomToFit();
-            }, 500);
-            
-            // Efecto de pulso en planetas
-            svg.selectAll('.node.level-1')
-                .transition()
-                .duration(800)
-                .ease(d3.easeElasticOut)
-                .attr('transform', d => `translate(${d.x},${d.y}) scale(1.2)`)
-                .transition()
-                .duration(400)
-                .attr('transform', d => `translate(${d.x},${d.y}) scale(1)`);
-        }
-
-        function zoomIn() {
-            svg.transition()
-                .duration(400)
-                .ease(d3.easeQuadInOut)
-                .call(zoom.scaleBy, 1.6);  // Zoom más agresivo
-        }
-
-        function zoomOut() {
-            svg.transition()
-                .duration(400)
-                .ease(d3.easeQuadInOut)
-                .call(zoom.scaleBy, 1 / 1.6);  // Zoom out más agresivo
-        }
-        
-        // Función para ajustar zoom para ver todo el sistema
-        function zoomToFit() {
-            try {
-                // Obtener todos los nodos visibles
-                const visibleNodes = nodes.filter(d => d.level <= 1 || d.visible);
-                
-                if (visibleNodes.length === 0) return;
-                
-                // Calcular bounds basado en las posiciones de los nodos
-                const padding = 100;
-                let minX = Infinity, maxX = -Infinity;
-                let minY = Infinity, maxY = -Infinity;
-                
-                visibleNodes.forEach(node => {
-                    const nodeRadius = getNodeRadius(node.level);
-                    minX = Math.min(minX, node.x - nodeRadius);
-                    maxX = Math.max(maxX, node.x + nodeRadius);
-                    minY = Math.min(minY, node.y - nodeRadius);
-                    maxY = Math.max(maxY, node.y + nodeRadius);
+                const progressBars = document.querySelectorAll('.progress-fill');
+                progressBars.forEach((bar, index) => {
+                    setTimeout(() => {
+                        bar.style.width = bar.style.width || '100%';
+                    }, index * 200);
                 });
-                
-                const boundsWidth = maxX - minX + padding * 2;
-                const boundsHeight = maxY - minY + padding * 2;
-                const centerX = (minX + maxX) / 2;
-                const centerY = (minY + maxY) / 2;
-                
-                // Calcular escala para que todo quepa con margen
-                const scale = Math.min(width / boundsWidth, height / boundsHeight) * 0.9;
-                
-                // Limitar escala dentro del rango permitido
-                const finalScale = Math.max(0.1, Math.min(8, scale));
-                
-                // Aplicar transformación para centrar y escalar
-                svg.transition()
-                    .duration(750)
-                    .ease(d3.easeQuadInOut)
-                    .call(zoom.transform, 
-                        d3.zoomIdentity
-                            .translate(width / 2, height / 2)
-                            .scale(finalScale)
-                            .translate(-centerX, -centerY)
-                    );
-            } catch (error) {
-                console.log('Error en zoomToFit:', error);
-                // Fallback: resetear zoom a escala 0.5
-                svg.transition()
-                    .duration(750)
-                    .call(zoom.transform, d3.zoomIdentity.scale(0.5));
-            }
-        }
+            }, 1000);
 
-        function expandAll() {
-            // Parar cualquier animación en progreso para evitar conflictos
-            if (animationRunning) {
-                stopOrbitalAnimation();
-            }
-            
-            // Hacer visibles todas las lunas de forma síncrona
-            nodes.forEach(node => {
-                if (node.level === 2) {
-                    node.visible = true;
-                }
-            });
-            
-            // Mostrar órbitas de lunas
-            svg.selectAll('.link')
-                .transition()
-                .duration(600)
-                .style('opacity', d => {
-                    if (d.type === 'orbit') return 0.6;      // Órbitas principales más visibles
-                    if (d.type === 'moon-orbit') return 0.4; // Órbitas de lunas más sutiles
-                    return 0.8;
-                })
-                .style('stroke-width', d => d.type === 'orbit' ? 4 : 2); // Órbitas principales más gruesas
-            
-            // Mostrar lunas con efecto de aparición
-            svg.selectAll('.node.level-2')
-                .transition()
-                .duration(800)
-                .delay((d, i) => d.planetId * 100 + i * 50)
-                .ease(d3.easeElasticOut)
-                .style('opacity', 1)
-                .attr("transform", d => `translate(${d.x},${d.y}) scale(1)`);
-            
-            // Crear efecto de "despertar" de las lunas
-            setTimeout(() => {
-                createMoonActivation();
-            }, 500);
-        }
-        
-        // Función para crear efecto de activación de lunas
-        function createMoonActivation() {
-            nodes.filter(d => d.level === 1).forEach(planet => {
-                if (planet.moons && planet.moons.length > 0) {
-                    // Crear pulso alrededor del planeta
-                    svg.append("circle")
-                        .attr("cx", planet.x)
-                        .attr("cy", planet.y)
-                        .attr("r", 30)
-                        .style("fill", "none")
-                        .style("stroke", "rgba(78, 205, 196, 0.8)")
-                        .style("stroke-width", 2)
-                        .transition()
-                        .duration(1500)
-                        .ease(d3.easeQuadOut)
-                        .attr("r", 80)
-                        .style("opacity", 0)
-                        .remove();
-                }
-            });
-        }
-
-        function collapseAll() {
-            // Parar cualquier animación en progreso para evitar conflictos
-            if (animationRunning) {
-                stopOrbitalAnimation();
-            }
-            
-            // Fase 1: Ocultar todas las lunas de forma síncrona
-            nodes.forEach(node => {
-                if (node.level === 2) {
-                    node.visible = false;
-                }
-            });
-            
-            // Fase 2: Animar la ocultación de lunas
-            svg.selectAll('.node.level-2')
-                .transition()
-                .duration(600)
-                .ease(d3.easeBackIn)
-                .style('opacity', 0)
-                .attr("transform", d => `translate(${d.parent.x},${d.parent.y}) scale(0.1)`);
-            
-            // Fase 3: Ocultar órbitas de lunas
-            svg.selectAll('.link')
-                .filter(d => d.type === 'moon-orbit')
-                .transition()
-                .duration(400)
-                .style('opacity', 0);
-            
-            // Fase 4: Crear efecto de colapso gravitacional (opcional)
-            const rootNode = svg.select('.node.root');
-            if (!rootNode.empty()) {
-                const rootData = rootNode.datum();
-                
-                // Crear efecto de agujero negro
-                const blackHole = svg.append('circle')
-                    .attr('cx', rootData.x)
-                    .attr('cy', rootData.y)
-                    .attr('r', 0)
-                    .style('fill', 'rgba(0,0,0,0.8)')
-                    .style('opacity', 0);
-                
-                blackHole.transition()
-                    .duration(800)
-                    .delay(200)
-                    .attr('r', 80)
-                    .style('opacity', 0.6)
-                    .transition()
-                    .duration(1000)
-                    .attr('r', 0)
-                    .style('opacity', 0)
-                    .remove();
-            }
-            
-            // Fase 5: Atenuar órbitas principales temporalmente
-            svg.selectAll('.link')
-                .filter(d => d.type === 'orbit')
-                .transition()
-                .duration(600)
-                .style('opacity', 0.2)
-                .style('stroke-width', 2)
-                .transition()
-                .duration(800)
-                .delay(600)
-                .style('opacity', 0.6)
-                .style('stroke-width', 3);
-        }
-
-        // Función removida para evitar duplicación
-
-        // Redimensionar al cambiar el tamaño de la ventana
-        let resizeTimeout;
-        window.addEventListener('resize', function() {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(() => {
-                const newWidth = container.clientWidth;
-                const newHeight = container.clientHeight;
-                
-                // Actualizar dimensiones del SVG
-                svg.attr("viewBox", [0, 0, newWidth, newHeight]);
-                
-                // Recalcular posiciones si hay cambio significativo
-                if (Math.abs(newWidth - width) > 200 || Math.abs(newHeight - height) > 200) {
-                    // Limpiar SVG anterior
-                    svg.selectAll("*").remove();
-                    
-                    // Actualizar variables globales
-                    width = newWidth;
-                    height = newHeight;
-                    
-                    // Reinicializar con nueva configuración
-                    initMindMap();
-                }
-            }, 500);
+            // Efecto de respiración en el nodo central
+            const centerCircle = document.querySelector('.center-circle');
+            setInterval(() => {
+                centerCircle.style.animation = 'none';
+                setTimeout(() => {
+                    centerCircle.style.animation = 'pulse 2s infinite';
+                }, 10);
+            }, 10000);
         });
 
-        // Función removida - sin referencias del sistema
-        
-        // Agregar algunos efectos adicionales al cargar
-        document.addEventListener('DOMContentLoaded', function() {
-            // Efecto de carga del header
-            const header = document.querySelector('.header');
-            header.style.opacity = '0';
-            header.style.transform = 'translateY(-20px)';
+        // Efecto de parallax sutil
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelector('.mind-map::before');
+            if (parallax) {
+                const speed = scrolled * 0.5;
+                parallax.style.transform = `translateY(${speed}px)`;
+            }
+        });
+
+        // Cerrar panel de información al hacer clic fuera
+        document.addEventListener('click', function(event) {
+            const panel = document.getElementById('info-panel');
+            const branches = document.querySelectorAll('.branch-node');
             
-            setTimeout(() => {
-                header.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
-                header.style.opacity = '1';
-                header.style.transform = 'translateY(0)';
-            }, 100);
+            let clickedBranch = false;
+            branches.forEach(branch => {
+                if (branch.contains(event.target)) {
+                    clickedBranch = true;
+                }
+            });
             
-            // Agregar información del sistema - comentado por ahora
-            // addSystemInfo();
-            
-            // Inicializar mapa mental
-            setTimeout(() => {
-                initMindMap();
-            }, 300);
+            if (!panel.contains(event.target) && !clickedBranch) {
+                hideInfo();
+            }
         });
     </script>
 </body>

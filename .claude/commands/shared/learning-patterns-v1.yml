@@ -1,0 +1,215 @@
+# Learning Patterns v1.0
+# Reusable educational methodologies and comprehension metrics for command integration
+
+## Pedagogical_Methodologies_v1
+
+Socratic_Method:
+  Purpose: "Knowledge discovery through guided questioning | Critical thinking development | Self-directed learning"
+  Implementation:
+    Question_Progression: "Clarification → Assumption examination → Evidence analysis → Perspective exploration → Meta-cognition"
+    Timing_Strategy: "Allow processing time | Build on responses | Guide without leading | Encourage elaboration"
+    Response_Framework: "Acknowledge thinking | Build on insights | Correct gently | Encourage further exploration"
+  
+  Question_Categories:
+    Clarification_Questions:
+      Purpose: "Understanding current knowledge | Identifying misconceptions | Establishing baseline"
+      Examples: "What do you mean by...? | Can you elaborate on...? | How is this similar to...?"
+      Triggers: "Vague statements | Unclear concepts | Ambiguous terminology"
+    
+    Assumption_Questions:
+      Purpose: "Challenge unstated beliefs | Explore foundations | Test reasoning"
+      Examples: "What assumptions are we making? | What if the opposite were true? | How do we know this?"
+      Triggers: "Unexamined beliefs | Taken-for-granted concepts | Logical gaps"
+    
+    Evidence_Questions:
+      Purpose: "Validate claims | Strengthen arguments | Develop critical analysis"
+      Examples: "What evidence supports this? | How reliable is this source? | What contradicts this view?"
+      Triggers: "Unsupported claims | Need for verification | Conflicting information"
+    
+    Perspective_Questions:
+      Purpose: "Broaden understanding | Consider alternatives | Develop empathy"
+      Examples: "How might others view this? | What are alternative approaches? | What are the implications?"
+      Triggers: "Single viewpoint | Narrow focus | Complex issues"
+
+Scaffolding_Framework:
+  Purpose: "Gradual support reduction | Independent learning development | Confidence building"
+  Implementation:
+    Support_Assessment: "Current skill level | Knowledge gaps | Learning preferences | Confidence level"
+    Structure_Design: "Clear progression | Achievable steps | Safety mechanisms | Success indicators"
+    Fading_Protocol: "Systematic reduction | Performance monitoring | Adjustment capability | Independence verification"
+  
+  Support_Levels:
+    Maximum_Scaffolding:
+      Characteristics: "Direct instruction | Step-by-step guidance | Detailed examples | Frequent verification"
+      Indicators: "Beginner level | Complex topic | High anxiety | No prior experience"
+      Transition_Criteria: "Basic understanding demonstrated | Can follow simple steps | Reduced anxiety"
+    
+    Moderate_Scaffolding:
+      Characteristics: "Guided discovery | Strategic hints | Partial examples | Targeted questions"
+      Indicators: "Some understanding | Developing confidence | Partial skills | Occasional confusion"
+      Transition_Criteria: "Independent thinking | Self-correction | Question generation | Concept application"
+    
+    Minimal_Scaffolding:
+      Characteristics: "Resource provision | Available consultation | Verification support | Independence encouragement"
+      Indicators: "Strong foundation | High confidence | Independent thinking | Teaching capability"
+      Transition_Criteria: "Complete independence | Teaching others | Creative application | Mastery demonstration"
+
+Bloom_Taxonomy_Implementation:
+  Purpose: "Structured learning progression | Cognitive skill development | Assessment framework"
+  Implementation:
+    Level_Assessment: "Current cognitive level | Target objectives | Progression planning | Skill validation"
+    Activity_Design: "Level-appropriate tasks | Skill building exercises | Assessment methods | Progress tracking"
+    Progression_Management: "Sequential development | Skill verification | Advancement criteria | Support adjustment"
+  
+  Cognitive_Levels:
+    Remember:
+      Skills: "Recall facts | Recognize patterns | List components | Define terms"
+      Activities: "Memorization exercises | Fact checking | Term definitions | Pattern recognition"
+      Assessment: "Can recall accurately | Recognizes correctly | Lists completely | Defines precisely"
+    
+    Understand:
+      Skills: "Explain concepts | Summarize ideas | Classify information | Compare elements"
+      Activities: "Explanation tasks | Summarization | Classification exercises | Comparison activities"
+      Assessment: "Explains clearly | Summarizes accurately | Classifies correctly | Compares meaningfully"
+    
+    Apply:
+      Skills: "Use procedures | Implement solutions | Execute plans | Demonstrate techniques"
+      Activities: "Problem solving | Procedure execution | Plan implementation | Skill demonstration"
+      Assessment: "Applies correctly | Solves problems | Implements successfully | Demonstrates competently"
+    
+    Analyze:
+      Skills: "Break down information | Identify relationships | Distinguish components | Examine structure"
+      Activities: "System analysis | Relationship mapping | Component identification | Structure examination"
+      Assessment: "Analyzes systematically | Identifies relationships | Distinguishes clearly | Examines thoroughly"
+    
+    Evaluate:
+      Skills: "Judge effectiveness | Critique approaches | Assess quality | Make reasoned decisions"
+      Activities: "Quality assessment | Approach evaluation | Decision making | Critical analysis"
+      Assessment: "Judges fairly | Critiques constructively | Assesses accurately | Decides rationally"
+    
+    Create:
+      Skills: "Design solutions | Generate ideas | Construct plans | Develop innovations"
+      Activities: "Solution design | Idea generation | Plan construction | Innovation development"
+      Assessment: "Creates effectively | Generates creatively | Constructs systematically | Develops innovatively"
+
+## Comprehension_Metrics_v1
+
+Understanding_Assessment:
+  Quantitative_Indicators:
+    Recall_Accuracy: "Percentage of facts correctly recalled | Baseline: >80% for basic concepts"
+    Application_Success: "Percentage of correct applications | Baseline: >75% for skill demonstration"
+    Transfer_Capability: "Ability to apply in new contexts | Baseline: >70% for concept mastery"
+    Teaching_Ability: "Can explain to others | Baseline: >85% accuracy in peer teaching"
+  
+  Qualitative_Indicators:
+    Explanation_Quality: "Clarity | Completeness | Accuracy | Appropriate language level"
+    Question_Sophistication: "Depth | Relevance | Critical thinking | Curiosity demonstration"
+    Connection_Making: "Links to prior knowledge | Cross-domain application | Pattern recognition"
+    Confidence_Level: "Expressed certainty | Willingness to attempt | Self-correction | Help-seeking behavior"
+
+Engagement_Metrics:
+  Behavioral_Indicators:
+    Question_Frequency: "Number of clarifying questions | Depth of inquiry | Spontaneous curiosity"
+    Participation_Level: "Active engagement | Contribution quality | Initiative taking | Persistence"
+    Attention_Duration: "Sustained focus | Topic retention | Return engagement | Deep processing"
+    Practice_Seeking: "Additional exercises | Application attempts | Skill building | Mastery pursuit"
+  
+  Cognitive_Indicators:
+    Processing_Depth: "Surface vs deep learning | Concept integration | Critical analysis | Creative application"
+    Metacognitive_Awareness: "Learning strategy recognition | Self-monitoring | Strategy adjustment | Reflection"
+    Knowledge_Construction: "Active building | Connection making | Personal meaning | Knowledge organization"
+
+Progress_Tracking:
+  Learning_Velocity:
+    Concept_Acquisition: "Time to understand new concepts | Baseline: varies by complexity"
+    Skill_Development: "Time to demonstrate competency | Baseline: varies by skill type"
+    Knowledge_Integration: "Time to connect concepts | Baseline: varies by domain"
+    Mastery_Achievement: "Time to independent application | Baseline: varies by learning goals"
+  
+  Retention_Metrics:
+    Short_Term_Retention: "24-hour recall | 1-week application | Immediate transfer"
+    Medium_Term_Retention: "1-month recall | Cross-context application | Skill maintenance"
+    Long_Term_Retention: "3-month recall | Independent usage | Teaching capability"
+    
+  Error_Pattern_Analysis:
+    Common_Mistakes: "Frequency | Pattern identification | Root cause analysis | Intervention design"
+    Misconception_Tracking: "Persistent errors | Conceptual gaps | Corrective progress | Understanding evolution"
+    Learning_Obstacles: "Consistent difficulties | Barriers identification | Support needs | Adaptation requirements"
+
+## Command_Integration_Patterns_v1
+
+Educational_Command_Enhancement:
+  Explanation_Commands:
+    Pattern_Application: "@include commands/shared/learning-patterns-v1.yml#Scaffolding_Framework"
+    Methodology_Integration: "Socratic questioning | Scaffolding support | Bloom's progression"
+    Assessment_Integration: "Understanding verification | Progress tracking | Engagement monitoring"
+  
+  Analysis_Commands:
+    Pattern_Application: "@include commands/shared/learning-patterns-v1.yml#Bloom_Taxonomy_Implementation"
+    Skill_Development: "Progressive analysis | Cognitive level advancement | Critical thinking development"
+    Metric_Integration: "Comprehension assessment | Progress tracking | Skill verification"
+  
+  Building_Commands:
+    Pattern_Application: "@include commands/shared/learning-patterns-v1.yml#Socratic_Method"
+    Learning_Integration: "Guided construction | Understanding verification | Knowledge building"
+    Support_Adaptation: "Scaffolding adjustment | Progress-based support | Independence development"
+  
+  Greeting_Commands:
+    Pattern_Application: "@include commands/shared/learning-patterns-v1.yml#Scaffolding_Framework#Support_Levels"
+    Educational_Integration: "Learning context detection | Educational offer integration | Support level assessment"
+    Engagement_Setup: "Learning motivation | Expectation setting | Rapport building"
+
+Cross_Command_Workflows:
+  Learning_Session_Design:
+    Session_Planning: "Objective setting | Method selection | Assessment design | Progress tracking"
+    Execution_Flow: "Engagement → Exploration → Explanation → Application → Assessment"
+    Adaptation_Protocol: "Real-time adjustment | Support modification | Method switching | Goal revision"
+  
+  Knowledge_Building_Progression:
+    Foundation_Building: "/explain --scaffolding-maximum --socratic-introduction"
+    Skill_Development: "/build --guided-discovery --scaffolding-moderate"
+    Knowledge_Application: "/analyze --independent-exploration --scaffolding-minimal"
+    Mastery_Demonstration: "/review --teaching-ability --comprehension-assessment"
+
+## Quality_Standards_v1
+
+Educational_Effectiveness:
+  Learning_Outcomes:
+    Comprehension_Rate: ">85% students demonstrate understanding | Measured through assessment metrics"
+    Retention_Rate: ">80% knowledge retained after 1 month | Verified through follow-up assessment"
+    Application_Success: ">75% successful application in new contexts | Demonstrated through transfer tasks"
+    Engagement_Level: ">90% positive learning experience | Measured through engagement metrics"
+  
+  Teaching_Quality:
+    Clarity_Standard: "Explanations understood by 95% of users | Age-appropriate language | Clear examples"
+    Patience_Standard: "Adapts to learner pace | Allows processing time | Provides multiple attempts"
+    Effectiveness_Standard: "Achieves learning objectives | Demonstrates measurable progress | Builds competence"
+    Adaptability_Standard: "Adjusts to learning style | Modifies approach based on feedback | Personalizes experience"
+
+Methodological_Rigor:
+  Implementation_Fidelity:
+    Socratic_Method: "Authentic questioning | Guided discovery | Critical thinking development"
+    Scaffolding: "Appropriate support level | Systematic fading | Independence building"
+    Bloom_Taxonomy: "Accurate level assessment | Progressive development | Skill verification"
+  
+  Assessment_Validity:
+    Measurement_Accuracy: "Valid indicators | Reliable metrics | Consistent assessment | Objective evaluation"
+    Progress_Tracking: "Meaningful milestones | Accurate progression | Clear achievements | Documented growth"
+    Outcome_Verification: "Authentic demonstration | Real-world application | Sustainable learning | Transferable skills"
+
+## Usage_Examples_v1
+
+Basic_Pattern_Integration:
+  Simple_Reference: "@include commands/shared/learning-patterns-v1.yml#Socratic_Method"
+  Specific_Section: "@include commands/shared/learning-patterns-v1.yml#Scaffolding_Framework#Support_Levels"
+  Multiple_Patterns: "@include commands/shared/learning-patterns-v1.yml#Bloom_Taxonomy_Implementation + #Comprehension_Metrics_v1"
+
+Advanced_Implementation:
+  Custom_Combination: "Socratic + Scaffolding for complex concept introduction"
+  Adaptive_Selection: "Method selection based on learner assessment and context"
+  Progressive_Enhancement: "Pattern evolution as learning advances"
+
+Cross_Domain_Application:
+  Technical_Learning: "Programming concepts | System design | Architecture principles"
+  Business_Learning: "Process improvement | Strategic thinking | Problem solving"
+  Creative_Learning: "Design thinking | Innovation processes | Artistic development"

@@ -1,0 +1,135 @@
+# Fintech Persona Patterns v1.0
+# Behavioral patterns and workflows for financial technology personas
+
+## Fintech_Architect_Patterns_v1
+
+Design_Approach:
+  Regulatory_First: "Compliance requirements → Architecture constraints → Technical design"
+  Risk_Assessment: "Identify risks → Mitigation strategies → Architecture decisions → Validation"
+  Scalability_Planning: "Current load → Growth projections → Capacity planning → Infrastructure design"
+  
+Decision_Matrix:
+  High_Risk_Financial: "Regulatory compliance REQUIRED | Security assessment REQUIRED | Audit trail REQUIRED"
+  Medium_Risk_Technical: "Architecture review RECOMMENDED | Performance testing RECOMMENDED"
+  Low_Risk_Operational: "Code review SUFFICIENT | Unit testing SUFFICIENT"
+  
+Validation_Patterns:
+  Compliance_Check: "PCI DSS requirements → Implementation review → Gap analysis → Remediation plan"
+  Security_Review: "Threat modeling → Security controls → Penetration testing → Risk acceptance"
+  Performance_Validation: "Load testing → Capacity planning → SLA validation → Monitoring setup"
+
+## Payment_Specialist_Patterns_v1
+
+Flow_Design:
+  Transaction_Lifecycle: "Authorization → Capture → Settlement → Reconciliation → Reporting"
+  Failure_Handling: "Timeout → Retry → Circuit breaker → Compensation → Manual intervention"
+  State_Management: "Idempotency → State transitions → Event sourcing → Audit trail"
+  
+Integration_Approach:
+  PSP_Onboarding: "Requirements analysis → Technical integration → Testing → Certification → Go-live"
+  API_Design: "RESTful endpoints → Error handling → Rate limiting → Monitoring → Documentation"
+  Protocol_Implementation: "Standard compliance → Message formatting → Encryption → Validation"
+  
+Quality_Assurance:
+  End_to_End_Testing: "Happy path → Error scenarios → Performance testing → Security testing"
+  Reconciliation_Validation: "Real-time matching → Batch processing → Exception handling → Reporting"
+  Performance_Monitoring: "Response times → Success rates → Error patterns → Capacity utilization"
+
+## Compliance_Security_Patterns_v1
+
+Compliance_Framework:
+  Gap_Analysis: "Current state → Required state → Gap identification → Remediation planning"
+  Control_Implementation: "Policy definition → Technical controls → Process controls → Monitoring"
+  Audit_Preparation: "Evidence collection → Documentation → Control testing → Findings remediation"
+  
+Security_Assessment:
+  Threat_Modeling: "Asset identification → Threat analysis → Vulnerability assessment → Risk rating"
+  Control_Validation: "Design effectiveness → Implementation testing → Operating effectiveness → Monitoring"
+  Incident_Response: "Detection → Containment → Investigation → Remediation → Lessons learned"
+  
+Risk_Management:
+  Risk_Identification: "Asset inventory → Threat landscape → Vulnerability assessment → Impact analysis"
+  Risk_Mitigation: "Control selection → Implementation → Testing → Monitoring → Review"
+  Continuous_Monitoring: "Real-time alerts → Periodic assessments → Trend analysis → Reporting"
+
+## Data_Analyst_Patterns_v1
+
+Data_Governance:
+  Quality_Management: "Data profiling → Quality rules → Validation → Cleansing → Monitoring"
+  Lineage_Tracking: "Source identification → Transformation mapping → Usage tracking → Impact analysis"
+  Privacy_Protection: "Data classification → Access controls → Anonymization → Retention policies"
+  
+Analytics_Framework:
+  Descriptive_Analytics: "What happened → Data visualization → Trend analysis → Reporting"
+  Diagnostic_Analytics: "Why did it happen → Root cause analysis → Correlation analysis → Insights"
+  Predictive_Analytics: "What will happen → Statistical modeling → Machine learning → Forecasting"
+  
+Regulatory_Reporting:
+  Report_Generation: "Data extraction → Validation → Transformation → Formatting → Submission"
+  Quality_Assurance: "Data validation → Business rule checks → Reconciliation → Approval workflow"
+  Audit_Trail: "Change tracking → Version control → Approval records → Submission confirmations"
+
+## Collaboration_Workflows_v1
+
+Architecture_Review:
+  Participants: "fintech-architect(lead) + compliance-security + payment-specialist"
+  Process: "Requirements → Design → Security review → Compliance check → Approval"
+  Deliverables: "Architecture document | Security assessment | Compliance checklist | Implementation plan"
+  
+Payment_Implementation:
+  Participants: "payment-specialist(lead) + fintech-architect + compliance-security"
+  Process: "Flow design → Technical architecture → Security controls → Testing → Deployment"
+  Deliverables: "Flow specification | API documentation | Security controls | Test results"
+  
+Compliance_Audit:
+  Participants: "compliance-security(lead) + fintech-architect + data-analyst"
+  Process: "Audit scope → Evidence collection → Control testing → Gap analysis → Remediation"
+  Deliverables: "Audit report | Gap analysis | Remediation plan | Control documentation"
+
+## Problem_Solving_Approaches_v1
+
+Financial_Incidents:
+  Investigation: "Impact assessment → Root cause analysis → Timeline reconstruction → Evidence preservation"
+  Resolution: "Immediate containment → Corrective actions → Process improvements → Monitoring"
+  Communication: "Stakeholder notification → Regular updates → Final report → Lessons learned"
+  
+Performance_Issues:
+  Analysis: "Metrics review → Bottleneck identification → Capacity analysis → Optimization planning"
+  Resolution: "Quick fixes → Architectural improvements → Infrastructure scaling → Monitoring enhancement"
+  Validation: "Performance testing → Capacity validation → SLA compliance → Continuous monitoring"
+  
+Security_Vulnerabilities:
+  Assessment: "Vulnerability validation → Impact analysis → Exploitability assessment → Risk rating"
+  Remediation: "Patch development → Testing → Deployment → Validation → Monitoring"
+  Prevention: "Security controls → Process improvements → Training → Awareness"
+
+## Quality_Metrics_v1
+
+Fintech_Architect:
+  Success_Metrics: "Zero compliance violations | 99.99% system availability | <2 week implementation cycles"
+  Quality_Indicators: "Architecture review score >90% | Security assessment pass | Performance SLA met"
+  
+Payment_Specialist:
+  Success_Metrics: "99.99% payment success rate | <100ms authorization time | 100% reconciliation accuracy"
+  Quality_Indicators: "Zero fund loss incidents | API response time <50ms | Customer satisfaction >95%"
+  
+Compliance_Security:
+  Success_Metrics: "100% audit pass rate | Zero security incidents | <24h vulnerability remediation"
+  Quality_Indicators: "Control effectiveness >95% | Risk score <medium | Compliance score 100%"
+  
+Data_Analyst:
+  Success_Metrics: "100% data accuracy | Zero reporting errors | <5min data freshness"
+  Quality_Indicators: "Data quality score >98% | Report timeliness 100% | Insight actionability >90%"
+
+## Command_Integration_v1
+
+Specialized_Commands:
+  fintech-architect: "/design --financial-system | /analyze --compliance-architecture | /scan --pci-compliance"
+  payment-specialist: "/payment-flow --orchestration | /integration --psp-setup | /analyze --transaction-performance"
+  compliance-security: "/regulatory --audit-preparation | /scan --security-compliance | /analyze --risk-assessment"
+  data-analyst: "/analyze --financial-data | /regulatory --data-reporting | /explain --analytics-insights"
+  
+Cross_Functional:
+  Architecture_Design: "All personas collaborate on system design with regulatory and security constraints"
+  Incident_Response: "payment-specialist(investigation) → fintech-architect(impact) → compliance-security(controls)"
+  Audit_Preparation: "compliance-security(lead) → data-analyst(evidence) → fintech-architect(controls)"

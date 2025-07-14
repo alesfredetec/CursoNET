@@ -53,19 +53,17 @@ graph TD
 - **Impacto:** Crítico - Bloquea funcionalidad principal
 - **Mitigación:** Implementar validación estricta de comercio activo
 
-```csharp
-// Validación en PaymentService
-public async Task<PaymentResult> ProcessPaymentAsync(PaymentRequest request)
-{
+**Pseudocódigo - Validación de Comercio:**
+```
+FUNCIÓN ProcesarPago(solicitudPago)
     // Validar comercio registrado y activo
-    var merchant = await _merchantService.GetActiveMerchantAsync(request.MerchantId);
-    if (merchant == null || !merchant.IsActive)
-    {
-        return PaymentResult.Failed("Merchant not registered or inactive");
-    }
+    comercio = ObtenerComercioActivo(solicitudPago.IdComercio)
+    SI comercio ES NULO O NO comercio.Activo ENTONCES
+        RETORNAR Error("Comercio no registrado o inactivo")
+    FIN SI
     
-    // Continuar con procesamiento...
-}
+    // Continuar con procesamiento
+END FUNCIÓN
 ```
 
 #### RN-005 ← RN-001 (Detectar Fraudes ← Procesar Pagos)
@@ -74,25 +72,23 @@ public async Task<PaymentResult> ProcessPaymentAsync(PaymentRequest request)
 - **Impacto:** Crítico - Riesgo de seguridad
 - **Mitigación:** Implementar validación síncrona y asíncrona
 
-```csharp
-// Procesamiento con validación de fraudes
-public async Task<PaymentResult> ProcessPaymentAsync(PaymentRequest request)
-{
-    // Validación síncrona de fraudes (rápida)
-    var quickFraudCheck = await _fraudService.QuickValidateAsync(request);
-    if (quickFraudCheck.IsHighRisk)
-    {
-        return PaymentResult.Failed("Transaction blocked - fraud risk");
-    }
+**Proceso de Validación de Fraudes:**
+```
+FUNCIÓN ProcesarPago(solicitudPago)
+    // 1. Validación síncrona de fraudes (rápida)
+    verificaciónRápida = ValidaciónRápidaFraude(solicitudPago)
+    SI verificaciónRápida.RiesgoAlto ENTONCES
+        RETORNAR Error("Transacción bloqueada - riesgo de fraude")
+    FIN SI
     
-    // Procesar pago
-    var result = await _paymentProcessor.ProcessAsync(request);
+    // 2. Procesar pago
+    resultado = ProcesarTransacción(solicitudPago)
     
-    // Validación asíncrona de fraudes (detallada)
-    _ = Task.Run(() => _fraudService.DetailedAnalysisAsync(request, result));
+    // 3. Validación asíncrona de fraudes (detallada)
+    EjecutarEnSegundoPlano(AnálisisDetalladoFraude(solicitudPago, resultado))
     
-    return result;
-}
+    RETORNAR resultado
+FIN FUNCIÓN
 ```
 
 ---
@@ -161,30 +157,38 @@ services:
 ```
 
 #### Análisis de Dependencias de Datos
-```csharp
-// Validación de integridad referencial
-public class DataDependencyValidator
-{
-    public async Task<bool> ValidatePaymentDependenciesAsync(PaymentRequest request)
-    {
-        // Validar existencia de comercio
-        var merchantExists = await _merchantRepo.ExistsAsync(request.MerchantId);
-        if (!merchantExists)
-            return false;
-            
-        // Validar configuración de métodos de pago
-        var paymentMethods = await _configRepo.GetPaymentMethodsAsync(request.MerchantId);
-        if (!paymentMethods.Contains(request.PaymentMethod))
-            return false;
-            
-        // Validar límites y restricciones
-        var limits = await _limitsRepo.GetMerchantLimitsAsync(request.MerchantId);
-        if (request.Amount > limits.MaxTransactionAmount)
-            return false;
-            
-        return true;
-    }
-}
+**Checklist de Validación de Datos:**
+
+1. **Validación de Integridad Referencial**
+   - [ ] Verificar existencia del comercio en la base de datos
+   - [ ] Comprobar que el comercio está activo
+   - [ ] Validar que el método de pago está configurado para el comercio
+   - [ ] Verificar que el monto está dentro de los límites permitidos
+   - [ ] Comprobar que la cuenta del cliente existe (si aplica)
+   - [ ] Validar restricciones geográficas (si aplica)
+
+**Proceso de Validación de Datos:**
+```
+FUNCIÓN ValidarDependenciasTransacción(solicitudPago)
+    // 1. Validar existencia de comercio
+    SI NO ExisteComercio(solicitudPago.IdComercio) ENTONCES
+        RETORNAR Falso
+    FIN SI
+    
+    // 2. Validar métodos de pago configurados
+    métodosPago = ObtenerMétodosPago(solicitudPago.IdComercio)
+    SI NO métodosPago.Contiene(solicitudPago.MétodoPago) ENTONCES
+        RETORNAR Falso
+    FIN SI
+    
+    // 3. Validar límites de monto
+    límites = ObtenerLímites(solicitudPago.IdComercio)
+    SI solicitudPago.Monto > límites.MontoMáximo ENTONCES
+        RETORNAR Falso
+    FIN SI
+    
+    RETORNAR Verdadero
+FIN FUNCIÓN
 ```
 
 ---
@@ -204,67 +208,77 @@ public class DataDependencyValidator
 ### 4.2 Estrategias de Mitigación
 
 #### Dependencias Externas Críticas
-```csharp
-// Patrón Circuit Breaker para dependencias externas
-public class PaymentGatewayService
-{
-    private readonly CircuitBreaker _circuitBreaker;
-    private readonly IList<IPaymentGateway> _gateways;
+**Estrategia de Mitigación - Patrón Circuit Breaker:**
+
+**Descripción:** Implementación de un mecanismo de protección para dependencias externas que permite:
+- Detectar fallos en servicios externos
+- Evitar llamadas innecesarias a servicios no disponibles
+- Redirigir tráfico a proveedores alternativos
+- Restaurar automáticamente la conexión cuando el servicio se restablece
+
+**Diagrama de Flujo:**
+```
+PROCESO ProcesarPagoConCircuitBreaker(solicitudPago)
+    PARA CADA gateway EN listaGateways HACER
+        SI circuitBreaker.PuedeEjecutar(gateway.Nombre) ENTONCES
+            INTENTAR
+                resultado = gateway.Procesar(solicitudPago)
+                circuitBreaker.MarcarÉxito(gateway.Nombre)
+                RETORNAR resultado
+            EXCEPCIÓN
+                circuitBreaker.MarcarError(gateway.Nombre)
+                // Continuar con el siguiente gateway
+            FIN INTENTAR
+        FIN SI
+    FIN PARA
     
-    public async Task<PaymentResult> ProcessAsync(PaymentRequest request)
-    {
-        foreach (var gateway in _gateways)
-        {
-            if (_circuitBreaker.CanExecute(gateway.Name))
-            {
-                try
-                {
-                    var result = await gateway.ProcessAsync(request);
-                    _circuitBreaker.OnSuccess(gateway.Name);
-                    return result;
-                }
-                catch (Exception ex)
-                {
-                    _circuitBreaker.OnFailure(gateway.Name);
-                    // Intentar siguiente gateway
-                }
-            }
-        }
-        
-        return PaymentResult.Failed("All payment gateways unavailable");
-    }
-}
+    RETORNAR Error("Todos los gateways de pago no disponibles")
+FIN PROCESO
 ```
 
+**Implementación recomendada:**
+- Usar biblioteca especializada (Polly, Hystrix, etc.)
+- Configurar timeouts adecuados para cada servicio externo
+- Definir umbrales de fallos según criticidad del servicio
+- Implementar estrategia de backoff exponencial para reintentos
+
 #### Dependencias de Datos
-```csharp
-// Patrón Repository con Cache para reducir dependencias
-public class MerchantRepository
-{
-    private readonly ICache _cache;
-    private readonly IDatabase _database;
-    
-    public async Task<Merchant> GetAsync(int merchantId)
-    {
-        // Intentar cache primero
-        var cached = await _cache.GetAsync<Merchant>($"merchant:{merchantId}");
-        if (cached != null)
-            return cached;
-            
-        // Fallback a base de datos
-        var merchant = await _database.QueryAsync<Merchant>(
-            "SELECT * FROM merchants WHERE id = @id AND active = 1", 
-            new { id = merchantId });
-            
-        if (merchant != null)
-        {
-            await _cache.SetAsync($"merchant:{merchantId}", merchant, TimeSpan.FromMinutes(15));
-        }
-        
-        return merchant;
-    }
-}
+**Estrategia de Desacoplamiento - Cache y Repository:**
+
+**Objetivo:** Reducir dependencias directas de datos mediante caché y abstraer el acceso a los datos
+
+**Funcionamiento:**
+1. Intentar primero recuperar datos del caché (alta velocidad)
+2. Si no existe en caché, obtener de la base de datos
+3. Almacenar resultado en caché con tiempo de expiración
+4. Abstraer los detalles de acceso a datos del resto de la aplicación
+
+**Ejemplo de Flujo:**
 ```
+FUNCIÓN ObtenerComercio(idComercio)
+    // 1. Intentar recuperar de caché primero
+    comercioEnCache = Caché.Obtener("comercio:" + idComercio)
+    SI comercioEnCache NO ES NULO ENTONCES
+        RETORNAR comercioEnCache
+    FIN SI
+    
+    // 2. Fallback a base de datos
+    comercio = BaseDatos.Consultar("SELECT * FROM comercios WHERE id = ? AND activo = 1", idComercio)
+    
+    // 3. Almacenar en caché si se encontró
+    SI comercio NO ES NULO ENTONCES
+        Caché.Establecer("comercio:" + idComercio, comercio, 15 MINUTOS)
+    FIN SI
+    
+    RETORNAR comercio
+FIN FUNCIÓN
+```
+
+**Beneficios:**
+- Reduce carga en la base de datos
+- Mejora tiempos de respuesta
+- Provee resiliencia ante fallos temporales
+- Facilita pruebas unitarias
 
 ---
 
@@ -361,48 +375,46 @@ gantt
 
 ### 6.1 Proceso de Análisis de Impacto
 
-```csharp
-// Herramienta de análisis de impacto
-public class DependencyImpactAnalyzer
-{
-    private readonly Dictionary<string, List<string>> _dependencies;
+**Proceso de Análisis de Impacto de Cambios:**
+
+**Objetivo:** Evaluar sistemáticamente el impacto de modificar un requisito en el resto del sistema
+
+**Metodología:**
+1. Identificar requisitos afectados directamente
+2. Determinar impacto en cadena (dependencias transitivas)
+3. Estimar esfuerzo necesario para implementar cambios
+4. Identificar riesgos asociados al cambio
+
+**Checklist de Análisis de Impacto:**
+- [ ] Identificar el requisito a modificar
+- [ ] Analizar dependencias hacia adelante (quién depende de este requisito)
+- [ ] Analizar dependencias hacia atrás (de quién depende este requisito)
+- [ ] Calcular métricas de impacto:
+  - [ ] Cantidad de componentes afectados
+  - [ ] Criticidad de los componentes afectados
+  - [ ] Esfuerzo estimado de modificación
+- [ ] Documentar riesgos identificados
+- [ ] Proponer estrategia de mitigación
+
+**Algoritmo de Análisis:**
+```
+FUNCIÓN AnalizarImpactoCambio(requisitoModificado)
+    análisis = NuevoAnálisisImpacto()
     
-    public ImpactAnalysis AnalyzeChange(string changedRequirement)
-    {
-        var analysis = new ImpactAnalysis();
-        
-        // Analizar dependencias hacia adelante
-        analysis.ForwardImpact = GetDependentRequirements(changedRequirement);
-        
-        // Analizar dependencias hacia atrás
-        analysis.BackwardImpact = GetRequirementDependencies(changedRequirement);
-        
-        // Calcular esfuerzo estimado
-        analysis.EstimatedEffort = CalculateEffort(analysis);
-        
-        // Identificar riesgos
-        analysis.Risks = IdentifyRisks(analysis);
-        
-        return analysis;
-    }
+    // 1. Analizar impacto hacia adelante (dependientes)
+    análisis.ImpactoAdelante = ObtenerRequisitosQueDependenDe(requisitoModificado)
     
-    private List<string> GetDependentRequirements(string requirement)
-    {
-        var dependents = new List<string>();
-        
-        foreach (var kvp in _dependencies)
-        {
-            if (kvp.Value.Contains(requirement))
-            {
-                dependents.Add(kvp.Key);
-                // Recursivamente encontrar dependencias transitivas
-                dependents.AddRange(GetDependentRequirements(kvp.Key));
-            }
-        }
-        
-        return dependents.Distinct().ToList();
-    }
-}
+    // 2. Analizar impacto hacia atrás (dependencias)
+    análisis.ImpactoAtrás = ObtenerRequisitosDeQueDepende(requisitoModificado)
+    
+    // 3. Calcular esfuerzo estimado
+    análisis.EsfuerzoEstimado = CalcularEsfuerzo(análisis)
+    
+    // 4. Identificar riesgos
+    análisis.Riesgos = IdentificarRiesgos(análisis)
+    
+    RETORNAR análisis
+FIN FUNCIÓN
 ```
 
 ### 6.2 Matriz de Impacto de Cambios
@@ -420,94 +432,130 @@ public class DependencyImpactAnalyzer
 
 ### 7.1 Identificación de Dependencias Innecesarias
 
-```csharp
-// Análisis de dependencias débiles
-public class DependencyOptimizer
-{
-    public OptimizationReport AnalyzeDependencies()
-    {
-        var report = new OptimizationReport();
-        
-        // Identificar dependencias circulares
-        report.CircularDependencies = FindCircularDependencies();
-        
-        // Identificar dependencias débiles
-        report.WeakDependencies = FindWeakDependencies();
-        
-        // Sugerir optimizaciones
-        report.OptimizationSuggestions = GenerateOptimizationSuggestions();
-        
-        return report;
-    }
+**Optimización de Dependencias:**
+
+**Objetivo:** Identificar y resolver dependencias innecesarias o problemáticas en el sistema
+
+**Tipos de dependencias a optimizar:**
+
+1. **Dependencias Circulares:**
+   - Componentes que dependen mutuamente entre sí
+   - Dificultan pruebas y mantenimiento
+   - Generan acoplamiento fuerte
+
+2. **Dependencias Débiles:**
+   - Conexiones que podrían eliminarse o hacerse asíncronas
+   - Dependencias que no son críticas para la función principal
+   - Relaciones que pueden ser refactorizadas
+
+3. **Dependencias Implícitas:**
+   - Conexiones no documentadas entre componentes
+   - Asunciones sobre comportamiento de otros módulos
+   - Dependencias ocultas de configuración o recursos
+
+**Candidatos para Optimización:**
+- RN-010 → RN-001: Las notificaciones pueden ser asíncronas
+- RN-009 → RN-003: Los reportes pueden usar datos históricos/replicados
+- RN-006 → RN-002: La configuración de métodos puede ser opcional
+
+**Proceso de Optimización:**
+```
+FUNCIÓN AnalizarOptimizaciones()
+    reporte = NuevoReporteOptimización()
     
-    private List<string> FindWeakDependencies()
-    {
-        // Dependencias que pueden ser eliminadas o refactorizadas
-        return new List<string>
-        {
-            "RN-010 → RN-001", // Notificaciones pueden ser asíncronas
-            "RN-009 → RN-003", // Reportes pueden usar datos históricos
-            "RN-006 → RN-002"  // Configuración puede ser opcional
-        };
-    }
-}
+    // 1. Identificar dependencias circulares
+    reporte.DependenciasCirculares = EncontrarDependenciasCirculares()
+    
+    // 2. Identificar dependencias débiles
+    reporte.DependenciasDebiles = EncontrarDependenciasDebiles()
+    
+    // 3. Generar sugerencias de optimización
+    reporte.SugerenciasOptimizacion = GenerarSugerenciasOptimizacion()
+    
+    RETORNAR reporte
+FIN FUNCIÓN
 ```
 
 ### 7.2 Estrategias de Desacoplamiento
 
 #### Event-Driven Architecture
-```csharp
-// Desacoplamiento mediante eventos
-public class PaymentProcessedEvent
-{
-    public string TransactionId { get; set; }
-    public decimal Amount { get; set; }
-    public string MerchantId { get; set; }
-    public DateTime ProcessedAt { get; set; }
-}
+**Arquitectura Orientada a Eventos (Event-Driven):**
 
-// Servicios que reaccionan a eventos
-public class FraudDetectionService
-{
-    public async Task HandlePaymentProcessed(PaymentProcessedEvent evt)
-    {
-        // Análisis de fraudes asíncrono
-        await AnalyzeTransactionAsync(evt.TransactionId);
-    }
-}
+**Objetivo:** Desacoplar servicios mediante el uso de eventos y mensajería asíncrona
 
-public class ReportingService
-{
-    public async Task HandlePaymentProcessed(PaymentProcessedEvent evt)
-    {
-        // Actualizar métricas y reportes
-        await UpdateMerchantMetricsAsync(evt.MerchantId, evt.Amount);
-    }
-}
+**Componentes principales:**
+1. **Eventos de Dominio:** Representan hechos ocurridos en el sistema
+2. **Publicadores:** Servicios que generan eventos cuando ocurren cambios
+3. **Suscriptores:** Servicios que reaccionan a eventos específicos
+4. **Bus de Eventos:** Infraestructura que conecta publicadores y suscriptores
+
+**Ejemplo - Evento de Pago Procesado:**
 ```
+ESTRUCTURA EventoPagoProcesado
+    IdTransaccion: texto
+    Monto: decimal
+    IdComercio: texto
+    FechaProcesado: fecha/hora
+FIN ESTRUCTURA
+```
+
+**Flujo de Procesamiento Desacoplado:**
+```
+// Servicio de Detección de Fraudes
+FUNCIÓN ManejarPagoProcesado(evento)
+    // Análisis asíncrono de transacción para detectar fraudes
+    AnalizarTransaccionAsincrono(evento.IdTransaccion)
+FIN FUNCIÓN
+
+// Servicio de Reportes
+FUNCIÓN ManejarPagoProcesado(evento)
+    // Actualizar métricas y reportes con la información del pago
+    ActualizarMetricasComercio(evento.IdComercio, evento.Monto)
+FIN FUNCIÓN
+```
+
+**Beneficios:**
+- Reduce acoplamiento entre servicios
+- Mejora escalabilidad y resiliencia
+- Facilita evolución independiente de componentes
+- Permite implementar CQRS y Event Sourcing
 
 #### Dependency Injection
-```csharp
-// Inversión de dependencias
-public interface IPaymentGateway
-{
-    Task<PaymentResult> ProcessAsync(PaymentRequest request);
-}
+**Patrón de Inversión de Dependencias:**
 
-public class PaymentService
-{
-    private readonly IPaymentGateway _gateway;
-    private readonly IFraudDetectionService _fraudService;
-    
-    public PaymentService(IPaymentGateway gateway, IFraudDetectionService fraudService)
-    {
-        _gateway = gateway;
-        _fraudService = fraudService;
-    }
-    
-    // Implementación sin dependencias hardcodeadas
-}
+**Objetivo:** Reducir acoplamiento entre componentes mediante abstracciones e inyección de dependencias
+
+**Principios:**
+1. Los módulos de alto nivel no deben depender de módulos de bajo nivel
+2. Ambos deben depender de abstracciones
+3. Las abstracciones no deben depender de detalles
+4. Los detalles deben depender de abstracciones
+
+**Estructura:**
 ```
+INTERFAZ IGatewayPago
+    FUNCIÓN ProcesarPago(solicitud): ResultadoPago
+FIN INTERFAZ
+
+CLASE ServicioPago
+    ATRIBUTOS:
+        gateway: IGatewayPago
+        servicioFraude: IServicioDeteccionFraude
+    
+    CONSTRUCTOR(gateway, servicioFraude)
+        this.gateway = gateway
+        this.servicioFraude = servicioFraude
+    FIN CONSTRUCTOR
+    
+    // Implementación que utiliza las interfaces inyectadas
+FIN CLASE
+```
+
+**Beneficios:**
+- Facilita cambiar implementaciones sin modificar el código cliente
+- Mejora la testeabilidad mediante mocks/stubs
+- Reduce acoplamiento entre componentes
+- Favorece el principio de responsabilidad única
 
 ---
 
@@ -515,79 +563,116 @@ public class PaymentService
 
 ### 8.1 Métricas de Salud de Dependencias
 
-```csharp
-// Monitoreo de dependencias en tiempo real
-public class DependencyHealthMonitor
-{
-    private readonly Dictionary<string, DependencyHealth> _healthStatus;
-    
-    public async Task<DependencyHealth> GetHealthAsync(string dependency)
-    {
-        switch (dependency)
-        {
-            case "PaymentGateway":
-                return await CheckPaymentGatewayHealth();
-            case "KYCService":
-                return await CheckKYCServiceHealth();
-            case "Database":
-                return await CheckDatabaseHealth();
-            default:
-                return DependencyHealth.Unknown;
-        }
-    }
-    
-    private async Task<DependencyHealth> CheckPaymentGatewayHealth()
-    {
-        try
-        {
-            var response = await _httpClient.GetAsync("/health");
-            var latency = response.Headers.GetValues("X-Response-Time").FirstOrDefault();
-            
-            return new DependencyHealth
-            {
-                Status = response.IsSuccessStatusCode ? "Healthy" : "Unhealthy",
-                Latency = TimeSpan.Parse(latency),
-                LastChecked = DateTime.UtcNow
-            };
-        }
-        catch (Exception ex)
-        {
-            return new DependencyHealth
-            {
-                Status = "Unhealthy",
-                Error = ex.Message,
-                LastChecked = DateTime.UtcNow
-            };
-        }
-    }
-}
+**Sistema de Monitoreo de Dependencias:**
+
+**Objetivo:** Proporcionar visibilidad en tiempo real sobre el estado de las dependencias críticas
+
+**Métricas clave a monitorear:**
+1. Estado operativo (activo/degradado/inactivo)
+2. Latencia de respuesta
+3. Tasa de errores
+4. Tiempo desde la última verificación exitosa
+5. Uso de recursos (CPU, memoria, conexiones)
+
+**Proceso de Monitoreo:**
 ```
+FUNCIÓN ObtenerEstadoDependencia(nombreDependencia)
+    SEGÚN nombreDependencia
+        CASO "GatewayPago":
+            RETORNAR VerificarEstadoGatewayPago()
+        CASO "ServicioKYC":
+            RETORNAR VerificarEstadoServicioKYC()
+        CASO "BaseDatos":
+            RETORNAR VerificarEstadoBaseDatos()
+        OTRO:
+            RETORNAR EstadoDesconocido
+    FIN SEGÚN
+FIN FUNCIÓN
+```
+
+**Verificación de Estado de Servicio:**
+```
+FUNCIÓN VerificarEstadoGatewayPago()
+    INTENTAR
+        respuesta = EnviarSolicitudHTTP("/health")
+        latencia = ObtenerCabecera(respuesta, "X-Response-Time")
+        
+        SI respuesta.EsExitosa ENTONCES
+            estadoDependencia = NuevoEstadoDependencia(
+                Estado: "Saludable",
+                Latencia: latencia,
+                UltimaVerificación: AhoraUTC
+            )
+        SINO
+            estadoDependencia = NuevoEstadoDependencia(
+                Estado: "No Saludable",
+                Latencia: latencia,
+                UltimaVerificación: AhoraUTC
+            )
+        FIN SI
+    EXCEPCIÓN error
+        estadoDependencia = NuevoEstadoDependencia(
+            Estado: "No Saludable",
+            Error: error.Mensaje,
+            UltimaVerificación: AhoraUTC
+        )
+    FIN INTENTAR
+    
+    RETORNAR estadoDependencia
+FIN FUNCIÓN
+```
+
+**Checklist de implementación:**
+- [ ] Endpoints de health check para cada servicio
+- [ ] Sistema centralizado de registro de métricas
+- [ ] Alertas configuradas para umbrales críticos
+- [ ] Dashboard en tiempo real
+- [ ] Historial de incidentes
 
 ### 8.2 Dashboard de Dependencias
 
-```javascript
-// Dashboard de estado de dependencias
-const dependencyStatus = {
-    "payment-gateway": {
-        status: "healthy",
-        latency: "45ms",
-        uptime: "99.9%",
-        affectedRequirements: ["RN-001", "RN-004"]
-    },
-    "kyc-service": {
-        status: "degraded",
-        latency: "250ms",
-        uptime: "97.5%",
-        affectedRequirements: ["RN-002", "RN-007"]
-    },
-    "database": {
-        status: "healthy",
-        latency: "5ms",
-        uptime: "99.99%",
-        affectedRequirements: ["RN-001", "RN-002", "RN-003"]
-    }
-};
+**Dashboard de Estado de Dependencias:**
+
+**Propósito:** Visualización en tiempo real del estado de todas las dependencias del sistema
+
+**Información a mostrar para cada dependencia:**
+
+| Dependencia | Estado | Latencia | Disponibilidad | Requisitos Afectados |
+|-------------|--------|----------|----------------|----------------------|
+| **Gateway de Pago** | Saludable | 45ms | 99.9% | RN-001, RN-004 |
+| **Servicio KYC** | Degradado | 250ms | 97.5% | RN-002, RN-007 |
+| **Base de Datos** | Saludable | 5ms | 99.99% | RN-001, RN-002, RN-003 |
+
+**Estructura del Modelo de Datos:**
 ```
+ESTRUCTURA EstadoDependencias
+    gateway_pago: {
+        estado: "saludable",
+        latencia: "45ms",
+        disponibilidad: "99.9%",
+        requisitos_afectados: ["RN-001", "RN-004"]
+    },
+    servicio_kyc: {
+        estado: "degradado",
+        latencia: "250ms",
+        disponibilidad: "97.5%",
+        requisitos_afectados: ["RN-002", "RN-007"]
+    },
+    base_datos: {
+        estado: "saludable",
+        latencia: "5ms",
+        disponibilidad: "99.99%",
+        requisitos_afectados: ["RN-001", "RN-002", "RN-003"]
+    }
+FIN ESTRUCTURA
+```
+
+**Funcionalidad Recomendada:**
+- Actualización automática cada 30 segundos
+- Histórico de estado (últimas 24 horas)
+- Notificaciones visuales para cambios de estado
+- Drill-down para ver métricas detalladas
+- Vista de impacto en requisitos de negocio
 
 ---
 
@@ -595,27 +680,39 @@ const dependencyStatus = {
 
 ### 9.1 Registro de Dependencias
 
-```yaml
-# dependency-registry.yml
-dependencies:
-  RN-001:
-    name: "Procesar Pagos"
-    requires:
-      - id: "RN-002"
-        name: "Registrar Comercio"
-        type: "prerequisite"
-        criticality: "high"
-    provides:
-      - id: "transaction-data"
-        name: "Datos de Transacciones"
-        type: "data"
-        consumers: ["RN-003", "RN-004", "RN-005"]
-    external_dependencies:
-      - name: "Payment Gateway"
-        type: "service"
-        sla: "99.9%"
-        fallback: "secondary-gateway"
+**Registro de Dependencias:**
+
+**Propósito:** Documentación estructurada de todas las dependencias entre requisitos y componentes
+
+**Estructura del Registro:**
+
 ```
+REGISTRO DE DEPENDENCIAS
+
+REQUISITO: RN-001 - Procesar Pagos
+  REQUIERE:
+    - ID: "RN-002"
+      NOMBRE: "Registrar Comercio"
+      TIPO: "prerrequisito"
+      CRITICIDAD: "alta"
+  PROPORCIONA:
+    - ID: "transaction-data"
+      NOMBRE: "Datos de Transacciones"
+      TIPO: "datos"
+      CONSUMIDORES: ["RN-003", "RN-004", "RN-005"]
+  DEPENDENCIAS EXTERNAS:
+    - NOMBRE: "Gateway de Pagos"
+      TIPO: "servicio"
+      SLA: "99.9%"
+      RESPALDO: "gateway-secundario"
+```
+
+**Elementos a documentar:**
+- Relaciones entre requisitos (requiere/proporciona)
+- Criticidad de las dependencias
+- Flujos de datos entre componentes
+- Dependencias externas y sus SLAs
+- Estrategias de respaldo/fallback
 
 ### 9.2 Diagramas de Dependencias
 

@@ -1,0 +1,494 @@
+# Universal Constants - Fintexa Edition v2.0
+# Fintexa-specific constants extending universal-constants.yml
+# Focus: .NET Core, Financial Technology, Azure AKS, Microservices
+
+@extends: universal-constants.yml
+
+## Fintexa_Legend_Extensions
+| Symbol | Meaning | | Abbrev | Meaning |
+|--------|---------|---|--------|---------|
+| 💰 | payment/transaction | | FT | fintech |
+| 🏦 | banking/financial | | KYC | know your customer |
+| 🔐 | security/encryption | | AML | anti-money laundering |
+| 📊 | analytics/reporting | | PCI | payment card industry |
+| ⚖️ | compliance/regulatory | | GDPR | data protection |
+| 🌐 | distributed/microservice | | MSA | microservices architecture |
+| ☁️ | cloud/Azure | | AKS | Azure Kubernetes Service |
+| 🔄 | event-driven | | CQRS | command query responsibility |
+| 📡 | API gateway | | ES | event sourcing |
+| 🎯 | targeting/routing | | DDD | domain-driven design |
+
+## Fintexa_Architecture_Symbols
+
+```yaml
+Payment_Flow:
+  Transaction: "💰"
+  Gateway: "📡"
+  Processing: "⚙️"
+  Settlement: "✅"
+  Refund: "🔄"
+  Chargeback: "❌"
+  
+Financial_Operations:
+  Balance: "💰"
+  Transfer: "➡️"
+  Deposit: "⬇️"
+  Withdrawal: "⬆️"
+  Exchange: "🔄"
+  Commission: "📊"
+  
+Security_Controls:
+  Authentication: "🔐"
+  Authorization: "🎯"
+  Encryption: "🔒"
+  Audit_Trail: "📋"
+  Fraud_Detection: "🚨"
+  Risk_Assessment: "⚖️"
+  
+Cloud_Architecture:
+  Container: "📦"
+  Pod: "🎪"
+  Service: "🌐"
+  Ingress: "📡"
+  Load_Balancer: "⚖️"
+  Auto_Scaler: "📊"
+```
+
+## .NET_Core_Constants
+
+```yaml
+Framework_Versions:
+  NET_8: ".NET 8.0"
+  NET_7: ".NET 7.0"
+  NET_6: ".NET 6.0 LTS"
+  NET_Standard: ".NET Standard 2.1"
+  
+Project_Types:
+  Web_API: "Microsoft.NET.Sdk.Web"
+  Class_Library: "Microsoft.NET.Sdk"
+  Worker_Service: "Microsoft.NET.Sdk.Worker"
+  Console_App: "Microsoft.NET.Sdk"
+  
+Common_Packages:
+  Entity_Framework: "Microsoft.EntityFrameworkCore"
+  Identity: "Microsoft.AspNetCore.Identity"
+  JWT: "Microsoft.AspNetCore.Authentication.JwtBearer"
+  Swagger: "Swashbuckle.AspNetCore"
+  Serilog: "Serilog.AspNetCore"
+  FluentValidation: "FluentValidation.AspNetCore"
+  AutoMapper: "AutoMapper.Extensions.Microsoft.DependencyInjection"
+  MediatR: "MediatR.Extensions.Microsoft.DependencyInjection"
+  
+Configuration_Files:
+  App_Settings: "appsettings.json"
+  App_Settings_Dev: "appsettings.Development.json"
+  App_Settings_Prod: "appsettings.Production.json"
+  Launch_Settings: "launchSettings.json"
+  Project_File: "*.csproj"
+  Solution_File: "*.sln"
+```
+
+## Fintexa_Service_Architecture
+
+```yaml
+Core_Services:
+  User_Service: "fintexa-user-svc"
+  Account_Service: "fintexa-account-svc"
+  Payment_Service: "fintexa-payment-svc"
+  Transaction_Service: "fintexa-transaction-svc"
+  Notification_Service: "fintexa-notification-svc"
+  Audit_Service: "fintexa-audit-svc"
+  
+Gateway_Services:
+  API_Gateway: "fintexa-api-gateway"
+  Payment_Gateway: "fintexa-payment-gw"
+  External_Gateway: "fintexa-external-gw"
+  
+Infrastructure_Services:
+  Config_Service: "fintexa-config-svc"
+  Discovery_Service: "fintexa-discovery-svc"
+  Logging_Service: "fintexa-logging-svc"
+  Monitoring_Service: "fintexa-monitoring-svc"
+  
+Database_Services:
+  User_DB: "fintexa-user-db"
+  Transaction_DB: "fintexa-transaction-db"
+  Audit_DB: "fintexa-audit-db"
+  Cache_Redis: "fintexa-cache-redis"
+```
+
+## Azure_AKS_Constants
+
+```yaml
+Kubernetes_Resources:
+  Namespace: "namespace"
+  Deployment: "deployment"
+  Service: "service"
+  ConfigMap: "configmap"
+  Secret: "secret"
+  Ingress: "ingress"
+  PersistentVolume: "pv"
+  PersistentVolumeClaim: "pvc"
+  
+AKS_Specific:
+  Node_Pool: "nodepool"
+  Load_Balancer: "load-balancer"
+  Application_Gateway: "app-gateway"
+  Azure_Monitor: "azure-monitor"
+  Key_Vault: "key-vault"
+  Container_Registry: "acr"
+  
+Helm_Charts:
+  Fintexa_Core: "fintexa-core"
+  Fintexa_Gateway: "fintexa-gateway"
+  Fintexa_Services: "fintexa-services"
+  Infrastructure: "fintexa-infra"
+  
+Resource_Limits:
+  CPU_Request: "100m"
+  CPU_Limit: "500m"
+  Memory_Request: "128Mi"
+  Memory_Limit: "512Mi"
+  Storage_Request: "1Gi"
+```
+
+## Financial_Technology_Terms
+
+```yaml
+Payment_Methods:
+  Credit_Card: "cc"
+  Debit_Card: "dc"
+  Bank_Transfer: "bt"
+  Digital_Wallet: "dw"
+  Cryptocurrency: "crypto"
+  SEPA: "sepa"
+  SWIFT: "swift"
+  ACH: "ach"
+  
+Transaction_Types:
+  Purchase: "purchase"
+  Refund: "refund"
+  Chargeback: "chargeback"
+  Authorization: "auth"
+  Capture: "capture"
+  Void: "void"
+  Settlement: "settlement"
+  
+Compliance_Standards:
+  PCI_DSS: "PCI-DSS"
+  PSD2: "PSD2"
+  GDPR: "GDPR"
+  KYC: "KYC"
+  AML: "AML"
+  SOX: "SOX"
+  ISO_27001: "ISO-27001"
+  
+Financial_Entities:
+  Merchant: "merchant"
+  Acquirer: "acquirer"
+  Issuer: "issuer"
+  PSP: "psp"
+  Processor: "processor"
+  Gateway: "gateway"
+  Aggregator: "aggregator"
+```
+
+## Fintexa_API_Patterns
+
+```yaml
+API_Endpoints:
+  Health_Check: "/health"
+  Metrics: "/metrics"
+  Ready: "/ready"
+  Live: "/live"
+  
+User_Endpoints:
+  User_Base: "/api/v1/users"
+  User_Profile: "/api/v1/users/{id}/profile"
+  User_Accounts: "/api/v1/users/{id}/accounts"
+  User_Transactions: "/api/v1/users/{id}/transactions"
+  
+Payment_Endpoints:
+  Payment_Base: "/api/v1/payments"
+  Payment_Process: "/api/v1/payments/process"
+  Payment_Status: "/api/v1/payments/{id}/status"
+  Payment_Refund: "/api/v1/payments/{id}/refund"
+  
+Transaction_Endpoints:
+  Transaction_Base: "/api/v1/transactions"
+  Transaction_History: "/api/v1/transactions/history"
+  Transaction_Search: "/api/v1/transactions/search"
+  Transaction_Export: "/api/v1/transactions/export"
+  
+HTTP_Methods:
+  GET: "Retrieve data"
+  POST: "Create resource"
+  PUT: "Update resource"
+  PATCH: "Partial update"
+  DELETE: "Remove resource"
+  OPTIONS: "Check capabilities"
+```
+
+## Event_Driven_Architecture
+
+```yaml
+Event_Types:
+  User_Events:
+    - "user.created"
+    - "user.updated"
+    - "user.deleted"
+    - "user.verified"
+    - "user.suspended"
+    
+  Payment_Events:
+    - "payment.initiated"
+    - "payment.processed"
+    - "payment.completed"
+    - "payment.failed"
+    - "payment.refunded"
+    
+  Transaction_Events:
+    - "transaction.created"
+    - "transaction.authorized"
+    - "transaction.captured"
+    - "transaction.settled"
+    - "transaction.disputed"
+    
+  System_Events:
+    - "system.started"
+    - "system.stopped"
+    - "system.health.degraded"
+    - "system.alert.triggered"
+    
+Message_Patterns:
+  Command: "Imperative action request"
+  Event: "Something that happened"
+  Query: "Request for information"
+  Saga: "Distributed transaction coordination"
+  
+Event_Stores:
+  Event_Stream: "event-store"
+  Command_Store: "command-store"
+  Projection_Store: "projection-store"
+  Snapshot_Store: "snapshot-store"
+```
+
+## Security_Implementation
+
+```yaml
+Authentication_Methods:
+  JWT: "JSON Web Token"
+  OAuth2: "OAuth 2.0"
+  OIDC: "OpenID Connect"
+  SAML: "Security Assertion Markup Language"
+  API_Key: "API Key Authentication"
+  
+Authorization_Patterns:
+  RBAC: "Role-Based Access Control"
+  ABAC: "Attribute-Based Access Control"
+  PBAC: "Policy-Based Access Control"
+  Claims: "Claims-Based Authorization"
+  
+Encryption_Standards:
+  AES_256: "Advanced Encryption Standard 256-bit"
+  RSA_2048: "RSA 2048-bit"
+  TLS_1_3: "Transport Layer Security 1.3"
+  HMAC_SHA256: "Hash-based Message Authentication Code"
+  
+Security_Headers:
+  CORS: "Cross-Origin Resource Sharing"
+  CSP: "Content Security Policy"
+  HSTS: "HTTP Strict Transport Security"
+  X_Frame_Options: "X-Frame-Options"
+  X_Content_Type: "X-Content-Type-Options"
+```
+
+## DevOps_Pipeline_Constants
+
+```yaml
+CI_CD_Stages:
+  Build: "build"
+  Test: "test"
+  Security_Scan: "security-scan"
+  Quality_Gate: "quality-gate"
+  Package: "package"
+  Deploy_Dev: "deploy-dev"
+  Deploy_Staging: "deploy-staging"
+  Deploy_Prod: "deploy-prod"
+  
+Pipeline_Tools:
+  Azure_DevOps: "Azure Pipelines"
+  GitHub_Actions: "GitHub Actions"
+  Jenkins: "Jenkins"
+  GitLab_CI: "GitLab CI/CD"
+  
+Container_Registry:
+  ACR: "Azure Container Registry"
+  Docker_Hub: "Docker Hub"
+  ECR: "Amazon ECR"
+  
+Deployment_Strategies:
+  Blue_Green: "blue-green"
+  Canary: "canary"
+  Rolling: "rolling"
+  Recreate: "recreate"
+```
+
+## Monitoring_Observability
+
+```yaml
+Metrics_Types:
+  Business_Metrics:
+    - "transaction.count"
+    - "payment.success.rate"
+    - "user.registration.rate"
+    - "revenue.daily"
+    
+  Technical_Metrics:
+    - "http.requests.total"
+    - "http.request.duration"
+    - "cpu.usage.percent"
+    - "memory.usage.bytes"
+    
+  Security_Metrics:
+    - "auth.failures.count"
+    - "fraud.attempts.count"
+    - "security.violations.count"
+    
+Logging_Levels:
+  Trace: "trace"
+  Debug: "debug"
+  Information: "info"
+  Warning: "warn"
+  Error: "error"
+  Critical: "critical"
+  
+APM_Tools:
+  Application_Insights: "Azure Application Insights"
+  Prometheus: "Prometheus"
+  Grafana: "Grafana"
+  ELK_Stack: "Elasticsearch, Logstash, Kibana"
+```
+
+## Database_Patterns
+
+```yaml
+Database_Types:
+  Relational:
+    - "SQL Server"
+    - "PostgreSQL"
+    - "MySQL"
+    
+  NoSQL:
+    - "MongoDB"
+    - "CosmosDB"
+    - "DynamoDB"
+    
+  Cache:
+    - "Redis"
+    - "Memcached"
+    - "Azure Cache"
+    
+  Search:
+    - "Elasticsearch"
+    - "Azure Search"
+    - "Solr"
+    
+Connection_Patterns:
+  Connection_String: "Data Source={server};Initial Catalog={database};Integrated Security=true"
+  Pool_Size: "Maximum pool size"
+  Timeout: "Connection timeout"
+  Retry_Policy: "Retry on failure"
+  
+Migration_Tools:
+  Entity_Framework: "EF Core Migrations"
+  Flyway: "Flyway Database Migrations"
+  Liquibase: "Liquibase"
+```
+
+## Fintexa_Error_Codes
+
+```yaml
+Business_Errors:
+  INSUFFICIENT_FUNDS: "40001"
+  INVALID_ACCOUNT: "40002"
+  PAYMENT_DECLINED: "40003"
+  FRAUD_DETECTED: "40004"
+  LIMIT_EXCEEDED: "40005"
+  
+Technical_Errors:
+  INTERNAL_ERROR: "50001"
+  SERVICE_UNAVAILABLE: "50002"
+  TIMEOUT: "50003"
+  RATE_LIMIT: "50004"
+  CONFIGURATION_ERROR: "50005"
+  
+Validation_Errors:
+  INVALID_FORMAT: "40101"
+  MISSING_FIELD: "40102"
+  INVALID_CURRENCY: "40103"
+  INVALID_AMOUNT: "40104"
+  INVALID_DATE: "40105"
+  
+Authentication_Errors:
+  UNAUTHORIZED: "40100"
+  FORBIDDEN: "40300"
+  TOKEN_EXPIRED: "40110"
+  INVALID_CREDENTIALS: "40120"
+```
+
+## Message_Templates_Fintexa
+
+```yaml
+Business_Messages:
+  Payment_Success: "💰 Payment {amount} {currency} processed successfully"
+  Payment_Failed: "❌ Payment {amount} {currency} failed: {reason}"
+  Account_Created: "🏦 Account {account_id} created for user {user_id}"
+  Transaction_Completed: "✅ Transaction {tx_id} completed"
+  
+Security_Messages:
+  Auth_Success: "🔐 User {user_id} authenticated successfully"
+  Auth_Failed: "❌ Authentication failed for {user_id}: {reason}"
+  Fraud_Alert: "🚨 Fraud detected for transaction {tx_id}"
+  Security_Violation: "⚠️ Security violation detected: {violation_type}"
+  
+System_Messages:
+  Service_Started: "🌐 Service {service_name} started successfully"
+  Service_Stopped: "⏹️ Service {service_name} stopped"
+  Health_Check_Failed: "❌ Health check failed for {service_name}"
+  Deployment_Complete: "🚀 Deployment {version} completed successfully"
+```
+
+## Reference_System_Fintexa
+
+```yaml
+Architecture_Documentation:
+  Fintexa_Architecture: "docs/architecture/fintexa-overview.md"
+  Microservices_Guide: "docs/architecture/microservices.md"
+  Security_Guide: "docs/security/security-guidelines.md"
+  API_Documentation: "docs/api/api-reference.md"
+  
+Configuration_Files:
+  Helm_Values: "helm/fintexa/values.yaml"
+  Kubernetes_Manifests: "k8s/manifests/"
+  Docker_Compose: "docker-compose.yml"
+  Environment_Config: "config/environments/"
+  
+Common_References:
+  Fintexa_Constants: "See Fintexa Architecture section above"
+  .NET_Patterns: "See .NET Core Constants section above"
+  Azure_Resources: "See Azure AKS Constants section above"
+  Payment_Processing: "See Payment Flow section above"
+  Security_Implementation: "See Security Implementation section above"
+  
+Usage_Examples:
+  Service_Definition: |
+    @include universal-constants-fintexa-v2.yml#Fintexa_Service_Architecture
+  API_Endpoint: |
+    @include universal-constants-fintexa-v2.yml#Fintexa_API_Patterns
+  Event_Pattern: |
+    @include universal-constants-fintexa-v2.yml#Event_Driven_Architecture
+```
+
+---
+*Universal Constants Fintexa Edition v2.0 - Specialized constants for financial technology and .NET Core architecture*

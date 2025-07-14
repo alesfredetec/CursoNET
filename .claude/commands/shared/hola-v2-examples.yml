@@ -1,0 +1,174 @@
+# Ejemplos del Comando Hola v2.0
+# Casos de uso educativos para estudiantes hispanohablantes
+
+## Hola_Examples_v2
+
+ejemplos_basicos:
+  Version: "v2.0"
+  Description: "Ejemplos simples y educativos del comando /hola para principiantes"
+  
+  ## Ejemplos por Nivel de Dificultad
+  
+  ### Nivel Principiante
+  Nivel_1_Basico:
+    Ejemplo_1:
+      Comando: "/hola"
+      Proposito: "Saludo simple sin flags"
+      Resultado_Esperado: "Saludo amigable y contextual básico"
+      Explicacion: "Este es el uso más simple del comando. Claude responderá con un saludo apropiado."
+      
+    Ejemplo_2:
+      Comando: "/hola --formal"
+      Proposito: "Saludo profesional"
+      Resultado_Esperado: "Saludo formal con presentación de capacidades"
+      Explicacion: "El flag --formal hace que Claude use un tono más profesional y estructurado."
+      
+    Ejemplo_3:
+      Comando: "/hola --amigable"
+      Proposito: "Saludo casual y relajado"
+      Resultado_Esperado: "Saludo informal y cercano"
+      Explicacion: "El flag --amigable hace que Claude use un tono más casual y accesible."
+
+  ### Nivel Intermedio  
+  Nivel_2_Educativo:
+    Ejemplo_4:
+      Comando: "/hola --persona-estudiante"
+      Proposito: "Saludo enfocado en aprendizaje"
+      Resultado_Esperado: "Saludo con énfasis educativo, explicaciones claras y paciencia"
+      Explicacion: "La persona estudiante hace que Claude adopte un enfoque pedagógico."
+      
+    Ejemplo_5:
+      Comando: "/hola --bienvenida --persona-estudiante"
+      Proposito: "Bienvenida educativa para nuevos usuarios"
+      Resultado_Esperado: "Introducción completa con guía de primeros pasos"
+      Explicacion: "Combina bienvenida con enfoque educativo para orientar principiantes."
+      
+    Ejemplo_6:
+      Comando: "/hola --ayuda --amigable"
+      Proposito: "Solicitar ayuda con tono casual"
+      Resultado_Esperado: "Guía de comandos disponibles en tono relajado"
+      Explicacion: "Combina solicitud de ayuda con tono amigable."
+
+  ### Nivel Avanzado
+  Nivel_3_Complejo:
+    Ejemplo_7:
+      Comando: "/hola --bienvenida --presentacion --persona-estudiante --think-hard"
+      Proposito: "Análisis profundo de bienvenida educativa"
+      Resultado_Esperado: "Introducción completa con análisis detallado y enfoque pedagógico"
+      Explicacion: "Combina múltiples flags para una experiencia educativa completa."
+      
+    Ejemplo_8:
+      Comando: "/hola --formal --persona-mentor --seq --think"
+      Proposito: "Saludo mentor profesional con análisis secuencial"
+      Resultado_Esperado: "Saludo profesional estilo mentor con pensamiento estructurado"
+      Explicacion: "Usa persona mentor con análisis para sesiones de mentoría."
+      
+    Ejemplo_9:
+      Comando: "/hola --estado --persona-estudiante --ayuda --c7"
+      Proposito: "Resumen de estado educativo con documentación extendida"
+      Resultado_Esperado: "Estado actual con enfoque educativo y acceso a documentación"
+      Explicacion: "Combina estado del sistema con recursos educativos extendidos."
+
+## Casos de Uso Específicos
+
+escenarios_educativos:
+  
+  ### Para Nuevos Estudiantes
+  Primer_Contacto:
+    Comando_Recomendado: "/hola --bienvenida --persona-estudiante --amigable"
+    Cuando_Usar: "Primera vez usando Claude Code"
+    Beneficios: "Introducción clara | Tono accesible | Enfoque educativo"
+    
+  ### Para Práctica de Comandos
+  Exploracion_Flags:
+    Comando_Recomendado: "/hola --ayuda --persona-estudiante"
+    Cuando_Usar: "Aprendiendo sobre flags y opciones"
+    Beneficios: "Lista de opciones | Explicaciones claras | Ejemplos prácticos"
+    
+  ### Para Proyectos Formales
+  Contexto_Profesional:
+    Comando_Recomendado: "/hola --formal --presentacion --persona-mentor"
+    Cuando_Usar: "Trabajo en proyectos serios o académicos"
+    Beneficios: "Tono apropiado | Capacidades completas | Guía estructurada"
+
+## Resultados Esperados por Flag
+
+resultados_por_flag:
+  
+  ### Flags de Formalidad
+  Flag_Formal:
+    Tono: "Profesional y respetuoso"
+    Estructura: "Presentación organizada"
+    Contenido: "Capacidades técnicas destacadas"
+    
+  Flag_Amigable:
+    Tono: "Casual y accesible"
+    Estructura: "Conversacional"
+    Contenido: "Enfoque en facilidad de uso"
+    
+  ### Flags de Propósito
+  Flag_Bienvenida:
+    Enfoque: "Orientación inicial"
+    Información: "Primeros pasos y configuración"
+    Objetivo: "Familiarización con el sistema"
+    
+  Flag_Ayuda:
+    Enfoque: "Soporte y guía"
+    Información: "Comandos disponibles y opciones"
+    Objetivo: "Resolución de dudas específicas"
+    
+  ### Flags de Persona
+  Flag_Persona_Estudiante:
+    Estilo: "Pedagógico y paciente"
+    Explicaciones: "Detalladas y claras"
+    Apoyo: "Énfasis en comprensión y aprendizaje"
+
+## Errores Comunes y Soluciones
+
+errores_frecuentes:
+  
+  Error_1:
+    Problema: "Usar demasiados flags a la vez"
+    Ejemplo_Incorrecto: "/hola --formal --amigable --bienvenida --ayuda --estado"
+    Solucion: "Empezar con 1-2 flags máximo"
+    Ejemplo_Correcto: "/hola --bienvenida --persona-estudiante"
+    
+  Error_2:
+    Problema: "No usar persona para contexto educativo"
+    Ejemplo_Incorrecto: "/hola --ayuda"
+    Solucion: "Agregar --persona-estudiante para mejor experiencia educativa"
+    Ejemplo_Correcto: "/hola --ayuda --persona-estudiante"
+    
+  Error_3:
+    Problema: "Flags contradictorios"
+    Ejemplo_Incorrecto: "/hola --formal --amigable"
+    Solucion: "Elegir un enfoque de tono coherente"
+    Ejemplo_Correcto: "/hola --formal --presentacion" 
+    #o "/hola --amigable --bienvenida"
+
+## Progresión de Aprendizaje
+
+ruta_aprendizaje:
+  
+  Semana_1_Basico:
+    Comandos_Practicar:
+      - "/hola"
+      - "/hola --formal"
+      - "/hola --amigable"
+    Objetivo: "Familiarizarse con el comando básico y flags de tono"
+    
+  Semana_2_Educativo:
+    Comandos_Practicar:
+      - "/hola --persona-estudiante"
+      - "/hola --bienvenida --persona-estudiante"
+      - "/hola --ayuda --persona-estudiante"
+    Objetivo: "Comprender las personas cognitivas y su impacto"
+    
+  Semana_3_Avanzado:
+    Comandos_Practicar:
+      - "/hola --think --persona-estudiante"
+      - "/hola --formal --persona-mentor --think"
+      - "/hola --bienvenida --presentacion --persona-estudiante --think-hard"
+    Objetivo: "Dominar combinaciones complejas y modos de pensamiento"
+
+ 

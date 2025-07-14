@@ -1,189 +1,156 @@
-# CLAUDE.md
+# CLAUDE.md - SuperClaude Configuration
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+You are SuperClaude, an enhanced version of Claude optimized for maximum efficiency and capability.
+You should use the following configuration to guide your behavior.
 
-## Project Overview
+## Legend
+@include commands/shared/universal-constants.yml#Universal_Legend
 
-This is a Spanish-language .NET educational course repository called "CursoNET" designed for **junior developers seeking promotion to semi-senior level**. The courses are **taught by architects** and focus on practical software engineering skills, architectural patterns, and best practices for enterprise-level development.
+## Core Configuration
+@include shared/superclaude-core.yml#Core_Philosophy
 
-**Target Audience**: Junior .NET developers in professional environments
-**Objective**: Promotion to semi-senior roles through practical knowledge and examples
-**Teaching Style**: Architectural focus with real-world scenarios (financial systems, payment processing, microservices)
+## Command Status Display System
+@include shared/command-status-prompt.yml#Command_Status_System
+@include shared/command-status-prompt.yml#Status_Components
+@include shared/command-status-prompt.yml#Auto_Activation_Rules
 
-## Repository Structure
+## Thinking Modes
+@include commands/shared/flag-inheritance.yml#Universal Flags (All Commands)
 
-- `doc/` - Course materials in Spanish
-  - `curso-gc.md` - Garbage Collection fundamentals course (markdown format)
-  - `clase noif.md` - "No If" refactoring techniques course (markdown format)
-  - `refactoring-presentacion.html` - Interactive HTML presentation on Refactoring (Procedural to Functional/OO)
-  - `requisitos-presentacion (1).html` - Interactive HTML presentation on Requirements Engineering
-  - `codestatico-presentacion.html` - Static Code Analysis presentation
-  - `cursosql2-presentacion.html` - SQL Indexing and EF Core performance
-  - `sqldisenio-presentacion.html` - Metadata-driven database design
-- `samples/` - Organized practical exercises by class
-  - `clase1-analisis-codigo-estatico/` - SonarLint and code quality examples
-  - `clase2-analisis-requisitos/` - Requirements engineering exercises
-  - `clase3-tecnicas-noif/` - "No If" pattern implementations
-  - `clase4-refactoring-avanzado/` - Advanced refactoring techniques
-  - `clase5-garbage-collection/` - Memory management and GC optimization
-  - `clase6-indexacion-sql/` - SQL query optimization examples
-  - `clase7-diseno-bd-metadatos/` - Metadata-driven database patterns
-- `index.html` - Main portal with course navigation and interactive features
+## Introspection Mode
+@include commands/shared/introspection-patterns.yml#Introspection_Mode
+@include shared/superclaude-rules.yml#Introspection_Standards
 
-## Course Architecture and Content
+## Advanced Token Economy
+@include shared/superclaude-core.yml#Advanced_Token_Economy
 
-### 1. Static Code Analysis (`codestatico-presentacion.html`)
-**Format**: Interactive HTML slideshow (8 slides)
-**Content**: Master SonarLint, cyclomatic complexity, and systematic refactoring
-- SonarLint configuration and real-time analysis
-- Cyclomatic complexity calculation and reduction (15+ → 2-3)
-- Code smells identification and automated fixing
-- Extract Method, Extract Class, Replace Conditional patterns
-- CI/CD integration with quality gates and metrics
+## UltraCompressed Mode Integration
+@include shared/superclaude-core.yml#UltraCompressed_Mode
 
-### 2. Requirements Analysis (`requisitos-presentacion.html`)
-**Format**: Interactive HTML slideshow (14 slides)
-**Content**: Modern requirements methodology for enterprise systems
-- Functional vs Non-Functional Requirements
-- User Stories with Connextra format
-- Acceptance Criteria with Gherkin/BDD
-- NFRs for microservices and Azure AKS
-- Case studies from payment/financial systems
+## Code Economy
+@include shared/superclaude-core.yml#Code_Economy
 
-### 3. "No If" Techniques (`clase noif.md` + `noif-presentacion.html`)
-**Format**: Markdown documentation + HTML presentation
-**Structure**: 4 refactoring patterns with practical implementations
-- **Dictionary Pattern** - Replacing switch statements 
-- **Strategy Pattern** - Algorithm encapsulation
-- **State Pattern** - Behavior based on internal state
-- **Polymorphism** - Type-based conditional elimination
+## Cost & Performance Optimization
+@include shared/superclaude-core.yml#Cost_Performance_Optimization
 
-### 4. Advanced Refactoring (`refactoring-presentacion.html`)
-**Format**: Interactive HTML slideshow (20 slides)
-**Content**: Transform procedural code to functional/OO patterns
-- Extract Method techniques
-- Introduce Class for SRP
-- Func<T> and Action<T> for flexibility
-- Real case study: Order processing system
-- Advanced patterns: Strategy, Factory, Pipeline
+## Intelligent Auto-Activation
+@include shared/superclaude-core.yml#Intelligent_Auto_Activation
 
-### 5. Garbage Collection (`curso-gc.md` + `gc-presentacion.html`)
-**Format**: Markdown documentation + HTML presentation
-**Structure**: 3 progressive classes
-- **Class 1**: GC Fundamentals - Heap, generations (Gen 0/1/2), reachability, mark-and-compact
-- **Class 2**: IDisposable Pattern - Unmanaged resources, proper disposal, using statements
-- **Class 3**: OutOfMemoryException - Memory exhaustion scenarios, leak simulation
+## Task Management
+@include shared/superclaude-core.yml#Task_Management
+@include commands/shared/task-management-patterns.yml#Task_Management_Hierarchy
 
-### 6. SQL Indexing and Performance (`cursosql2-presentacion.html`)
-**Format**: Interactive HTML slideshow
-**Content**: EF Core performance optimization and SQL indexing strategies
-- Query performance analysis and optimization
-- Index design patterns for high-traffic systems
-- EF Core best practices for enterprise applications
+## Performance Standards
+@include shared/superclaude-core.yml#Performance_Standards
+@include commands/shared/compression-performance-patterns.yml#Performance_Baselines
 
-### 7. Database Design with Metadata (`sqldisenio-presentacion.html`)
-**Format**: Interactive HTML slideshow
-**Content**: Metadata-driven database architecture patterns
-- EAV (Entity-Attribute-Value) pattern implementation
-- Dynamic schema design for enterprise systems
-- Metadata-driven CRUD operations and validation
+## Output Organization
+@include shared/superclaude-core.yml#Output_Organization
 
-## Presentation Format and Style
 
-### HTML Presentation Architecture
-The HTML presentations follow a consistent, professional format:
+## Session Management
+@include shared/superclaude-core.yml#Session_Management
+@include commands/shared/system-config.yml#Session_Settings
 
-**Visual Design**:
-- Dark theme (`#0a0a0a` background) with gradient effects
-- Purple/blue accent colors (`#667eea`, `#764ba2`)
-- Glass-morphism cards with blur effects
-- Responsive grid layouts
-- Professional typography (system fonts)
+## Rules & Standards
 
-**Interactive Features**:
-- Keyboard navigation (arrow keys, spacebar, Home key)
-- Touch/swipe support for mobile
-- Progress bar and slide counter
-- Previous/Next navigation buttons
-- "Portal" home button for easy navigation
-- Smooth animations and transitions
-- Instructor information (Alejandro Sfrede, Área de Arquitectura)
+### Evidence-Based Standards
+@include shared/superclaude-core.yml#Evidence_Based_Standards
 
-**Code Presentation**:
-- Syntax highlighting for C#
-- "Before/After" comparisons with visual indicators
-- Color-coded examples (bad=red, good=green)
-- Monospace font for code blocks
-- Collapsible sections for answers
+### Standards
+@include shared/superclaude-core.yml#Standards
 
-**Content Structure**:
-- Title slide with course overview
-- Progressive concept building
-- Practical examples from real systems
-- Interactive exercises and questions
-- Glossary of technical terms
-- Conclusion with actionable takeaways
+### Severity System
+@include commands/shared/quality-patterns.yml#Severity_Levels
+@include commands/shared/quality-patterns.yml#Validation_Sequence
 
-## Technical Context and Examples
+### Smart Defaults & Handling
+@include shared/superclaude-rules.yml#Smart_Defaults
 
-The courses emphasize **enterprise-grade development** with examples from:
-- **Payment Systems**: QR codes, credit card processing, PCI DSS compliance
-- **Financial Services**: High-concurrency transaction processing
-- **Cloud Architecture**: Azure AKS, microservices, observability
-- **Security**: OWASP, mTLS, zero-trust principles
-- **Performance**: SLI/SLO, circuit breakers, caching strategies
+### Ambiguity Resolution
+@include shared/superclaude-rules.yml#Ambiguity_Resolution
 
-## Course Development Standards
+### Development Practices
+@include shared/superclaude-rules.yml#Development_Practices
 
-When creating new courses following this format:
+### Code Generation
+@include shared/superclaude-rules.yml#Code_Generation
 
-1. **Content Approach**: Practical, architect-level perspective with real-world scenarios
-2. **Progression**: Start with fundamentals, build to advanced patterns
-3. **Examples**: Use financial/payment systems for relevance
-4. **Format**: Combine markdown docs with interactive HTML presentations
-5. **Exercises**: Include hands-on coding exercises and architectural decisions
-6. **Assessment**: Questions that test both understanding and practical application
+### Session Awareness
+@include shared/superclaude-rules.yml#Session_Awareness
 
-## Tools and Technologies Referenced
+### Action & Command Efficiency
+@include shared/superclaude-rules.yml#Action_Command_Efficiency
 
-The courses assume familiarity with:
-- .NET Core/5+, C#, ASP.NET Core
-- Azure cloud services (AKS, Key Vault, etc.)
-- Microservices patterns (CQRS, Event Sourcing)
-- Testing frameworks (SpecFlow, BDD)
-- Observability tools (Serilog, Prometheus)
-- DevOps practices (CI/CD, Infrastructure as Code)
+### Project Quality
+@include shared/superclaude-rules.yml#Project_Quality
 
-## Exercise Portal Architecture
+### Security Standards
+@include shared/superclaude-rules.yml#Security_Standards
+@include commands/shared/security-patterns.yml#OWASP_Top_10
+@include commands/shared/security-patterns.yml#Validation_Levels
 
-The `samples/index.html` serves as an interactive portal featuring:
-- **File Explorer Interface**: Navigate through 7 classes of exercises
-- **Code Viewer Modal**: Inline display of C#, SQL, and markdown files
-- **Responsive Design**: Optimized for desktop and mobile viewing
-- **Search Functionality**: Filter exercises by class or topic
-- **Progress Tracking**: Visual indicators for completed exercises
+### Efficiency Management
+@include shared/superclaude-rules.yml#Efficiency_Management
 
-### Exercise Structure Pattern
-Each class follows a consistent "Before/After" pattern:
-- `*-Before.cs/sql/md` - Problematic code with architectural issues
-- `*-After.cs/sql/md` - Refactored solution with explanations
-- `README.md` - Learning objectives and setup instructions
-- `README.html` - Formatted version for web viewing
+### Operations Standards
+@include shared/superclaude-rules.yml#Operations_Standards
 
-## Working with Presentations
+## Model Context Protocol (MCP) Integration
 
-### Navigation Standards
-All HTML presentations use standardized navigation:
-- **Arrow Keys**: Previous/Next slide
-- **Spacebar**: Next slide
-- **Home Key**: Return to main portal
-- **Navigation Buttons**: Click-based controls
-- **Slide Counter**: Current position indicator
+### MCP Architecture
+@include commands/shared/flag-inheritance.yml#Universal Flags (All Commands)
+@include commands/shared/execution-patterns.yml#Servers
 
-### Content Modification Guidelines
-When updating presentations:
-1. Maintain consistent visual theme (dark background, purple/blue gradients)
-2. Use semantic HTML structure with proper slide classes
-3. Include instructor information in navigation area
-4. Ensure responsive breakpoints for mobile viewing
-5. Test keyboard navigation functionality
+### Server Capabilities Extended
+@include shared/superclaude-mcp.yml#Server_Capabilities_Extended
+
+### Token Economics
+@include shared/superclaude-mcp.yml#Token_Economics
+
+### Workflows
+@include shared/superclaude-mcp.yml#Workflows
+
+### Quality Control
+@include shared/superclaude-mcp.yml#Quality_Control
+
+### Command Integration
+@include shared/superclaude-mcp.yml#Command_Integration
+
+### Error Recovery
+@include shared/superclaude-mcp.yml#Error_Recovery
+
+### Best Practices
+@include shared/superclaude-mcp.yml#Best_Practices
+
+### Session Management
+@include shared/superclaude-mcp.yml#Session_Management
+
+## Cognitive Archetypes (Personas)
+
+### Persona Architecture
+@include commands/shared/flag-inheritance.yml#Universal Flags (All Commands)
+
+### All Personas
+@include shared/superclaude-personas.yml#All_Personas
+
+### Collaboration Patterns
+@include shared/superclaude-personas.yml#Collaboration_Patterns
+
+### Intelligent Activation Patterns
+@include shared/superclaude-personas.yml#Intelligent_Activation_Patterns
+
+### Command Specialization
+@include shared/superclaude-personas.yml#Command_Specialization
+
+### Integration Examples
+@include shared/superclaude-personas.yml#Integration_Examples
+
+### Advanced Features
+@include shared/superclaude-personas.yml#Advanced_Features
+
+### MCP + Persona Integration
+@include shared/superclaude-personas.yml#MCP_Persona_Integration
+
+---
+*SuperClaude v2.0.1 | Development framework | Evidence-based methodology | Advanced Claude Code configuration*

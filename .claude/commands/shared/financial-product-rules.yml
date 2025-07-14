@@ -1,0 +1,423 @@
+# Financial Product Rules - Business Engine Compatible with SuperClaude
+# Reglas fundamentales de productos financieros con compliance automático
+
+Financial_Product_Rules:
+  Version: "1.0"
+  Domain: "Financial Products & Services"
+  ComplianceLevel: "PCI DSS Level 1, Basel III, AML/KYC"
+  ValidationStatus: "Business Approved, Compliance Validated"
+  RegulatoryScope: "Uruguay (BCU), Costa Rica (BCCR), Regional LATAM"
+
+# ARQUITECTURA DE REGLAS CORE
+BusinessRules_Architecture:
+  Core_Principles:
+    - ConfigurationDriven: "Reglas configurables sin deployment"
+    - ComplianceFirst: "Compliance automático en todas las reglas"
+    - RealTimeValidation: "Validación tiempo real en transacciones"
+    - AuditTrailComplete: "Trazabilidad completa de decisiones"
+    - RiskBased: "Controles basados en perfiles dinámicos"
+  
+  Rule_Categories:
+    - ProductRules: "Configuración comportamiento productos"
+    - TransactionRules: "Controles validaciones transaccionales"
+    - ComplianceRules: "Cumplimiento normativo automático"
+    - RiskRules: "Gestión mitigación riesgos"
+    - PricingRules: "Estructuras precios comisiones"
+    - LimitRules: "Límites restricciones operacionales"
+
+# PRODUCTOS FINANCIEROS CORE
+CreditCard_Products:
+  Classic_Card:
+    ProductCode: "CC_CLASSIC"
+    RiskProfile: "LOW_TO_MEDIUM"
+    
+    Eligibility_Criteria:
+      MinAge: 18
+      MaxAge: 75
+      MinIncome_USD: 25000
+      CreditScore_Min: 650
+      Employment_Required: true
+      Residency_Required: true
+      Banking_Relationship_Months: 6
+    
+    Credit_Limit_Rules:
+      Initial_Calculation: "MIN(MonthlyIncome * 6, 5000)"
+      Minimum_Limit: 500
+      Maximum_Limit: 5000
+      Income_Multiplier: 6
+      Debt_To_Income_Max: 0.3
+      
+      Dynamic_Adjustments:
+        Auto_Increase: true
+        Payment_History_Months: 12
+        OnTime_Payment_Percent: 95
+        Utilization_Rate_Max: 30
+        Increase_Frequency: "QUARTERLY"
+        Max_Increase_Percent: 25
+    
+    Transaction_Controls:
+      Daily_Limits:
+        Purchase_Limit: 3000
+        Cash_Advance_Limit: 500
+        ATM_Withdrawal_Limit: 400
+        Online_Transaction_Limit: 2000
+      
+      Velocity_Controls:
+        Max_Transactions_Per_Hour: 10
+        Max_Transactions_Per_Day: 50
+        Suspicious_Amount_Threshold: 80  # % of available credit
+        Geographic_Restrictions:
+          Allowed_Countries: ["UY", "AR", "BR", "CL", "PE", "CO"]
+          Restricted_Countries: ["IR", "KP", "SY"]  # OFAC sanctions
+      
+      Interest_And_Fees:
+        Purchase_APR: 24.99
+        Cash_Advance_APR: 29.99
+        Promotional_APR: 0.00
+        Promotional_Period_Months: 12
+        Penalty_APR: 35.99
+        Late_Fee: 25
+        Over_Limit_Fee: 35
+        Cash_Advance_Fee: 10
+        Foreign_Transaction_Fee: 3
+
+  Platinum_Card:
+    ProductCode: "CC_PLATINUM"
+    RiskProfile: "MEDIUM_TO_HIGH"
+    
+    Eligibility_Criteria:
+      MinAge: 25
+      MaxAge: 70
+      MinIncome_USD: 100000
+      CreditScore_Min: 750
+      Relationship_Required: "PREMIUM_BANKING"
+      Investment_Portfolio_Min: 50000
+      
+    Credit_Limit_Rules:
+      Initial_Calculation: "MIN(MonthlyIncome * 12, 50000)"
+      Minimum_Limit: 10000
+      Maximum_Limit: 100000
+      Income_Multiplier: 12
+
+Digital_Wallet_Products:
+  Personal_Wallet:
+    ProductCode: "WALLET_PERSONAL"
+    RiskProfile: "LOW_TO_MEDIUM"
+    
+    KYC_Requirements:
+      Basic_KYC:
+        Required_Documents: ["GOVERNMENT_ID", "PROOF_OF_ADDRESS"]
+        Verification_Methods: ["DOCUMENT_SCAN", "FACIAL_RECOGNITION", "SMS_VERIFICATION"]
+        Transaction_Limits:
+          Daily_Limit: 1000
+          Monthly_Limit: 5000
+          Loading_Limit: 2000
+      
+      Enhanced_KYC:
+        Required_Documents: ["INCOME_VERIFICATION", "BANK_STATEMENTS", "EMPLOYMENT_VERIFICATION"]
+        Verification_Methods: ["VIDEO_CALL_VERIFICATION", "BIOMETRIC_VERIFICATION"]
+        Transaction_Limits:
+          Daily_Limit: 10000
+          Monthly_Limit: 50000
+          Loading_Limit: 25000
+    
+    Loading_Methods:
+      Bank_Transfer:
+        Min_Amount: 10
+        Max_Amount: 25000
+        Fee_Structure: "FREE_FIRST_5_MONTHLY"
+        Processing_Time: "INSTANT"
+      
+      Debit_Card_Loading:
+        Min_Amount: 10
+        Max_Amount: 2000
+        Fee_Percent: 1.5
+        Fee_Minimum: 1
+        Processing_Time: "INSTANT"
+      
+      Cash_Loading:
+        Agent_Network: "NATIONWIDE"
+        Min_Amount: 5
+        Max_Amount: 500
+        Fee_Flat: 2
+        Max_Loadings_Per_Day: 3
+
+  Business_Wallet:
+    ProductCode: "WALLET_BUSINESS"
+    RiskProfile: "MEDIUM_TO_HIGH"
+    
+    Business_Verification:
+      Required_Documents:
+        - "BUSINESS_REGISTRATION"
+        - "TAX_IDENTIFICATION"
+        - "BANK_ACCOUNT_VERIFICATION"
+        - "BUSINESS_LICENSE"
+        - "BENEFICIAL_OWNERSHIP_DECLARATION"
+      
+      Enhanced_Due_Diligence:
+        Required_For_High_Risk: true
+        High_Risk_Criteria:
+          - Money_Service_Business: true
+          - Cash_Intensive_Business: true
+          - International_Business: true
+          - High_Transaction_Volume: true
+    
+    Transaction_Limits:
+      Basic_Business:
+        Daily_Limit: 50000
+        Monthly_Limit: 500000
+        Single_Transaction_Limit: 25000
+      
+      Verified_Business:
+        Daily_Limit: 250000
+        Monthly_Limit: 2500000
+        Single_Transaction_Limit: 100000
+
+# REGLAS TRANSACCIONALES
+Transaction_Validation_Rules:
+  Pre_Authorization_Checks:
+    Account_Validation:
+      - Account_Status: "ACTIVE"
+      - Account_Not_Blocked: true
+      - KYC_Status: "VERIFIED"
+      - Compliance_Status: "COMPLIANT"
+    
+    Balance_Validation:
+      - Sufficient_Funds: true
+      - Available_Credit: true
+      - Reserved_Funds: false
+    
+    Limit_Validation:
+      - Daily_Limit_Check: true
+      - Monthly_Limit_Check: true
+      - Velocity_Limit_Check: true
+      - Merchant_Category_Allowed: true
+    
+    Fraud_Validation:
+      - Geolocation_Check: true
+      - Device_Fingerprint_Check: true
+      - Behavioral_Analysis_Check: true
+      - Sanctions_List_Check: true
+  
+  Real_Time_Validation:
+    Transaction_Scoring:
+      Fraud_Score:
+        Algorithm: "ENSEMBLE_ML_MODEL"
+        Threshold: 0.7
+        Factors_Considered:
+          - Transaction_Amount
+          - Merchant_Category
+          - Geographic_Location
+          - Time_Of_Day
+          - Payment_Method
+          - Customer_Behavior_History
+        
+        Actions:
+          Score_Below_30: "AUTO_APPROVE"
+          Score_30_to_70: "ADDITIONAL_VALIDATION"
+          Score_Above_70: "MANUAL_REVIEW"
+          Score_Above_90: "AUTO_DECLINE"
+
+# REGLAS DE COMPLIANCE
+Compliance_Framework:
+  KYC_Requirements:
+    Identity_Verification:
+      Document_Types:
+        Primary: ["PASSPORT", "NATIONAL_ID", "DRIVERS_LICENSE"]
+        Secondary: ["UTILITY_BILL", "BANK_STATEMENT", "PHONE_BILL"]
+      
+      Verification_Methods:
+        Document_Authentication:
+          - OCR_Extraction: true
+          - Security_Feature_Validation: true
+          - Database_Verification: true
+          - Biometric_Matching: true
+        
+        Address_Verification:
+          - Document_Validation: true
+          - Geolocation_Verification: true
+          - Database_Lookup: true
+    
+    Ongoing_Monitoring:
+      Periodic_Review:
+        Low_Risk_Customers: "ANNUALLY"
+        Medium_Risk_Customers: "EVERY_6_MONTHS"
+        High_Risk_Customers: "QUARTERLY"
+        PEP_Customers: "MONTHLY"
+      
+      Trigger_Events:
+        - Significant_Transaction_Increase: true
+        - Unusual_Geographic_Activity: true
+        - Negative_Media_Mention: true
+        - Regulatory_List_Update: true
+  
+  AML_Procedures:
+    Sanctions_Screening:
+      List_Sources: ["OFAC_SDN", "UN_SANCTIONS", "EU_SANCTIONS", "LOCAL_SANCTIONS"]
+      Screening_Frequency:
+        New_Customers: "REAL_TIME"
+        Existing_Customers: "DAILY"
+        Transactions: "REAL_TIME"
+      
+      False_Positive_Reduction:
+        Fuzzy_Matching: true
+        Phonetic_Matching: true
+        Contextual_Analysis: true
+        Manual_Review: true
+    
+    Transaction_Monitoring:
+      Suspicious_Activity_Indicators:
+        - Transaction_Amount_Thresholds
+        - Frequency_Patterns
+        - Geographic_Anomalies
+        - Customer_Behavior_Changes
+        - Network_Analysis
+      
+      Automated_Decisions:
+        Straight_Through_Processing: 85  # Percent
+        Manual_Review_Queue: 10         # Percent
+        Automatic_Blocking: 5          # Percent
+
+# REGLAS DE RIESGO
+Risk_Management_Rules:
+  Credit_Risk:
+    Scoring_Models:
+      Application_Scoring:
+        Model: "LOGISTIC_REGRESSION_ENSEMBLE"
+        Variables: ["CreditHistory", "IncomeStability", "DebtToIncomeRatio", "EmploymentHistory", "CollateralValue"]
+        Score_Ranges:
+          Excellent: "750-850"
+          Good: "650-749"
+          Fair: "550-649"
+          Poor: "300-549"
+        Auto_Decisions:
+          Auto_Approve: ">750"
+          Manual_Review: "550-750"
+          Auto_Decline: "<550"
+      
+      Behavioral_Scoring:
+        Model: "NEURAL_NETWORK"
+        Real_Time_Updating: true
+        Variables: ["PaymentBehavior", "SpendingPatterns", "AccountUtilization", "CustomerInteractions"]
+        Alert_Thresholds:
+          Early_Warning: "Score decrease >50 points"
+          Collection_Risk: "Score <400"
+          Default_Risk: "Score <300"
+  
+  Operational_Risk:
+    Transaction_Risk:
+      Fraud_Detection:
+        Machine_Learning_Model: "GRADIENT_BOOSTING"
+        Real_Time_Scoring: true
+        Model_Retraining_Frequency: "WEEKLY"
+        Feature_Engineering: ["TransactionVelocity", "GeolocationConsistency", "DeviceBehavior", "NetworkAnalysis", "TimeSeriesAnomalies"]
+      
+      System_Risk:
+        Availability_Target: 99.9  # Percent
+        Response_Time_Target: 200   # Milliseconds
+        Throughput_Target: 10000   # Transactions per second
+        Fallback_Procedures: ["SecondaryDataCenter", "OfflineProcessing", "ManualOverride"]
+  
+  Liquidity_Risk:
+    Cash_Flow_Management:
+      Minimum_Cash_Reserve: 10     # Percent of outstanding balances
+      Stress_Test_Scenarios: true
+      Liquidity_Buffer_Days: 30    # Days of operating expenses
+    
+    Funding_Diversification:
+      Max_Concentration_Per_Source: 25  # Percent
+      Minimum_Funding_Sources: 3
+      Backup_Credit_Lines: true
+
+# LÍMITES Y CONTROLES
+Limit_Management_System:
+  Dynamic_Limits:
+    Risk_Based_Limits:
+      Calculation_Factors: ["CustomerRiskProfile", "TransactionHistory", "AccountBalance", "RelationshipDepth", "ExternalCreditData"]
+      Real_Time_Adjustment:
+        Enabled: true
+        Max_Increase_Percent: 50
+        Max_Decrease_Percent: 75
+        Cooling_Period_Hours: 24
+    
+    Behavior_Based_Limits:
+      Learning_Period_Days: 90
+      Adaptation_Enabled: true
+      Anomaly_Detection: true
+      Limit_Types:
+        Transaction_Amount: "DYNAMIC"
+        Transaction_Frequency: "ADAPTIVE"
+        Merchant_Category: "BEHAVIORAL"
+        Geographic_Location: "LEARNED"
+  
+  Compliance_Based_Limits:
+    Regulatory_Limits:
+      KYC_Based_Limits:
+        Basic_KYC: 1000    # USD daily
+        Enhanced_KYC: 10000 # USD daily
+        Premium_KYC: 50000  # USD daily
+      
+      AML_Limits:
+        Cash_Equivalent_Daily: 10000    # USD
+        Cross_Border_Daily: 5000        # USD
+        High_Risk_Country_Daily: 1000   # USD
+    
+    Internal_Limits:
+      Concentration_Limits:
+        Single_Customer_Exposure: 5     # Percent of capital
+        Single_Industry_Exposure: 15    # Percent of portfolio
+        Single_Country_Exposure: 25     # Percent of portfolio
+      
+      Liquidity_Limits:
+        Max_Loan_To_Deposit_Ratio: 90     # Percent
+        Min_Liquidity_Ratio: 10         # Percent
+        Stress_Test_Buffer: 15          # Percent
+
+# Configuration Management
+Configuration_Management:
+  System_Integration:
+    API_Endpoints:
+      - "/api/product-rules/validate"
+      - "/api/transaction-rules/check"
+      - "/api/compliance-rules/verify"
+      - "/api/risk-rules/assess"
+    
+    Event_Integration:
+      - ProductConfigurationChanged
+      - TransactionRuleViolation
+      - ComplianceAlertTriggered
+      - RiskThresholdExceeded
+    
+    Performance_Targets:
+      Rule_Evaluation_Time: "<100ms"
+      Concurrent_Users: ">10,000"
+      Transaction_Throughput: ">10,000 TPS"
+      System_Availability: "99.9%"
+
+# Validation & Compliance
+Business_Validation:
+  BusinessValidation: "Validated by Financial Business Analyst Expert"
+  ComplianceApproval: "Approved by Chief Compliance Officer"
+  RegulatoryAlignment: "PCI DSS, Basel III, AML/KYC, Local Regulations"
+  TechnicalCompatibility: "Microservices .NET Core Architecture"
+
+# Success Metrics
+Success_Metrics:
+  KPIs:
+    Operational:
+      - Rule_evaluation_accuracy: ">99.9%"
+      - False_positive_rate: "<2%"
+      - System_availability: ">99.9%"
+      - Average_response_time: "<100ms"
+    
+    Business:
+      - Customer_approval_rate_improvement: ">15%"
+      - Manual_review_reduction: ">30%"
+      - Operational_cost_reduction: ">25%"
+      - Time_to_market_reduction: ">50%"
+    
+    Compliance:
+      - Regulatory_violations: "0"
+      - Audit_findings_reduction: ">75%"
+      - Training_completion_rate: "100%"
+      - Incident_response_time: "<15 minutes"

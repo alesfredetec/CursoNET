@@ -21,7 +21,7 @@ Nuestra empresa FinTech quiere ayudar a los negocios a cobrar por internet.
 
 ---
 
-## Tu trabajo como Junior
+## Tu trabajo 
 
 ### Pregunta 1: ¿Quién usa el sistema?
 Identifica a las personas que van a usar nuestro sistema:
