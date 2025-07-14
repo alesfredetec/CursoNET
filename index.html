@@ -433,7 +433,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: #0a0a0a;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e, #16213e);
+            background-size: 400% 400%;
+            animation: gradient-animation 15s ease infinite;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -443,21 +445,160 @@
 
         .loading-content {
             text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            min-width: 400px;
+            max-width: 600px;
+        }
+
+        .loading-logo {
+            font-size: 3em;
+            font-weight: 700;
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px rgba(106, 17, 203, 0.3);
         }
 
         .loading-spinner {
-            width: 60px;
-            height: 60px;
-            border: 3px solid rgba(102, 126, 234, 0.3);
-            border-top: 3px solid #667eea;
+            width: 80px;
+            height: 80px;
+            border: 4px solid rgba(102, 126, 234, 0.2);
+            border-top: 4px solid #667eea;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
+            margin: 0 auto 30px;
+            position: relative;
         }
+
+        .loading-spinner::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(37, 117, 252, 0.3);
+            border-top: 3px solid #2575fc;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite reverse;
+            transform: translate(-50%, -50%);
+        }
+
+        .loading-text {
+            font-size: 1.4em;
+            color: #f0f0f0;
+            margin-bottom: 15px;
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .loading-phrase {
+            font-size: 1.1em;
+            color: #a8a8b3;
+            min-height: 30px;
+            font-weight: 300;
+            font-style: italic;
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: fadeInOut 2s ease-in-out infinite;
+        }
+
+        .loading-progress {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 25px;
+            position: relative;
+        }
+
+        .loading-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #2575fc, #6a11cb);
+            background-size: 200% 100%;
+            animation: progressMove 2s ease-in-out infinite;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .loading-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .loading-dot {
+            width: 8px;
+            height: 8px;
+            background: #667eea;
+            border-radius: 50%;
+            animation: dotPulse 1.5s ease-in-out infinite;
+        }
+
+        .loading-dot:nth-child(1) { animation-delay: 0s; }
+        .loading-dot:nth-child(2) { animation-delay: 0.2s; }
+        .loading-dot:nth-child(3) { animation-delay: 0.4s; }
+        .loading-dot:nth-child(4) { animation-delay: 0.6s; }
+        .loading-dot:nth-child(5) { animation-delay: 0.8s; }
 
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; transform: translateY(10px); }
+            50% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes progressMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes dotPulse {
+            0%, 100% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.2); opacity: 1; }
+        }
+
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @media (max-width: 768px) {
+            .loading-content {
+                min-width: 300px;
+                max-width: 90%;
+                padding: 30px;
+            }
+            
+            .loading-logo {
+                font-size: 2.2em;
+            }
+            
+            .loading-spinner {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .loading-text {
+                font-size: 1.2em;
+            }
+            
+            .loading-phrase {
+                font-size: 1em;
+            }
         }
     </style>
 </head>
@@ -465,9 +606,20 @@
     <!-- Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-content">
+            <div class="loading-logo">CursoNET</div>
             <div class="loading-spinner"></div>
-            <h3>Cargando CursoNET...</h3>
-            <p>Preparando el contenido para tu aprendizaje</p>
+            <div class="loading-text">Preparando tu experiencia de aprendizaje...</div>
+            <div class="loading-phrase" id="loadingPhrase">Inicializando sistema...</div>
+            <div class="loading-progress">
+                <div class="loading-progress-bar" id="loadingProgressBar"></div>
+            </div>
+            <div class="loading-dots">
+                <div class="loading-dot"></div>
+                <div class="loading-dot"></div>
+                <div class="loading-dot"></div>
+                <div class="loading-dot"></div>
+                <div class="loading-dot"></div>
+            </div>
         </div>
     </div>
 
@@ -590,7 +742,7 @@
                     <li>Principios SOLID aplicados</li>
                     <li>Modernización de legacy code</li>
                     <li>Builder y Factory patterns</li>
-                </ul>
+                </ul> 
                 <div class="course-actions">
                     <a href="doc/refactoring-presentacion.html" class="action-button btn-presentation">Ver Presentación</a>
                     <a href="samples/clase4-refactoring-avanzado/README.html" class="action-button btn-exercises">Ejercicios</a>
@@ -744,20 +896,103 @@
             </div>
 
             <p style="color: #666; margin-top: 30px; font-size: 0.9em;">
-                © 2024 CursoNET - Educación de calidad para desarrolladores en crecimiento
+                © JULIO 2025 CursoNET - Educación de calidad para desarrolladores en crecimiento
             </p>
         </div>
     </footer>
 
     <script>
-        // Loading screen
+        // Loading screen with creative phrases
+        const loadingPhrases = [
+            "Alineando bits cuánticos...",
+            "Desfragmentando la cafeína...",
+            "Consultando oráculos de silicio...",
+            "Generando sinergia algorítmica...",
+            "Traduciendo de binario a sarcasmo...",
+            "Evitando una singularidad...",
+            "Peinando al gato de Schrödinger...",
+            "Optimizando los flujos de neutrones...",
+            "Buscando un ; perdido...",
+            "Es culpa del DNS... siempre.",
+            "Convirtiendo café en código...",
+            "Haciendo un git blame al universo...",
+            "Entrenando la red neuronal con memes...",
+            "¡Potenciando los condensadores de flujo!",
+            "Calculando la entropía del código...",
+            "Invocando al espíritu de Alan Turing...",
+            "Asegurándome de que no es un Skynet...",
+            "Recompilando el kernel de la realidad...",
+            "Viendo si funciona en mi máquina...",
+            "Buscando la documentación (que no existe)...",
+            "Ignorando el error 418: I'm a teapot...",
+            "Añadiendo más console.log...",
+            "Compilando el futuro en .NET...",
+            "Ejecutando reflexión sobre la reflexión...",
+            "Garbage collecting mis pensamientos...",
+            "Instanciando objetos de la felicidad...",
+            "Aplicando patrones de diseño al caos...",
+            "Refactorizando el universo...",
+            "Sincronizando los async/await...",
+            "Creando IEnumerable<Conocimiento>..."
+        ];
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
         window.addEventListener('load', function() {
-            setTimeout(() => {
-                document.getElementById('loadingScreen').style.opacity = '0';
+            const loadingScreen = document.getElementById('loadingScreen');
+            const loadingPhrase = document.getElementById('loadingPhrase');
+            const progressBar = document.getElementById('loadingProgressBar');
+            
+            // Shuffle phrases for random order
+            shuffleArray(loadingPhrases);
+            
+            let currentPhraseIndex = 0;
+            let progress = 0;
+            
+            // Random duration between 3-7 seconds
+            const loadingDuration = Math.random() * 4000 + 3000; // 3000-7000ms
+            const phraseInterval = 650; // Change phrase every 650ms
+            const progressInterval = 100; // Update progress every 100ms
+            
+            // Start with first phrase
+            loadingPhrase.textContent = loadingPhrases[0];
+            loadingPhrase.style.opacity = '1';
+            
+            // Phrase rotation
+            const phraseTimer = setInterval(() => {
+                loadingPhrase.style.opacity = '0';
                 setTimeout(() => {
-                    document.getElementById('loadingScreen').style.display = 'none';
-                }, 500);
-            }, 1500);
+                    currentPhraseIndex = (currentPhraseIndex + 1) % loadingPhrases.length;
+                    loadingPhrase.textContent = loadingPhrases[currentPhraseIndex];
+                    loadingPhrase.style.opacity = '1';
+                }, 150);
+            }, phraseInterval);
+            
+            // Progress bar animation
+            const progressTimer = setInterval(() => {
+                progress += (100 / (loadingDuration / progressInterval));
+                if (progress > 100) progress = 100;
+                progressBar.style.width = progress + '%';
+            }, progressInterval);
+            
+            // Hide loading screen after duration
+            setTimeout(() => {
+                clearInterval(phraseTimer);
+                clearInterval(progressTimer);
+                progressBar.style.width = '100%';
+                
+                setTimeout(() => {
+                    loadingScreen.style.opacity = '0';
+                    setTimeout(() => {
+                        loadingScreen.style.display = 'none';
+                    }, 500);
+                }, 300);
+            }, loadingDuration);
         });
 
         // Progress bar

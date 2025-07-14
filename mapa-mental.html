@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CursoNET - Mapa Mental del Curso</title>
+    <title>CursoNET - Mapa Mental  Ale 3D</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -14,68 +14,182 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
             min-height: 100vh;
             color: #333;
-            overflow-x: auto;
+            overflow: hidden;
+            position: relative;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        /* Partículas de fondo animadas */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { 
+                transform: translateY(0px) rotate(0deg);
+                opacity: 0.6;
+            }
+            50% { 
+                transform: translateY(-20px) rotate(180deg);
+                opacity: 1;
+            }
+        }
+
+        /* Contenedor principal con zoom */
+        .zoom-container {
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            cursor: grab;
+        }
+
+        .zoom-container:active {
+            cursor: grabbing;
+        }
+
+        .zoom-content {
+            width: 100%;
+            height: 100%;
+            transform-origin: center center;
+            transition: transform 0.3s ease;
+            position: relative;
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 2000px;
             margin: 0 auto;
             padding: 20px;
+            position: relative;
+            z-index: 2;
         }
 
+        /* Header mejorado */
         .header {
             text-align: center;
             margin-bottom: 40px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
             padding: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transform: perspective(1000px) rotateX(5deg);
         }
 
         .header h1 {
-            font-size: 2.5em;
+            font-size: 2.8em;
             font-weight: 700;
-            color: #fff;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            margin-bottom: 10px;
+            background: linear-gradient(45deg, #fff, #f0f8ff, #e6f3ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            margin-bottom: 15px;
+            animation: titleGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            from { text-shadow: 0 0 20px rgba(255, 255, 255, 0.5); }
+            to { text-shadow: 0 0 30px rgba(255, 255, 255, 0.8); }
         }
 
         .header p {
-            font-size: 1.2em;
+            font-size: 1.3em;
             color: rgba(255, 255, 255, 0.9);
-            font-weight: 300;
+            font-weight: 400;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
-        .nav-buttons {
+        /* Controles de navegación mejorados */
+        .nav-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             gap: 15px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
+            z-index: 1000;
         }
 
         .nav-btn {
             background: rgba(255, 255, 255, 0.2);
             border: none;
             color: white;
-            padding: 12px 24px;
+            padding: 15px 20px;
             border-radius: 25px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transform: translateZ(0);
         }
 
         .nav-btn:hover {
             background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
         }
+
+        /* Controles de zoom */
+        .zoom-controls {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .zoom-btn {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            border-radius: 50%;
+            font-size: 1.8em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .zoom-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Mini-mapa eliminado */
 
         .home-btn {
             position: fixed;
@@ -84,108 +198,144 @@
             background: rgba(255, 255, 255, 0.2);
             border: none;
             color: white;
-            padding: 12px 20px;
+            padding: 15px 25px;
             border-radius: 25px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
             text-decoration: none;
             z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
         .home-btn:hover {
             background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
         }
 
+        /* Mapa mental 3D */
         .mind-map {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 30px;
             padding: 40px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
             position: relative;
-            overflow: hidden;
+            overflow: visible;
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transform: perspective(1000px) rotateX(2deg);
         }
 
-        .mind-map::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(102, 126, 234, 0.05) 0%, transparent 70%);
-            animation: rotate 20s linear infinite;
-            z-index: 1;
-        }
-
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .mind-map-content {
-            position: relative;
-            z-index: 2;
-        }
-
+        /* Nodo central 3D */
         .center-node {
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 60px;
+            position: relative;
         }
 
         .center-circle {
-            width: 200px;
-            height: 200px;
-            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            width: 250px;
+            height: 250px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24, #ff9ff3);
             border-radius: 50%;
             margin: 0 auto 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
-            animation: pulse 2s infinite;
+            box-shadow: 0 15px 40px rgba(255, 107, 107, 0.4);
+            animation: pulse3d 3s ease-in-out infinite;
             position: relative;
             overflow: hidden;
+            transform: perspective(1000px) rotateX(10deg);
+            border: 3px solid rgba(255, 255, 255, 0.3);
         }
 
         .center-circle::before {
             content: '';
             position: absolute;
-            top: 20%;
-            left: 20%;
-            width: 60%;
-            height: 60%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+            top: 10%;
+            left: 10%;
+            width: 80%;
+            height: 80%;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.4) 0%, transparent 70%);
             border-radius: 50%;
+            animation: shine 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse3d {
+            0%, 100% { 
+                transform: perspective(1000px) rotateX(10deg) scale(1);
+                box-shadow: 0 15px 40px rgba(255, 107, 107, 0.4);
+            }
+            50% { 
+                transform: perspective(1000px) rotateX(15deg) scale(1.05);
+                box-shadow: 0 25px 60px rgba(255, 107, 107, 0.6);
+            }
+        }
+
+        @keyframes shine {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
         }
 
         .center-circle h2 {
             color: white;
-            font-size: 1.8em;
+            font-size: 2.2em;
             font-weight: 700;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
             z-index: 1;
             position: relative;
+            animation: textFloat 2s ease-in-out infinite alternate;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+        @keyframes textFloat {
+            from { transform: translateY(0px); }
+            to { transform: translateY(-5px); }
         }
 
+        /* Conexiones animadas */
+        .connections {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .connection-line {
+            position: absolute;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+            border-radius: 2px;
+            animation: connectionPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes connectionPulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        /* Ramas mejoradas con efectos 3D */
         .branches {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-            margin-top: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 60px;
+            margin-top: 50px;
+            perspective: 1000px;
+            max-width: 1800px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .branch {
             position: relative;
-            animation: slideIn 0.8s ease-out;
+            animation: slideIn3d 1s ease-out;
+            transform-style: preserve-3d;
         }
 
         .branch:nth-child(1) { animation-delay: 0.1s; }
@@ -196,38 +346,28 @@
         .branch:nth-child(6) { animation-delay: 0.6s; }
         .branch:nth-child(7) { animation-delay: 0.7s; }
 
-        @keyframes slideIn {
+        @keyframes slideIn3d {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(50px) rotateX(-20deg);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0) rotateX(0deg);
             }
         }
 
-        .branch::before {
-            content: '';
-            position: absolute;
-            top: 30px;
-            left: -30px;
-            width: 60px;
-            height: 4px;
-            background: var(--branch-color);
-            border-radius: 2px;
-            z-index: 1;
-        }
-
         .branch-node {
-            background: var(--branch-color);
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
+            background: linear-gradient(135deg, var(--branch-color), var(--branch-color-dark));
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.5s ease;
             cursor: pointer;
             position: relative;
             overflow: hidden;
+            transform: perspective(1000px) rotateX(5deg);
+            border: 2px solid rgba(255, 255, 255, 0.2);
         }
 
         .branch-node::before {
@@ -237,151 +377,228 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 100%);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, transparent 100%);
             pointer-events: none;
+            border-radius: 25px;
         }
 
         .branch-node:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            transform: perspective(1000px) rotateX(10deg) translateY(-10px) scale(1.03);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .branch-node:hover::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            background: linear-gradient(45deg, var(--branch-color), transparent, var(--branch-color));
+            border-radius: 30px;
+            z-index: -1;
+            animation: borderGlow 1s ease-in-out infinite alternate;
+        }
+
+        @keyframes borderGlow {
+            from { opacity: 0.5; }
+            to { opacity: 1; }
         }
 
         .branch-node h3 {
             color: white;
-            font-size: 1.3em;
-            font-weight: 600;
+            font-size: 1.4em;
+            font-weight: 700;
             margin-bottom: 15px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 2;
         }
 
         .branch-node p {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 0.9em;
-            line-height: 1.5;
-            margin-bottom: 15px;
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 1em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
         }
 
         .subtopics {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 10px;
-            margin-top: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 12px;
+            margin-top: 20px;
         }
 
         .subtopic {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 15px;
-            padding: 10px;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 20px;
+            padding: 12px;
             text-align: center;
-            font-size: 0.8em;
+            font-size: 0.85em;
             color: white;
-            font-weight: 500;
+            font-weight: 600;
             transition: all 0.3s ease;
             backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
         }
 
         .subtopic:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.4);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
-        /* Colores para cada clase */
-        .branch:nth-child(1) { --branch-color: #3498db; }
-        .branch:nth-child(2) { --branch-color: #9b59b6; }
-        .branch:nth-child(3) { --branch-color: #e74c3c; }
-        .branch:nth-child(4) { --branch-color: #f39c12; }
-        .branch:nth-child(5) { --branch-color: #1abc9c; }
-        .branch:nth-child(6) { --branch-color: #34495e; }
-        .branch:nth-child(7) { --branch-color: #e67e22; }
+        /* Colores mejorados para cada clase */
+        .branch:nth-child(1) { 
+            --branch-color: #3498db; 
+            --branch-color-dark: #2980b9;
+        }
+        .branch:nth-child(2) { 
+            --branch-color: #9b59b6; 
+            --branch-color-dark: #8e44ad;
+        }
+        .branch:nth-child(3) { 
+            --branch-color: #e74c3c; 
+            --branch-color-dark: #c0392b;
+        }
+        .branch:nth-child(4) { 
+            --branch-color: #f39c12; 
+            --branch-color-dark: #e67e22;
+        }
+        .branch:nth-child(5) { 
+            --branch-color: #1abc9c; 
+            --branch-color-dark: #16a085;
+        }
+        .branch:nth-child(6) { 
+            --branch-color: #34495e; 
+            --branch-color-dark: #2c3e50;
+        }
+        .branch:nth-child(7) { 
+            --branch-color: #e67e22; 
+            --branch-color-dark: #d35400;
+        }
 
         .progress-bar {
             background: rgba(255, 255, 255, 0.3);
-            border-radius: 10px;
-            height: 8px;
-            margin-top: 15px;
+            border-radius: 15px;
+            height: 10px;
+            margin-top: 20px;
             overflow: hidden;
+            position: relative;
         }
 
         .progress-fill {
             height: 100%;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 10px;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 1));
+            border-radius: 15px;
             transition: width 2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+            animation: progressShine 2s ease-in-out infinite;
+        }
+
+        @keyframes progressShine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
 
         .class-number {
             position: absolute;
-            top: -10px;
-            left: -10px;
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.9);
+            top: -15px;
+            left: -15px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
             color: var(--branch-color);
-            font-size: 1.2em;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            font-size: 1.4em;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 3px solid var(--branch-color);
+            animation: numberFloat 3s ease-in-out infinite alternate;
         }
 
+        @keyframes numberFloat {
+            from { transform: translateY(0px); }
+            to { transform: translateY(-5px); }
+        }
+
+        /* Panel de información mejorado */
         .info-panel {
             position: fixed;
             top: 50%;
-            right: -400px;
-            width: 350px;
+            right: -450px;
+            width: 400px;
             background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            transition: all 0.4s ease;
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            transition: all 0.5s ease;
             transform: translateY(-50%);
             z-index: 1000;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.3);
         }
 
         .info-panel.active {
-            right: 20px;
+            right: 30px;
+            transform: translateY(-50%) scale(1);
         }
 
         .info-panel h3 {
             color: #333;
-            font-size: 1.3em;
-            margin-bottom: 15px;
-            font-weight: 600;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            font-weight: 700;
         }
 
         .info-panel p {
             color: #666;
-            line-height: 1.6;
-            margin-bottom: 20px;
+            line-height: 1.7;
+            margin-bottom: 25px;
+            font-size: 1.05em;
         }
 
         .info-link {
             display: inline-block;
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
-            padding: 12px 24px;
+            padding: 15px 30px;
             border-radius: 25px;
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 600;
             transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
         }
 
         .info-link:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
         }
 
         .close-info {
             position: absolute;
-            top: 15px;
-            right: 20px;
+            top: 20px;
+            right: 25px;
             background: none;
             border: none;
-            font-size: 1.5em;
+            font-size: 1.8em;
             cursor: pointer;
             color: #999;
             transition: color 0.3s ease;
@@ -391,64 +608,101 @@
             color: #333;
         }
 
-        .floating-icons {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .floating-icon {
+        /* Efectos de partículas en hover */
+        .particle-effect {
             position: absolute;
-            font-size: 2em;
-            opacity: 0.1;
-            animation: float 6s ease-in-out infinite;
+            width: 6px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: particleFloat 1s ease-out forwards;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
+        @keyframes particleFloat {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0) translateY(-50px);
+            }
         }
-
-        .floating-icon:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
-        .floating-icon:nth-child(2) { top: 60%; left: 80%; animation-delay: 1s; }
-        .floating-icon:nth-child(3) { top: 30%; left: 70%; animation-delay: 2s; }
-        .floating-icon:nth-child(4) { top: 80%; left: 20%; animation-delay: 3s; }
-        .floating-icon:nth-child(5) { top: 10%; left: 50%; animation-delay: 4s; }
 
         /* Responsive Design */
-        @media (max-width: 768px) {
+        @media (min-width: 2560px) {
             .container {
-                padding: 10px;
+                max-width: 2400px;
             }
+            
+            .branches {
+                grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+                gap: 80px;
+                max-width: 2200px;
+            }
+            
+            .center-circle {
+                width: 300px;
+                height: 300px;
+            }
+            
+            .center-circle h2 {
+                font-size: 2.5em;
+            }
+        }
 
+        @media (min-width: 1920px) and (max-width: 2559px) {
+            .branches {
+                grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+                gap: 70px;
+                max-width: 2000px;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .branches {
+                grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+                gap: 40px;
+            }
+        }
+
+        @media (max-width: 768px) {
             .header h1 {
-                font-size: 2em;
-            }
-
-            .mind-map {
-                padding: 20px;
+                font-size: 2.2em;
             }
 
             .center-circle {
-                width: 150px;
-                height: 150px;
+                width: 180px;
+                height: 180px;
             }
 
             .center-circle h2 {
-                font-size: 1.4em;
+                font-size: 1.6em;
             }
 
             .branches {
                 grid-template-columns: 1fr;
-                gap: 20px;
+                gap: 30px;
             }
 
-            .branch::before {
-                display: none;
+            .nav-controls {
+                flex-direction: row;
+                top: auto;
+                bottom: 120px;
+                right: 20px;
+            }
+
+            .zoom-controls {
+                bottom: 20px;
+                right: 20px;
+                flex-direction: row;
+            }
+
+            .zoom-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 1.4em;
             }
 
             .info-panel {
@@ -459,37 +713,20 @@
             .info-panel.active {
                 right: 5%;
             }
-
-            .nav-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .nav-btn {
-                width: 200px;
-            }
         }
 
         @media (max-width: 480px) {
-            .header {
-                padding: 20px;
-            }
-
             .header h1 {
                 font-size: 1.8em;
             }
 
-            .mind-map {
-                padding: 15px;
-            }
-
             .center-circle {
-                width: 120px;
-                height: 120px;
+                width: 150px;
+                height: 150px;
             }
 
             .center-circle h2 {
-                font-size: 1.2em;
+                font-size: 1.4em;
             }
 
             .branch-node {
@@ -503,153 +740,166 @@
     </style>
 </head>
 <body>
-    <div class="floating-icons">
-        <div class="floating-icon">🚀</div>
-        <div class="floating-icon">💻</div>
-        <div class="floating-icon">🎯</div>
-        <div class="floating-icon">✨</div>
-        <div class="floating-icon">🔧</div>
-    </div>
+    <!-- Partículas de fondo -->
+    <div class="particles" id="particles"></div>
 
     <a href="index.html" class="home-btn">🏠 Portal Principal</a>
 
-    <div class="container">
-        <div class="header">
-            <h1>🧠 Mapa Mental CursoNET</h1>
-            <p>Programa completo de desarrollo Jr → Semi-Sr</p>
-        </div>
+    <!-- Controles de navegación -->
+    <div class="nav-controls">
+        <button class="nav-btn" onclick="showAll()">👁️ Mostrar Todo</button>
+        <button class="nav-btn" onclick="showBasics()">🎯 Básicos</button>
+        <button class="nav-btn" onclick="showAdvanced()">🚀 Avanzados</button>
+        <button class="nav-btn" onclick="resetView()">🔄 Reiniciar</button>
+    </div>
 
-        <div class="nav-buttons">
-            <button class="nav-btn" onclick="showAll()">👁️ Mostrar Todo</button>
-            <button class="nav-btn" onclick="showBasics()">🎯 Solo Básicos</button>
-            <button class="nav-btn" onclick="showAdvanced()">🚀 Avanzados</button>
-            <button class="nav-btn" onclick="resetView()">🔄 Reiniciar</button>
-        </div>
+    <!-- Controles de zoom -->
+    <div class="zoom-controls">
+        <button class="zoom-btn" onclick="zoomIn()" title="Acercar">+</button>
+        <button class="zoom-btn" onclick="zoomOut()" title="Alejar">-</button>
+        <button class="zoom-btn" onclick="resetZoom()" title="Zoom normal" style="font-size: 1.2em;">⌂</button>
+    </div>
 
-        <div class="mind-map">
-            <div class="mind-map-content">
-                <div class="center-node">
-                    <div class="center-circle">
-                        <h2>CursoNET<br>Jr → Semi-Sr</h2>
-                    </div>
+    <!-- Mini-mapa eliminado -->
+
+    <!-- Contenedor principal con zoom -->
+    <div class="zoom-container" id="zoom-container">
+        <div class="zoom-content" id="zoom-content">
+            <div class="container">
+                <div class="header">
+                    <h1>🧠 Mapa Mental CursoNET</h1>
+                    <p>Programa completo de desarrollo Jr → Semi-Sr</p>
                 </div>
 
-                <div class="branches">
-                    <div class="branch" data-class="1" data-level="basic">
-                        <div class="class-number">1</div>
-                        <div class="branch-node" onclick="showInfo('clase1')">
-                            <h3>🔧 Análisis Código Estático</h3>
-                            <p>Domina SonarLint, métricas de complejidad y técnicas de refactoring para código limpio y mantenible.</p>
-                            <div class="subtopics">
-                                <div class="subtopic">SonarLint</div>
-                                <div class="subtopic">Complejidad</div>
-                                <div class="subtopic">Refactoring</div>
-                                <div class="subtopic">Métricas</div>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 100%"></div>
+                <div class="mind-map">
+                    <!-- Conexiones animadas -->
+                    <div class="connections" id="connections"></div>
+
+                    <div class="mind-map-content">
+                        <div class="center-node">
+                            <div class="center-circle">
+                                <h2>CursoNET<br>Jr → Semi-Sr</h2>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="branch" data-class="2" data-level="basic">
-                        <div class="class-number">2</div>
-                        <div class="branch-node" onclick="showInfo('clase2')">
-                            <h3>📋 Análisis de Requisitos</h3>
-                            <p>Metodología moderna para identificar, documentar y gestionar requisitos funcionales y no funcionales.</p>
-                            <div class="subtopics">
-                                <div class="subtopic">FR vs NFR</div>
-                                <div class="subtopic">Casos de Uso</div>
-                                <div class="subtopic">User Stories</div>
-                                <div class="subtopic">Trazabilidad</div>
+                        <div class="branches">
+                            <div class="branch" data-class="1" data-level="basic">
+                                <div class="class-number">1</div>
+                                <div class="branch-node" onclick="showInfo('clase1')">
+                                    <h3>🔧 Análisis Código Estático</h3>
+                                    <p>Domina SonarLint, métricas de complejidad y técnicas de refactoring para código limpio y mantenible.</p>
+                                    <div class="subtopics">
+                                        <div class="subtopic" onclick="event.stopPropagation(); createParticles(event)">SonarLint</div>
+                                        <div class="subtopic" onclick="event.stopPropagation(); createParticles(event)">Complejidad</div>
+                                        <div class="subtopic" onclick="event.stopPropagation(); createParticles(event)">Refactoring</div>
+                                        <div class="subtopic" onclick="event.stopPropagation(); createParticles(event)">Métricas</div>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 100%"></div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 100%"></div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="branch" data-class="3" data-level="intermediate">
-                        <div class="class-number">3</div>
-                        <div class="branch-node" onclick="showInfo('clase3')">
-                            <h3>🚫 Técnicas "No If"</h3>
-                            <p>Patrones avanzados para eliminar condicionales complejas y mejorar la mantenibilidad del código.</p>
-                            <div class="subtopics">
-                                <div class="subtopic">Dictionary</div>
-                                <div class="subtopic">Strategy</div>
-                                <div class="subtopic">State</div>
-                                <div class="subtopic">Polimorfismo</div>
+                            <div class="branch" data-class="2" data-level="basic">
+                                <div class="class-number">2</div>
+                                <div class="branch-node" onclick="showInfo('clase2')">
+                                    <h3>📋 Análisis de Requisitos</h3>
+                                    <p>Metodología moderna para identificar, documentar y gestionar requisitos funcionales y no funcionales.</p>
+                                    <div class="subtopics">
+                                        <div class="subtopic" onclick="event.stopPropagation(); createParticles(event)">FR vs NFR</div>
+                                        <div class="subtopic" onclick="event.stopPropagation(); createParticles(event)">Casos de Uso</div>
+                                        <div class="subtopic" onclick="event.stopPropagation(); createParticles(event)">User Stories</div>
+                                        <div class="subtopic" onclick="event.stopPropagation(); createParticles(event)">Trazabilidad</div>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 100%"></div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 100%"></div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="branch" data-class="4" data-level="advanced">
-                        <div class="class-number">4</div>
-                        <div class="branch-node" onclick="showInfo('clase4')">
-                            <h3>🔧 Refactoring SOLID</h3>
-                            <p>Transformación de código procedural a arquitecturas funcionales y OOP usando principios SOLID.</p>
-                            <div class="subtopics">
-                                <div class="subtopic">SOLID</div>
-                                <div class="subtopic">Patrones</div>
-                                <div class="subtopic">Factory</div>
-                                <div class="subtopic">Builder</div>
+                            <div class="branch" data-class="3" data-level="intermediate">
+                                <div class="class-number">3</div>
+                                <div class="branch-node" onclick="showInfo('clase3')">
+                                    <h3>🚫 Técnicas "No If"</h3>
+                                    <p>Patrones avanzados para eliminar condicionales complejas y mejorar la mantenibilidad del código.</p>
+                                    <div class="subtopics">
+                                        <div class="subtopic" onclick="event.stopPropagation(); createParticles(event)">Dictionary</div>
+                                        <div class="subtopic" onclick="event.stopPropagation(); createParticles(event)">Strategy</div>
+                                        <div class="subtopic" onclick="event.stopPropagation(); createParticles(event)">State</div>
+                                        <div class="subtopic" onclick="event.stopPropagation(); createParticles(event)">Polimorfismo</div>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 100%"></div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 100%"></div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="branch" data-class="5" data-level="advanced">
-                        <div class="class-number">5</div>
-                        <div class="branch-node" onclick="showInfo('clase5')">
-                            <h3>🗑️ Garbage Collection</h3>
-                            <p>Fundamentos de gestión de memoria en .NET, patrón IDisposable y prevención de memory leaks.</p>
-                            <div class="subtopics">
-                                <div class="subtopic">GC Basics</div>
-                                <div class="subtopic">IDisposable</div>
-                                <div class="subtopic">Memory Leaks</div>
-                                <div class="subtopic">Performance</div>
+                            <div class="branch" data-class="4" data-level="advanced">
+                                <div class="class-number">4</div>
+                                <div class="branch-node" onclick="showInfo('clase4')">
+                                    <h3>🔧 Refactoring SOLID</h3>
+                                    <p>Transformación de código procedural a arquitecturas funcionales y OOP usando principios SOLID.</p>
+                                    <div class="subtopics">
+                                        <div class="subtopic" onclick="event.stopPropagation(); createParticles(event)">SOLID</div>
+                                        <div class="subtopic" onclick="event.stopPropagation(); createParticles(event)">Patrones</div>
+                                        <div class="subtopic" onclick="event.stopPropagation(); createParticles(event)">Factory</div>
+                                        <div class="subtopic" onclick="event.stopPropagation(); createParticles(event)">Builder</div>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 100%"></div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 100%"></div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="branch" data-class="6" data-level="advanced">
-                        <div class="class-number">6</div>
-                        <div class="branch-node" onclick="showInfo('clase6')">
-                            <h3>⚡ Optimización SQL</h3>
-                            <p>Estrategias de indexación SQL y optimización de performance en EF Core para sistemas de alto tráfico.</p>
-                            <div class="subtopics">
-                                <div class="subtopic">Indexación</div>
-                                <div class="subtopic">EF Core</div>
-                                <div class="subtopic">Performance</div>
-                                <div class="subtopic">Planes</div>
+                            <div class="branch" data-class="5" data-level="advanced">
+                                <div class="class-number">5</div>
+                                <div class="branch-node" onclick="showInfo('clase5')">
+                                    <h3>🗑️ Garbage Collection</h3>
+                                    <p>Fundamentos de gestión de memoria en .NET, patrón IDisposable y prevención de memory leaks.</p>
+                                    <div class="subtopics">
+                                        <div class="subtopic" onclick="event.stopPropagation(); createParticles(event)">GC Basics</div>
+                                        <div class="subtopic" onclick="event.stopPropagation(); createParticles(event)">IDisposable</div>
+                                        <div class="subtopic" onclick="event.stopPropagation(); createParticles(event)">Memory Leaks</div>
+                                        <div class="subtopic" onclick="event.stopPropagation(); createParticles(event)">Performance</div>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 100%"></div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 100%"></div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="branch" data-class="7" data-level="advanced">
-                        <div class="class-number">7</div>
-                        <div class="branch-node" onclick="showInfo('clase7')">
-                            <h3>🏗️ Diseño BD Avanzado</h3>
-                            <p>Arquitecturas de base de datos metadata-driven y patrones EAV para sistemas empresariales flexibles.</p>
-                            <div class="subtopics">
-                                <div class="subtopic">Metadatos</div>
-                                <div class="subtopic">EAV Pattern</div>
-                                <div class="subtopic">JSON Híbrido</div>
-                                <div class="subtopic">Flexibilidad</div>
+                            <div class="branch" data-class="6" data-level="advanced">
+                                <div class="class-number">6</div>
+                                <div class="branch-node" onclick="showInfo('clase6')">
+                                    <h3>⚡ Optimización SQL</h3>
+                                    <p>Estrategias de indexación SQL y optimización de performance en EF Core para sistemas de alto tráfico.</p>
+                                    <div class="subtopics">
+                                        <div class="subtopic" onclick="event.stopPropagation(); createParticles(event)">Indexación</div>
+                                        <div class="subtopic" onclick="event.stopPropagation(); createParticles(event)">EF Core</div>
+                                        <div class="subtopic" onclick="event.stopPropagation(); createParticles(event)">Performance</div>
+                                        <div class="subtopic" onclick="event.stopPropagation(); createParticles(event)">Planes</div>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 100%"></div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 100%"></div>
+
+                            <div class="branch" data-class="7" data-level="advanced">
+                                <div class="class-number">7</div>
+                                <div class="branch-node" onclick="showInfo('clase7')">
+                                    <h3>🏗️ Diseño BD Avanzado</h3>
+                                    <p>Arquitecturas de base de datos metadata-driven y patrones EAV para sistemas empresariales flexibles.</p>
+                                    <div class="subtopics">
+                                        <div class="subtopic" onclick="event.stopPropagation(); createParticles(event)">Metadatos</div>
+                                        <div class="subtopic" onclick="event.stopPropagation(); createParticles(event)">EAV Pattern</div>
+                                        <div class="subtopic" onclick="event.stopPropagation(); createParticles(event)">JSON Híbrido</div>
+                                        <div class="subtopic" onclick="event.stopPropagation(); createParticles(event)">Flexibilidad</div>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 100%"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -666,6 +916,14 @@
     </div>
 
     <script>
+        // Variables globales
+        let currentZoom = 1;
+        let isDragging = false;
+        let startX = 0;
+        let startY = 0;
+        let currentX = 0;
+        let currentY = 0;
+
         // Datos de información para cada clase
         const classInfo = {
             clase1: {
@@ -705,6 +963,133 @@
             }
         };
 
+        // Inicializar partículas de fondo
+        function initParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Funciones de zoom
+        function zoomIn() {
+            currentZoom = Math.min(currentZoom * 1.2, 3);
+            applyZoom();
+        }
+
+        function zoomOut() {
+            currentZoom = Math.max(currentZoom / 1.2, 0.3);
+            applyZoom();
+        }
+
+        function resetZoom() {
+            currentZoom = 1;
+            currentX = 0;
+            currentY = 0;
+            applyZoom();
+        }
+
+        function applyZoom() {
+            const zoomContent = document.getElementById('zoom-content');
+            zoomContent.style.transform = `scale(${currentZoom}) translate(${currentX}px, ${currentY}px)`;
+        }
+
+        // Zoom con rueda del mouse
+        document.getElementById('zoom-container').addEventListener('wheel', function(e) {
+            e.preventDefault();
+            if (e.deltaY < 0) {
+                zoomIn();
+            } else {
+                zoomOut();
+            }
+        });
+
+        // Arrastrar para hacer pan
+        const zoomContainer = document.getElementById('zoom-container');
+        
+        zoomContainer.addEventListener('mousedown', function(e) {
+            isDragging = true;
+            startX = e.clientX - currentX;
+            startY = e.clientY - currentY;
+            zoomContainer.style.cursor = 'grabbing';
+        });
+
+        document.addEventListener('mousemove', function(e) {
+            if (!isDragging) return;
+            
+            currentX = (e.clientX - startX) / currentZoom;
+            currentY = (e.clientY - startY) / currentZoom;
+            applyZoom();
+        });
+
+        document.addEventListener('mouseup', function() {
+            isDragging = false;
+            zoomContainer.style.cursor = 'grab';
+        });
+
+        // Crear conexiones animadas
+        function createConnections() {
+            const connections = document.getElementById('connections');
+            const branches = document.querySelectorAll('.branch');
+            const centerNode = document.querySelector('.center-circle');
+            
+            branches.forEach((branch, index) => {
+                const connection = document.createElement('div');
+                connection.className = 'connection-line';
+                
+                // Calcular posición y rotación
+                const angle = (index * 360 / branches.length) * Math.PI / 180;
+                const length = 150;
+                const x = 50 + Math.cos(angle) * 20;
+                const y = 50 + Math.sin(angle) * 20;
+                
+                connection.style.left = x + '%';
+                connection.style.top = y + '%';
+                connection.style.width = length + 'px';
+                connection.style.transform = `rotate(${angle}rad)`;
+                connection.style.animationDelay = (index * 0.2) + 's';
+                
+                connections.appendChild(connection);
+            });
+        }
+
+        // Crear efectos de partículas
+        function createParticles(event) {
+            const rect = event.target.getBoundingClientRect();
+            const particleCount = 8;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle-effect';
+                particle.style.left = (rect.left + rect.width / 2) + 'px';
+                particle.style.top = (rect.top + rect.height / 2) + 'px';
+                particle.style.left = (rect.left + Math.random() * rect.width) + 'px';
+                particle.style.top = (rect.top + Math.random() * rect.height) + 'px';
+                
+                document.body.appendChild(particle);
+                
+                setTimeout(() => {
+                    particle.remove();
+                }, 1000);
+            }
+        }
+
+        // Función para centrar el contenido al cargar
+        function centerContent() {
+            currentZoom = 1;
+            currentX = 0;
+            currentY = 0;
+            applyZoom();
+        }
+
         // Función para mostrar información
         function showInfo(className) {
             const panel = document.getElementById('info-panel');
@@ -743,7 +1128,6 @@
                     branch.style.display = 'block';
                     branch.style.opacity = '1';
                 } else {
-                    branch.style.display = 'none';
                     branch.style.opacity = '0.3';
                 }
             });
@@ -756,7 +1140,6 @@
                     branch.style.display = 'block';
                     branch.style.opacity = '1';
                 } else {
-                    branch.style.display = 'none';
                     branch.style.opacity = '0.3';
                 }
             });
@@ -765,39 +1148,8 @@
         function resetView() {
             showAll();
             hideInfo();
+            centerContent();
         }
-
-        // Animaciones de entrada
-        document.addEventListener('DOMContentLoaded', function() {
-            // Animar barras de progreso
-            setTimeout(() => {
-                const progressBars = document.querySelectorAll('.progress-fill');
-                progressBars.forEach((bar, index) => {
-                    setTimeout(() => {
-                        bar.style.width = bar.style.width || '100%';
-                    }, index * 200);
-                });
-            }, 1000);
-
-            // Efecto de respiración en el nodo central
-            const centerCircle = document.querySelector('.center-circle');
-            setInterval(() => {
-                centerCircle.style.animation = 'none';
-                setTimeout(() => {
-                    centerCircle.style.animation = 'pulse 2s infinite';
-                }, 10);
-            }, 10000);
-        });
-
-        // Efecto de parallax sutil
-        window.addEventListener('scroll', function() {
-            const scrolled = window.pageYOffset;
-            const parallax = document.querySelector('.mind-map::before');
-            if (parallax) {
-                const speed = scrolled * 0.5;
-                parallax.style.transform = `translateY(${speed}px)`;
-            }
-        });
 
         // Cerrar panel de información al hacer clic fuera
         document.addEventListener('click', function(event) {
@@ -814,6 +1166,48 @@
             if (!panel.contains(event.target) && !clickedBranch) {
                 hideInfo();
             }
+        });
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            initParticles();
+            createConnections();
+            centerContent();
+            
+            // Animar barras de progreso
+            setTimeout(() => {
+                const progressBars = document.querySelectorAll('.progress-fill');
+                progressBars.forEach((bar, index) => {
+                    setTimeout(() => {
+                        bar.style.width = '100%';
+                    }, index * 300);
+                });
+            }, 1000);
+        });
+
+        // Soporte para touch en dispositivos móviles
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        zoomContainer.addEventListener('touchstart', function(e) {
+            if (e.touches.length === 1) {
+                isDragging = true;
+                touchStartX = e.touches[0].clientX - currentX;
+                touchStartY = e.touches[0].clientY - currentY;
+            }
+        });
+
+        zoomContainer.addEventListener('touchmove', function(e) {
+            if (isDragging && e.touches.length === 1) {
+                e.preventDefault();
+                currentX = (e.touches[0].clientX - touchStartX) / currentZoom;
+                currentY = (e.touches[0].clientY - touchStartY) / currentZoom;
+                applyZoom();
+            }
+        });
+
+        zoomContainer.addEventListener('touchend', function() {
+            isDragging = false;
         });
     </script>
 </body>
