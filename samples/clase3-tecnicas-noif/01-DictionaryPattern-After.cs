@@ -80,7 +80,7 @@ namespace TecnicasNoIf.Ejercicios
             var config = GetPaymentConfig(paymentType);
             return amount * config.FeePercentage;
         }
-
+ 
         /// <summary>
         /// ✅ MEJORA 3: Dictionary lookup - sin switches
         /// </summary>

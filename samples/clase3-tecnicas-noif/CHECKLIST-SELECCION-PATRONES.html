@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checklist: Selección de Patrones NoIf - CursoNET</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2rem;
+            font-weight: 300;
+        }
+
+        .decision-flow {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .pattern-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pattern-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .pattern-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ffd700, #ff6b6b);
+        }
+
+        .pattern-card h2 {
+            color: white;
+            font-size: 1.6rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pattern-card .use-when {
+            background: rgba(0, 255, 0, 0.1);
+            border-left: 4px solid #00ff00;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .pattern-card .use-when h3 {
+            color: #90ee90;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .checklist {
+            list-style: none;
+        }
+
+        .checklist li {
+            color: rgba(255, 255, 255, 0.9);
+            margin: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        .checklist li:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #00ff00;
+            font-weight: bold;
+        }
+
+        .example {
+            background: rgba(255, 215, 0, 0.1);
+            border-left: 4px solid #ffd700;
+            padding: 12px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .example strong {
+            color: #ffd700;
+        }
+
+        .example p {
+            color: rgba(255, 255, 255, 0.85);
+            margin: 5px 0;
+        }
+
+        .decision-matrix {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .decision-matrix h2 {
+            color: white;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .matrix-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .matrix-item h3 {
+            color: #ffd700;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .matrix-item p {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.5;
+        }
+
+        .arrow-indicator {
+            font-size: 1.5rem;
+            color: #ffd700;
+            margin: 0 10px;
+        }
+
+        .complexity-guide {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .complexity-guide h2 {
+            color: white;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .complexity-levels {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .complexity-level {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .complexity-level .level {
+            color: #ffd700;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .complexity-level .pattern {
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .complexity-level .desc {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        .combinations {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .combinations h2 {
+            color: white;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .combo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .combo-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .combo-card h3 {
+            color: #ff6b6b;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .final-advice {
+            background: rgba(255, 69, 0, 0.15);
+            border-left: 4px solid #ff4500;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+
+        .final-advice h3 {
+            color: #ffa500;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .final-advice p {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .nav-button {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-button:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .decision-flow {
+                grid-template-columns: 1fr;
+            }
+            .complexity-levels {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .matrix-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 Checklist de Selección de Patrones NoIf</h1>
+            <p class="subtitle">Guía práctica para decidir qué patrón utilizar en cada situación</p>
+        </div>
+
+        <div class="decision-flow">
+            <div class="pattern-card">
+                <h2>📚 Dictionary Pattern</h2>
+                <div class="use-when">
+                    <h3>Usa este patrón cuando:</h3>
+                    <ul class="checklist">
+                        <li>Necesitas mapear un valor (clave) a una acción o comportamiento</li>
+                        <li>Los comportamientos son sencillos y pueden expresarse como funciones</li>
+                        <li>El conjunto de opciones es conocido y relativamente estable</li>
+                        <li>El comportamiento no requiere mantener un estado complejo</li>
+                        <li>Quieres una solución simple con poco código adicional</li>
+                    </ul>
+                </div>
+                <div class="example">
+                    <strong>Ejemplo de caso de uso:</strong>
+                    <p>Sistemas de menús, calculadoras, mapeo de comandos a acciones</p>
+                </div>
+            </div>
+
+            <div class="pattern-card">
+                <h2>⚡ Strategy Pattern</h2>
+                <div class="use-when">
+                    <h3>Usa este patrón cuando:</h3>
+                    <ul class="checklist">
+                        <li>Tienes diferentes algoritmos para resolver un mismo problema</li>
+                        <li>Los algoritmos son complejos y tienen múltiples líneas de código</li>
+                        <li>Necesitas que los algoritmos sean intercambiables en tiempo de ejecución</li>
+                        <li>Quieres encapsular cada algoritmo en su propia clase</li>
+                        <li>Los algoritmos comparten una interfaz común</li>
+                    </ul>
+                </div>
+                <div class="example">
+                    <strong>Ejemplo de caso de uso:</strong>
+                    <p>Algoritmos de descuento, estrategias de navegación, métodos de pago</p>
+                </div>
+            </div>
+
+            <div class="pattern-card">
+                <h2>🔄 State Pattern</h2>
+                <div class="use-when">
+                    <h3>Usa este patrón cuando:</h3>
+                    <ul class="checklist">
+                        <li>El comportamiento de un objeto cambia según su estado interno</li>
+                        <li>Tienes múltiples condicionales basados en variables de estado</li>
+                        <li>Necesitas gestionar transiciones entre estados de forma clara</li>
+                        <li>El objeto tiene un ciclo de vida definido con diferentes etapas</li>
+                        <li>Cada estado tiene su propio conjunto de comportamientos</li>
+                    </ul>
+                </div>
+                <div class="example">
+                    <strong>Ejemplo de caso de uso:</strong>
+                    <p>Flujos de trabajo, máquinas de estados, procesos con etapas definidas</p>
+                </div>
+            </div>
+
+            <div class="pattern-card">
+                <h2>🎭 Polimorfismo</h2>
+                <div class="use-when">
+                    <h3>Usa este patrón cuando:</h3>
+                    <ul class="checklist">
+                        <li>Haces muchas comprobaciones de tipo (is, instanceof, typeof)</li>
+                        <li>Tienes una jerarquía natural de objetos con comportamientos específicos</li>
+                        <li>Necesitas extender el sistema con nuevos tipos frecuentemente</li>
+                        <li>El comportamiento está intrínsecamente ligado al tipo de objeto</li>
+                        <li>Quieres aprovechar al máximo la orientación a objetos</li>
+                    </ul>
+                </div>
+                <div class="example">
+                    <strong>Ejemplo de caso de uso:</strong>
+                    <p>Sistemas de entidades, jerarquías de elementos UI, procesamiento de tipos</p>
+                </div>
+            </div>
+
+            <div class="pattern-card">
+                <h2>🔧 Extension Methods</h2>
+                <div class="use-when">
+                    <h3>Usa este patrón cuando:</h3>
+                    <ul class="checklist">
+                        <li>Necesitas crear una API fluida y encadenable</li>
+                        <li>Quieres extender tipos existentes sin modificarlos</li>
+                        <li>Tienes operaciones de transformación o validación en cadena</li>
+                        <li>Prefieres un enfoque más funcional que orientado a objetos</li>
+                        <li>Quieres centralizar la lógica condicional en métodos reutilizables</li>
+                    </ul>
+                </div>
+                <div class="example">
+                    <strong>Ejemplo de caso de uso:</strong>
+                    <p>Validación de datos, transformación de objetos, operaciones en colecciones</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="decision-matrix">
+            <h2>🎯 Matriz de Decisión Rápida</h2>
+            <div class="matrix-grid">
+                <div class="matrix-item">
+                    <h3>¿Cómo es la estructura del problema?</h3>
+                    <p><strong>Selección entre opciones</strong> → Dictionary</p>
+                    <p><strong>Variaciones de un algoritmo</strong> → Strategy</p>
+                    <p><strong>Comportamiento basado en estado</strong> → State</p>
+                    <p><strong>Comportamiento basado en tipo</strong> → Polimorfismo</p>
+                    <p><strong>Transformaciones en cadena</strong> → Extension Methods</p>
+                </div>
+
+                <div class="matrix-item">
+                    <h3>¿Cómo es el contexto de extensibilidad?</h3>
+                    <p><strong>Agregar nuevas claves/acciones</strong> → Dictionary</p>
+                    <p><strong>Agregar nuevos algoritmos</strong> → Strategy</p>
+                    <p><strong>Agregar nuevos estados</strong> → State</p>
+                    <p><strong>Agregar nuevos tipos</strong> → Polimorfismo</p>
+                    <p><strong>Agregar nuevas transformaciones</strong> → Extension Methods</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="complexity-guide">
+            <h2>📊 Guía de Complejidad</h2>
+            <div class="complexity-levels">
+                <div class="complexity-level">
+                    <div class="level">MÍNIMA</div>
+                    <div class="pattern">Dictionary</div>
+                    <div class="desc">Solución sencilla</div>
+                </div>
+                <div class="complexity-level">
+                    <div class="level">BAJA</div>
+                    <div class="pattern">Extension Methods</div>
+                    <div class="desc">Interfaces simples</div>
+                </div>
+                <div class="complexity-level">
+                    <div class="level">MEDIA</div>
+                    <div class="pattern">Strategy</div>
+                    <div class="desc">Clases con una responsabilidad</div>
+                </div>
+                <div class="complexity-level">
+                    <div class="level">ALTA</div>
+                    <div class="pattern">State/Polimorfismo</div>
+                    <div class="desc">Jerarquía de clases</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="combinations">
+            <h2>🔗 Combinaciones Comunes</h2>
+            <div class="combo-grid">
+                <div class="combo-card">
+                    <h3>Dictionary de Strategies</h3>
+                    <p>Utiliza un diccionario para seleccionar entre diferentes estrategias. Combina la simplicidad del Dictionary con la flexibilidad del Strategy.</p>
+                </div>
+                <div class="combo-card">
+                    <h3>Estado con Polimorfismo</h3>
+                    <p>Utiliza polimorfismo para implementar diferentes estados. Cada estado es una clase que implementa una interfaz común.</p>
+                </div>
+                <div class="combo-card">
+                    <h3>Strategies con Extension Methods</h3>
+                    <p>Implementa estrategias que se pueden encadenar como métodos de extensión para crear APIs fluidas complejas.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="final-advice">
+            <h3>💡 Consejo Final</h3>
+            <p>Recuerda que no siempre es necesario eliminar todos los condicionales. A veces, un simple if-else puede ser más claro y mantenible que un patrón complejo. Usa estos patrones cuando aporten valor real en términos de legibilidad, mantenibilidad o extensibilidad.</p>
+        </div>
+
+        <div class="navigation">
+            <a href="README.html" class="nav-button">
+                <span>🔙</span> Volver a Ejercicios
+            </a>
+            <a href="../../index.html" class="nav-button">
+                <span>🏠</span> Portal Principal
+            </a>
+        </div>
+    </div>
+</body>
+</html>

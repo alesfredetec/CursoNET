@@ -1,0 +1,6 @@
+{
+    "sonarlint.connectedMode.project": {
+        "connectionId": "fintexa-base",
+        "projectKey": "fintexa-base_democurso"
+    }
+}

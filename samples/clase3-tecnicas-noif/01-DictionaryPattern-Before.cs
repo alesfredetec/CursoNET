@@ -1,7 +1,7 @@
 using System;
 
 namespace TecnicasNoIf.Ejercicios
-{
+{ 
     /// <summary>
     /// PROBLEMA: Múltiples switch/if statements para mapeos simples
     /// 
