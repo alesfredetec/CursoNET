@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checklist: Selección de Patrones NoIf - CursoNET</title>
+    <title>Checklist: 8 Patrones NoIf Esenciales - CursoNET</title>
     <style>
         * {
             margin: 0;
@@ -19,7 +19,7 @@
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
             padding: 20px;
         }
@@ -45,13 +45,54 @@
             color: rgba(255, 255, 255, 0.9);
             font-size: 1.2rem;
             font-weight: 300;
+            margin-bottom: 10px;
         }
 
-        .decision-flow {
+        .header .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 15px;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 15px;
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        /* Difficulty Level Sections */
+        .difficulty-section {
+            margin: 40px 0;
+        }
+
+        .difficulty-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .difficulty-title {
+            color: white;
+            font-size: 2rem;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .beginner-title { color: #90ee90; }
+        .intermediate-title { color: #ffd700; }
+        .advanced-title { color: #ff6b6b; }
+
+        .difficulty-desc {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+        }
+
+        .pattern-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
         }
 
         .pattern-card {
@@ -66,42 +107,85 @@
         }
 
         .pattern-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px);
             background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
         }
 
-        .pattern-card::before {
+        .pattern-card.beginner::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, #ffd700, #ff6b6b);
+            background: linear-gradient(90deg, #90ee90, #32cd32);
         }
 
-        .pattern-card h2 {
+        .pattern-card.intermediate::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ffd700, #ffa500);
+        }
+
+        .pattern-card.advanced::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b6b, #ff4500);
+        }
+
+        .pattern-card h3 {
             color: white;
             font-size: 1.6rem;
             margin-bottom: 15px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
-        .pattern-card .use-when {
-            background: rgba(0, 255, 0, 0.1);
-            border-left: 4px solid #00ff00;
+        .performance-indicator {
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: bold;
+            margin-left: auto;
+        }
+
+        .performance-fast { background: #90ee90; color: #000; }
+        .performance-medium { background: #ffd700; color: #000; }
+        .performance-slow { background: #ff6b6b; color: #fff; }
+
+        .use-when, .avoid-when {
+            border-radius: 8px;
             padding: 15px;
             margin: 15px 0;
-            border-radius: 8px;
         }
 
-        .pattern-card .use-when h3 {
-            color: #90ee90;
+        .use-when {
+            background: rgba(0, 255, 0, 0.1);
+            border-left: 4px solid #00ff00;
+        }
+
+        .avoid-when {
+            background: rgba(255, 69, 0, 0.1);
+            border-left: 4px solid #ff4500;
+        }
+
+        .use-when h4, .avoid-when h4 {
             font-size: 1.1rem;
             margin-bottom: 10px;
         }
+
+        .use-when h4 { color: #90ee90; }
+        .avoid-when h4 { color: #ffa500; }
 
         .checklist {
             list-style: none;
@@ -116,11 +200,19 @@
         }
 
         .checklist li:before {
-            content: '✓';
             position: absolute;
             left: 0;
-            color: #00ff00;
             font-weight: bold;
+        }
+
+        .use-when .checklist li:before {
+            content: '✓';
+            color: #00ff00;
+        }
+
+        .avoid-when .checklist li:before {
+            content: '✗';
+            color: #ff4500;
         }
 
         .example {
@@ -140,52 +232,116 @@
             margin: 5px 0;
         }
 
-        .decision-matrix {
+        /* Decision Flow */
+        .decision-flow {
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
             border-radius: 15px;
             padding: 30px;
-            margin: 30px 0;
+            margin: 40px 0;
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        .decision-matrix h2 {
+        .decision-flow h2 {
             color: white;
             font-size: 1.8rem;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             text-align: center;
         }
 
-        .matrix-grid {
+        .decision-tree {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .decision-node {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            text-align: center;
+        }
+
+        .decision-node h3 {
+            color: #ffd700;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .decision-node .question {
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .decision-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .decision-option {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Scenario Mapping */
+        .scenarios {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 40px 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .scenarios h2 {
+            color: white;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .scenario-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
         }
 
-        .matrix-item {
+        .scenario-card {
             background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
             padding: 20px;
             border: 1px solid rgba(255, 255, 255, 0.15);
         }
 
-        .matrix-item h3 {
-            color: #ffd700;
+        .scenario-card h3 {
+            color: #ff6b6b;
             font-size: 1.2rem;
             margin-bottom: 10px;
         }
 
-        .matrix-item p {
-            color: rgba(255, 255, 255, 0.9);
-            line-height: 1.5;
+        .scenario-patterns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
         }
 
-        .arrow-indicator {
-            font-size: 1.5rem;
+        .pattern-tag {
+            background: rgba(255, 215, 0, 0.2);
             color: #ffd700;
-            margin: 0 10px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
         }
 
+        /* Complexity Guide */
         .complexity-guide {
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
@@ -204,90 +360,41 @@
 
         .complexity-levels {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
         }
 
         .complexity-level {
             background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
-            padding: 20px;
+            padding: 25px;
             text-align: center;
             border: 1px solid rgba(255, 255, 255, 0.15);
         }
 
         .complexity-level .level {
-            color: #ffd700;
             font-size: 1.5rem;
             font-weight: bold;
             margin-bottom: 10px;
         }
 
-        .complexity-level .pattern {
+        .level-beginner { color: #90ee90; }
+        .level-intermediate { color: #ffd700; }
+        .level-advanced { color: #ff6b6b; }
+
+        .complexity-level .patterns {
             color: white;
-            font-size: 1rem;
-            margin-bottom: 5px;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            line-height: 1.4;
         }
 
         .complexity-level .desc {
             color: rgba(255, 255, 255, 0.8);
-            font-size: 0.9rem;
+            font-size: 0.8rem;
         }
 
-        .combinations {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 30px;
-            margin: 30px 0;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .combinations h2 {
-            color: white;
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .combo-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .combo-card {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-        }
-
-        .combo-card h3 {
-            color: #ff6b6b;
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-        }
-
-        .final-advice {
-            background: rgba(255, 69, 0, 0.15);
-            border-left: 4px solid #ff4500;
-            padding: 20px;
-            margin: 30px 0;
-            border-radius: 8px;
-        }
-
-        .final-advice h3 {
-            color: #ffa500;
-            font-size: 1.3rem;
-            margin-bottom: 10px;
-        }
-
-        .final-advice p {
-            color: rgba(255, 255, 255, 0.9);
-            line-height: 1.6;
-        }
-
+        /* Navigation */
         .navigation {
             display: flex;
             justify-content: center;
@@ -315,14 +422,38 @@
             transform: translateY(-2px);
         }
 
+        /* Final Advice */
+        .final-advice {
+            background: rgba(255, 69, 0, 0.15);
+            border-left: 4px solid #ff4500;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+
+        .final-advice h3 {
+            color: #ffa500;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+        }
+
+        .final-advice p {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
         @media (max-width: 768px) {
-            .decision-flow {
+            .pattern-grid {
                 grid-template-columns: 1fr;
             }
             .complexity-levels {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: 1fr;
             }
-            .matrix-grid {
+            .decision-tree {
+                grid-template-columns: 1fr;
+            }
+            .scenario-grid {
                 grid-template-columns: 1fr;
             }
         }
@@ -331,172 +462,498 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>📋 Checklist de Selección de Patrones NoIf</h1>
-            <p class="subtitle">Guía práctica para decidir qué patrón utilizar en cada situación</p>
+            <h1>📋 Checklist: 8 Patrones NoIf Esenciales</h1>
+            <p class="subtitle">Guía completa para eliminar condicionales complejos con patrones de diseño</p>
+            <div class="stats">
+                <div class="stat-item">8 Patrones</div>
+                <div class="stat-item">3 Niveles</div>
+                <div class="stat-item">15+ Escenarios</div>
+                <div class="stat-item">Anti-patrones</div>
+            </div>
         </div>
 
+        <!-- BEGINNER PATTERNS -->
+        <div class="difficulty-section">
+            <div class="difficulty-header">
+                <h2 class="difficulty-title beginner-title">🌱 Nivel Principiante</h2>
+                <p class="difficulty-desc">Patrones simples, ideal para comenzar a eliminar condicionales básicos</p>
+            </div>
+            
+            <div class="pattern-grid">
+                <div class="pattern-card beginner">
+                    <h3>
+                        📚 Dictionary Pattern
+                        <span class="performance-indicator performance-fast">⚡ Rápido</span>
+                    </h3>
+                    
+                    <div class="use-when">
+                        <h4>✅ Usa este patrón cuando:</h4>
+                        <ul class="checklist">
+                            <li>Necesitas mapear claves simples a acciones o valores</li>
+                            <li>Los comportamientos son funciones puras (sin efectos secundarios)</li>
+                            <li>El conjunto de opciones es conocido y relativamente estable</li>
+                            <li>Rendimiento es crítico (O(1) lookup time)</li>
+                            <li>Quieres una solución minimalista con poco overhead</li>
+                        </ul>
+                    </div>
+
+                    <div class="avoid-when">
+                        <h4>❌ Evita este patrón cuando:</h4>
+                        <ul class="checklist">
+                            <li>La lógica es compleja y requiere múltiples pasos</li>
+                            <li>Necesitas validaciones complejas antes de ejecutar</li>
+                            <li>Las claves se generan dinámicamente en runtime</li>
+                            <li>Requieres dependency injection o configuración compleja</li>
+                        </ul>
+                    </div>
+
+                    <div class="example">
+                        <strong>Casos de uso ideales:</strong>
+                        <p>• Calculadoras simples (operadores matemáticos)</p>
+                        <p>• Sistemas de menús con acciones directas</p>
+                        <p>• Mapeo de códigos de estado a mensajes</p>
+                        <p>• Conversores de unidades básicas</p>
+                    </div>
+                </div>
+
+                <div class="pattern-card beginner">
+                    <h3>
+                        🔧 Extension Methods
+                        <span class="performance-indicator performance-medium">⚖️ Medio</span>
+                    </h3>
+                    
+                    <div class="use-when">
+                        <h4>✅ Usa este patrón cuando:</h4>
+                        <ul class="checklist">
+                            <li>Quieres crear APIs fluidas y encadenables</li>
+                            <li>Necesitas extender tipos existentes sin modificarlos</li>
+                            <li>Tienes operaciones de transformación o validación en cadena</li>
+                            <li>Prefieres un enfoque más funcional</li>
+                            <li>Quieres centralizar validaciones condicionales</li>
+                        </ul>
+                    </div>
+
+                    <div class="avoid-when">
+                        <h4>❌ Evita este patrón cuando:</h4>
+                        <ul class="checklist">
+                            <li>Contaminarías demasiado el namespace global</li>
+                            <li>La lógica pertenece conceptualmente al tipo original</li>
+                            <li>Necesitas acceso a miembros privados</li>
+                            <li>El team no está familiarizado con programación funcional</li>
+                        </ul>
+                    </div>
+
+                    <div class="example">
+                        <strong>Casos de uso ideales:</strong>
+                        <p>• Fluent validation APIs (IsRequired(), IsEmail())</p>
+                        <p>• String utilities (IsNullOrEmpty(), ToPascalCase())</p>
+                        <p>• Collection transformations (WhereNotNull(), Batch())</p>
+                        <p>• Conditional operations (IfTrue(), WhenNotNull())</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- INTERMEDIATE PATTERNS -->
+        <div class="difficulty-section">
+            <div class="difficulty-header">
+                <h2 class="difficulty-title intermediate-title">⚡ Nivel Intermedio</h2>
+                <p class="difficulty-desc">Patrones más sofisticados para escenarios complejos de negocio</p>
+            </div>
+            
+            <div class="pattern-grid">
+                <div class="pattern-card intermediate">
+                    <h3>
+                        ⚡ Strategy Pattern
+                        <span class="performance-indicator performance-medium">⚖️ Medio</span>
+                    </h3>
+                    
+                    <div class="use-when">
+                        <h4>✅ Usa este patrón cuando:</h4>
+                        <ul class="checklist">
+                            <li>Tienes algoritmos complejos intercambiables</li>
+                            <li>Necesitas dependency injection para las estrategias</li>
+                            <li>Los algoritmos requieren configuración o estado</li>
+                            <li>Planeas agregar nuevas estrategias frecuentemente</li>
+                            <li>Quieres testear cada algoritmo independientemente</li>
+                        </ul>
+                    </div>
+
+                    <div class="avoid-when">
+                        <h4>❌ Evita este patrón cuando:</h4>
+                        <ul class="checklist">
+                            <li>Solo tienes 2-3 algoritmos simples</li>
+                            <li>Los algoritmos nunca cambiarán</li>
+                            <li>La performance es absolutamente crítica</li>
+                            <li>El overhead de interfaces no se justifica</li>
+                        </ul>
+                    </div>
+
+                    <div class="example">
+                        <strong>Casos de uso ideales:</strong>
+                        <p>• Sistemas de pricing complejos</p>
+                        <p>• Algoritmos de recomendación</p>
+                        <p>• Estrategias de caching</p>
+                        <p>• Métodos de autenticación</p>
+                    </div>
+                </div>
+
+                <div class="pattern-card intermediate">
+                    <h3>
+                        🏭 Factory Pattern
+                        <span class="performance-indicator performance-medium">⚖️ Medio</span>
+                    </h3>
+                    
+                    <div class="use-when">
+                        <h4>✅ Usa este patrón cuando:</h4>
+                        <ul class="checklist">
+                            <li>La creación de objetos depende de condiciones runtime</li>
+                            <li>Quieres centralizar la lógica de creación compleja</li>
+                            <li>Necesitas ocultar detalles de construcción al cliente</li>
+                            <li>Los tipos a crear cambiarán frecuentemente</li>
+                            <li>Requieres validación antes de la creación</li>
+                        </ul>
+                    </div>
+
+                    <div class="avoid-when">
+                        <h4>❌ Evita este patrón cuando:</h4>
+                        <ul class="checklist">
+                            <li>Solo creas 1-2 tipos de objetos</li>
+                            <li>La construcción es trivial (sin parámetros)</li>
+                            <li>Los constructores son suficientes</li>
+                            <li>No necesitas abstracción en la creación</li>
+                        </ul>
+                    </div>
+
+                    <div class="example">
+                        <strong>Casos de uso ideales:</strong>
+                        <p>• Document parsers (PDF, Excel, Word)</p>
+                        <p>• Database connection factories</p>
+                        <p>• UI control factories</p>
+                        <p>• Message serializer factories</p>
+                    </div>
+                </div>
+
+                <div class="pattern-card intermediate">
+                    <h3>
+                        📝 Command Pattern
+                        <span class="performance-indicator performance-slow">🐌 Lento</span>
+                    </h3>
+                    
+                    <div class="use-when">
+                        <h4>✅ Usa este patrón cuando:</h4>
+                        <ul class="checklist">
+                            <li>Necesitas funcionalidad de undo/redo</li>
+                            <li>Quieres encolar operaciones para ejecución posterior</li>
+                            <li>Requieres logging detallado de operaciones</li>
+                            <li>Necesitas parametrizar objetos con operaciones</li>
+                            <li>Implementas macro commands o transacciones</li>
+                        </ul>
+                    </div>
+
+                    <div class="avoid-when">
+                        <h4>❌ Evita este patrón cuando:</h4>
+                        <ul class="checklist">
+                            <li>Las operaciones son simples llamadas a métodos</li>
+                            <li>No necesitas historial de operaciones</li>
+                            <li>La performance es más importante que la flexibilidad</li>
+                            <li>El overhead de objetos no se justifica</li>
+                        </ul>
+                    </div>
+
+                    <div class="example">
+                        <strong>Casos de uso ideales:</strong>
+                        <p>• Editores de texto (Cut, Copy, Paste)</p>
+                        <p>• Transacciones financieras</p>
+                        <p>• Game action systems</p>
+                        <p>• HTTP request queuing</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ADVANCED PATTERNS -->
+        <div class="difficulty-section">
+            <div class="difficulty-header">
+                <h2 class="difficulty-title advanced-title">🚀 Nivel Avanzado</h2>
+                <p class="difficulty-desc">Patrones sofisticados para arquitecturas complejas y sistemas enterprise</p>
+            </div>
+            
+            <div class="pattern-grid">
+                <div class="pattern-card advanced">
+                    <h3>
+                        🔄 State Pattern
+                        <span class="performance-indicator performance-medium">⚖️ Medio</span>
+                    </h3>
+                    
+                    <div class="use-when">
+                        <h4>✅ Usa este patrón cuando:</h4>
+                        <ul class="checklist">
+                            <li>El comportamiento cambia radicalmente según el estado interno</li>
+                            <li>Tienes estados con transiciones complejas y reglas</li>
+                            <li>Necesitas un workflow claramente definido</li>
+                            <li>Cada estado tiene comportamientos únicos</li>
+                            <li>Las transiciones requieren validación o lógica</li>
+                        </ul>
+                    </div>
+
+                    <div class="avoid-when">
+                        <h4>❌ Evita este patrón cuando:</h4>
+                        <ul class="checklist">
+                            <li>Solo tienes 2-3 estados simples</li>
+                            <li>Los estados son solo flags booleanos</li>
+                            <li>No hay transiciones complejas</li>
+                            <li>Un simple enum es suficiente</li>
+                        </ul>
+                    </div>
+
+                    <div class="example">
+                        <strong>Casos de uso ideales:</strong>
+                        <p>• Order processing workflows</p>
+                        <p>• Document approval systems</p>
+                        <p>• Game character states</p>
+                        <p>• TCP connection states</p>
+                    </div>
+                </div>
+
+                <div class="pattern-card advanced">
+                    <h3>
+                        🎭 Polimorfismo
+                        <span class="performance-indicator performance-fast">⚡ Rápido</span>
+                    </h3>
+                    
+                    <div class="use-when">
+                        <h4>✅ Usa este patrón cuando:</h4>
+                        <ul class="checklist">
+                            <li>Haces múltiples comprobaciones de tipo (is, instanceof)</li>
+                            <li>Tienes una jerarquía natural de objetos</li>
+                            <li>Necesitas extender con nuevos tipos frecuentemente</li>
+                            <li>El comportamiento está intrínsecamente ligado al tipo</li>
+                            <li>Quieres aprovechar el dispatch automático</li>
+                        </ul>
+                    </div>
+
+                    <div class="avoid-when">
+                        <h4>❌ Evita este patrón cuando:</h4>
+                        <ul class="checklist">
+                            <li>No hay una relación "es-un" natural</li>
+                            <li>La jerarquía cambia frecuentemente</li>
+                            <li>Prefieres composición sobre herencia</li>
+                            <li>Los comportamientos no están relacionados con el tipo</li>
+                        </ul>
+                    </div>
+
+                    <div class="example">
+                        <strong>Casos de uso ideales:</strong>
+                        <p>• Shape rendering systems</p>
+                        <p>• Animal behavior simulation</p>
+                        <p>• Media file processing</p>
+                        <p>• Vehicle management systems</p>
+                    </div>
+                </div>
+
+                <div class="pattern-card advanced">
+                    <h3>
+                        👁️ Visitor Pattern
+                        <span class="performance-indicator performance-slow">🐌 Lento</span>
+                    </h3>
+                    
+                    <div class="use-when">
+                        <h4>✅ Usa este patrón cuando:</h4>
+                        <ul class="checklist">
+                            <li>Necesitas muchas operaciones no relacionadas en una jerarquía</li>
+                            <li>Las operaciones cambian más que la estructura de objetos</li>
+                            <li>Quieres evitar contaminar clases con operaciones externas</li>
+                            <li>Necesitas traversal complejo de estructuras</li>
+                            <li>Implementas compiladores o interpreters</li>
+                        </ul>
+                    </div>
+
+                    <div class="avoid-when">
+                        <h4>❌ Evita este patrón cuando:</h4>
+                        <ul class="checklist">
+                            <li>La jerarquía de objetos cambia frecuentemente</li>
+                            <li>Solo tienes pocas operaciones</li>
+                            <li>Las operaciones están estrechamente relacionadas con objetos</li>
+                            <li>El pattern añade complejidad innecesaria</li>
+                        </ul>
+                    </div>
+
+                    <div class="example">
+                        <strong>Casos de uso ideales:</strong>
+                        <p>• AST processing en compiladores</p>
+                        <p>• DOM tree operations</p>
+                        <p>• File system traversal con múltiples operaciones</p>
+                        <p>• Report generation desde object models</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DECISION FLOW -->
         <div class="decision-flow">
-            <div class="pattern-card">
-                <h2>📚 Dictionary Pattern</h2>
-                <div class="use-when">
-                    <h3>Usa este patrón cuando:</h3>
-                    <ul class="checklist">
-                        <li>Necesitas mapear un valor (clave) a una acción o comportamiento</li>
-                        <li>Los comportamientos son sencillos y pueden expresarse como funciones</li>
-                        <li>El conjunto de opciones es conocido y relativamente estable</li>
-                        <li>El comportamiento no requiere mantener un estado complejo</li>
-                        <li>Quieres una solución simple con poco código adicional</li>
-                    </ul>
+            <h2>🎯 Árbol de Decisión Rápida</h2>
+            <div class="decision-tree">
+                <div class="decision-node">
+                    <h3>¿Qué tipo de problema tienes?</h3>
+                    <div class="question">Mapeo simple clave → valor</div>
+                    <div class="decision-options">
+                        <div class="decision-option">✓ Dictionary Pattern</div>
+                    </div>
                 </div>
-                <div class="example">
-                    <strong>Ejemplo de caso de uso:</strong>
-                    <p>Sistemas de menús, calculadoras, mapeo de comandos a acciones</p>
-                </div>
-            </div>
 
-            <div class="pattern-card">
-                <h2>⚡ Strategy Pattern</h2>
-                <div class="use-when">
-                    <h3>Usa este patrón cuando:</h3>
-                    <ul class="checklist">
-                        <li>Tienes diferentes algoritmos para resolver un mismo problema</li>
-                        <li>Los algoritmos son complejos y tienen múltiples líneas de código</li>
-                        <li>Necesitas que los algoritmos sean intercambiables en tiempo de ejecución</li>
-                        <li>Quieres encapsular cada algoritmo en su propia clase</li>
-                        <li>Los algoritmos comparten una interfaz común</li>
-                    </ul>
+                <div class="decision-node">
+                    <h3>¿Necesitas crear objetos?</h3>
+                    <div class="question">Creación condicional compleja</div>
+                    <div class="decision-options">
+                        <div class="decision-option">✓ Factory Pattern</div>
+                    </div>
                 </div>
-                <div class="example">
-                    <strong>Ejemplo de caso de uso:</strong>
-                    <p>Algoritmos de descuento, estrategias de navegación, métodos de pago</p>
-                </div>
-            </div>
 
-            <div class="pattern-card">
-                <h2>🔄 State Pattern</h2>
-                <div class="use-when">
-                    <h3>Usa este patrón cuando:</h3>
-                    <ul class="checklist">
-                        <li>El comportamiento de un objeto cambia según su estado interno</li>
-                        <li>Tienes múltiples condicionales basados en variables de estado</li>
-                        <li>Necesitas gestionar transiciones entre estados de forma clara</li>
-                        <li>El objeto tiene un ciclo de vida definido con diferentes etapas</li>
-                        <li>Cada estado tiene su propio conjunto de comportamientos</li>
-                    </ul>
+                <div class="decision-node">
+                    <h3>¿Tienes algoritmos intercambiables?</h3>
+                    <div class="question">Lógicas complejas variables</div>
+                    <div class="decision-options">
+                        <div class="decision-option">✓ Strategy Pattern</div>
+                    </div>
                 </div>
-                <div class="example">
-                    <strong>Ejemplo de caso de uso:</strong>
-                    <p>Flujos de trabajo, máquinas de estados, procesos con etapas definidas</p>
-                </div>
-            </div>
 
-            <div class="pattern-card">
-                <h2>🎭 Polimorfismo</h2>
-                <div class="use-when">
-                    <h3>Usa este patrón cuando:</h3>
-                    <ul class="checklist">
-                        <li>Haces muchas comprobaciones de tipo (is, instanceof, typeof)</li>
-                        <li>Tienes una jerarquía natural de objetos con comportamientos específicos</li>
-                        <li>Necesitas extender el sistema con nuevos tipos frecuentemente</li>
-                        <li>El comportamiento está intrínsecamente ligado al tipo de objeto</li>
-                        <li>Quieres aprovechar al máximo la orientación a objetos</li>
-                    </ul>
+                <div class="decision-node">
+                    <h3>¿El comportamiento depende del estado?</h3>
+                    <div class="question">Workflows con transiciones</div>
+                    <div class="decision-options">
+                        <div class="decision-option">✓ State Pattern</div>
+                    </div>
                 </div>
-                <div class="example">
-                    <strong>Ejemplo de caso de uso:</strong>
-                    <p>Sistemas de entidades, jerarquías de elementos UI, procesamiento de tipos</p>
-                </div>
-            </div>
 
-            <div class="pattern-card">
-                <h2>🔧 Extension Methods</h2>
-                <div class="use-when">
-                    <h3>Usa este patrón cuando:</h3>
-                    <ul class="checklist">
-                        <li>Necesitas crear una API fluida y encadenable</li>
-                        <li>Quieres extender tipos existentes sin modificarlos</li>
-                        <li>Tienes operaciones de transformación o validación en cadena</li>
-                        <li>Prefieres un enfoque más funcional que orientado a objetos</li>
-                        <li>Quieres centralizar la lógica condicional en métodos reutilizables</li>
-                    </ul>
+                <div class="decision-node">
+                    <h3>¿Haces type checking?</h3>
+                    <div class="question">if (obj is TypeA) ...</div>
+                    <div class="decision-options">
+                        <div class="decision-option">✓ Polimorfismo</div>
+                    </div>
                 </div>
-                <div class="example">
-                    <strong>Ejemplo de caso de uso:</strong>
-                    <p>Validación de datos, transformación de objetos, operaciones en colecciones</p>
+
+                <div class="decision-node">
+                    <h3>¿Necesitas operaciones encapsuladas?</h3>
+                    <div class="question">Undo, Queue, Log</div>
+                    <div class="decision-options">
+                        <div class="decision-option">✓ Command Pattern</div>
+                    </div>
+                </div>
+
+                <div class="decision-node">
+                    <h3>¿Quieres APIs fluidas?</h3>
+                    <div class="question">Chaining y transformaciones</div>
+                    <div class="decision-options">
+                        <div class="decision-option">✓ Extension Methods</div>
+                    </div>
+                </div>
+
+                <div class="decision-node">
+                    <h3>¿Múltiples operaciones en jerarquía?</h3>
+                    <div class="question">Operaciones externas a objetos</div>
+                    <div class="decision-options">
+                        <div class="decision-option">✓ Visitor Pattern</div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="decision-matrix">
-            <h2>🎯 Matriz de Decisión Rápida</h2>
-            <div class="matrix-grid">
-                <div class="matrix-item">
-                    <h3>¿Cómo es la estructura del problema?</h3>
-                    <p><strong>Selección entre opciones</strong> → Dictionary</p>
-                    <p><strong>Variaciones de un algoritmo</strong> → Strategy</p>
-                    <p><strong>Comportamiento basado en estado</strong> → State</p>
-                    <p><strong>Comportamiento basado en tipo</strong> → Polimorfismo</p>
-                    <p><strong>Transformaciones en cadena</strong> → Extension Methods</p>
+        <!-- REAL-WORLD SCENARIOS -->
+        <div class="scenarios">
+            <h2>🏢 Escenarios del Mundo Real</h2>
+            <div class="scenario-grid">
+                <div class="scenario-card">
+                    <h3>💳 E-Commerce</h3>
+                    <p>Sistemas de comercio electrónico con pricing, descuentos, y procesamiento de órdenes</p>
+                    <div class="scenario-patterns">
+                        <span class="pattern-tag">Strategy</span>
+                        <span class="pattern-tag">State</span>
+                        <span class="pattern-tag">Factory</span>
+                    </div>
                 </div>
 
-                <div class="matrix-item">
-                    <h3>¿Cómo es el contexto de extensibilidad?</h3>
-                    <p><strong>Agregar nuevas claves/acciones</strong> → Dictionary</p>
-                    <p><strong>Agregar nuevos algoritmos</strong> → Strategy</p>
-                    <p><strong>Agregar nuevos estados</strong> → State</p>
-                    <p><strong>Agregar nuevos tipos</strong> → Polimorfismo</p>
-                    <p><strong>Agregar nuevas transformaciones</strong> → Extension Methods</p>
+                <div class="scenario-card">
+                    <h3>🎮 Gaming</h3>
+                    <p>Comportamientos de personajes, sistemas de items, y mecánicas de juego</p>
+                    <div class="scenario-patterns">
+                        <span class="pattern-tag">State</span>
+                        <span class="pattern-tag">Command</span>
+                        <span class="pattern-tag">Polimorfismo</span>
+                    </div>
+                </div>
+
+                <div class="scenario-card">
+                    <h3>🏦 Finanzas</h3>
+                    <p>Procesamiento de transacciones, cálculos de riesgo, y auditoría</p>
+                    <div class="scenario-patterns">
+                        <span class="pattern-tag">Strategy</span>
+                        <span class="pattern-tag">Command</span>
+                        <span class="pattern-tag">Factory</span>
+                    </div>
+                </div>
+
+                <div class="scenario-card">
+                    <h3>📄 Documentos</h3>
+                    <p>Processing de diferentes tipos de documentos y formatos</p>
+                    <div class="scenario-patterns">
+                        <span class="pattern-tag">Factory</span>
+                        <span class="pattern-tag">Visitor</span>
+                        <span class="pattern-tag">Polimorfismo</span>
+                    </div>
+                </div>
+
+                <div class="scenario-card">
+                    <h3>🔧 APIs y Validación</h3>
+                    <p>Sistemas de validación compleja y APIs fluidas</p>
+                    <div class="scenario-patterns">
+                        <span class="pattern-tag">Extension Methods</span>
+                        <span class="pattern-tag">Strategy</span>
+                    </div>
+                </div>
+
+                <div class="scenario-card">
+                    <h3>⚙️ Enterprise Workflows</h3>
+                    <p>Procesos de aprobación, workflows de negocio complejos</p>
+                    <div class="scenario-patterns">
+                        <span class="pattern-tag">State</span>
+                        <span class="pattern-tag">Command</span>
+                        <span class="pattern-tag">Strategy</span>
+                    </div>
                 </div>
             </div>
         </div>
 
+        <!-- COMPLEXITY GUIDE -->
         <div class="complexity-guide">
-            <h2>📊 Guía de Complejidad</h2>
+            <h2>📊 Guía de Complejidad por Nivel</h2>
             <div class="complexity-levels">
                 <div class="complexity-level">
-                    <div class="level">MÍNIMA</div>
-                    <div class="pattern">Dictionary</div>
-                    <div class="desc">Solución sencilla</div>
+                    <div class="level level-beginner">PRINCIPIANTE</div>
+                    <div class="patterns">Dictionary Pattern<br>Extension Methods</div>
+                    <div class="desc">Soluciones directas, poca configuración, ideal para comenzar</div>
                 </div>
                 <div class="complexity-level">
-                    <div class="level">BAJA</div>
-                    <div class="pattern">Extension Methods</div>
-                    <div class="desc">Interfaces simples</div>
+                    <div class="level level-intermediate">INTERMEDIO</div>
+                    <div class="patterns">Strategy Pattern<br>Factory Pattern<br>Command Pattern</div>
+                    <div class="desc">Requiere interfaces y clases adicionales, más flexibilidad</div>
                 </div>
                 <div class="complexity-level">
-                    <div class="level">MEDIA</div>
-                    <div class="pattern">Strategy</div>
-                    <div class="desc">Clases con una responsabilidad</div>
-                </div>
-                <div class="complexity-level">
-                    <div class="level">ALTA</div>
-                    <div class="pattern">State/Polimorfismo</div>
-                    <div class="desc">Jerarquía de clases</div>
+                    <div class="level level-advanced">AVANZADO</div>
+                    <div class="patterns">State Pattern<br>Polimorfismo<br>Visitor Pattern</div>
+                    <div class="desc">Jerarquías complejas, requiere diseño cuidadoso</div>
                 </div>
             </div>
         </div>
 
-        <div class="combinations">
-            <h2>🔗 Combinaciones Comunes</h2>
-            <div class="combo-grid">
-                <div class="combo-card">
-                    <h3>Dictionary de Strategies</h3>
-                    <p>Utiliza un diccionario para seleccionar entre diferentes estrategias. Combina la simplicidad del Dictionary con la flexibilidad del Strategy.</p>
-                </div>
-                <div class="combo-card">
-                    <h3>Estado con Polimorfismo</h3>
-                    <p>Utiliza polimorfismo para implementar diferentes estados. Cada estado es una clase que implementa una interfaz común.</p>
-                </div>
-                <div class="combo-card">
-                    <h3>Strategies con Extension Methods</h3>
-                    <p>Implementa estrategias que se pueden encadenar como métodos de extensión para crear APIs fluidas complejas.</p>
-                </div>
-            </div>
-        </div>
-
+        <!-- FINAL ADVICE -->
         <div class="final-advice">
-            <h3>💡 Consejo Final</h3>
-            <p>Recuerda que no siempre es necesario eliminar todos los condicionales. A veces, un simple if-else puede ser más claro y mantenible que un patrón complejo. Usa estos patrones cuando aporten valor real en términos de legibilidad, mantenibilidad o extensibilidad.</p>
+            <h3>💡 Consejo del Experto</h3>
+            <p><strong>La regla de oro:</strong> Empieza simple y evoluciona. No todos los if-else necesitan ser eliminados.</p>
+            <p><strong>Criterios para refactorizar:</strong> Más de 3-4 condiciones, lógica que cambia frecuentemente, o necesidad de testing independiente.</p>
+            <p><strong>Performance vs. Flexibilidad:</strong> Dictionary y Polimorfismo son rápidos; Command y Visitor tienen overhead.</p>
+            <p><strong>Team considerations:</strong> Introduce patrones gradualmente y asegúrate de que el equipo entienda el valor.</p>
         </div>
 
         <div class="navigation">

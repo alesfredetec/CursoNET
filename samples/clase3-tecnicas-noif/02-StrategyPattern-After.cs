@@ -217,7 +217,7 @@ namespace TecnicasNoIf.Ejercicios
 
         public bool IsEligibleForPromotion(string productCategory, int customerAge)
         {
-            if (context.ProductCategory is "BOOKS" or "ELECTRONICS")
+            if (productCategory is "BOOKS" or "ELECTRONICS")
                 return customerAge <= 25; // Student age limit
             
             return customerAge <= 30; // Extended for other categories

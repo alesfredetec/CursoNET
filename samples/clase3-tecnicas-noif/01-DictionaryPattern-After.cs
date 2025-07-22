@@ -220,24 +220,12 @@ namespace TecnicasNoIf.Ejercicios
         string[] AvailableRegions
     )
     {
-        // Validación en constructor
-        public PaymentMethodConfig : this()
-        {
-            if (FeePercentage < 0)
-                throw new ArgumentException("Fee percentage cannot be negative");
-            
-            if (ProcessingTimeMinutes < 0)
-                throw new ArgumentException("Processing time cannot be negative");
-            
-            if (MaxTransactionLimit <= 0)
-                throw new ArgumentException("Transaction limit must be positive");
-            
-            if (string.IsNullOrWhiteSpace(Description))
-                throw new ArgumentException("Description is required");
-            
-            if (AvailableRegions == null || AvailableRegions.Length == 0)
-                throw new ArgumentException("At least one region must be specified");
-        }
+        // Validación usando init-only properties
+        public decimal FeePercentage { get; init; } = FeePercentage >= 0 ? FeePercentage : throw new ArgumentException("Fee percentage cannot be negative");
+        public int ProcessingTimeMinutes { get; init; } = ProcessingTimeMinutes >= 0 ? ProcessingTimeMinutes : throw new ArgumentException("Processing time cannot be negative");
+        public decimal MaxTransactionLimit { get; init; } = MaxTransactionLimit > 0 ? MaxTransactionLimit : throw new ArgumentException("Transaction limit must be positive");
+        public string Description { get; init; } = !string.IsNullOrWhiteSpace(Description) ? Description : throw new ArgumentException("Description is required");
+        public string[] AvailableRegions { get; init; } = AvailableRegions?.Length > 0 ? AvailableRegions : throw new ArgumentException("At least one region must be specified");
     };
 
     /// <summary>

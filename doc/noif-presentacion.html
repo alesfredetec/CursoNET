@@ -401,6 +401,139 @@
                 font-size: 0.8em;
             }
         }
+
+        /* Loader and Modal Styles */
+        .solution-loader {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+        }
+
+        .spinner {
+            border: 4px solid rgba(102, 126, 234, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid #667eea;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .password-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .password-modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            padding: 30px;
+            border: 2px solid #667eea;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            color: #ffffff;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.7) translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal-content h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+            color: #ffffff;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .password-input:focus {
+            outline: none;
+            border-color: #764ba2;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+        }
+
+        .modal-buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .modal-btn-confirm {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .modal-btn-cancel {
+            background: rgba(255,255,255,0.1);
+            color: #a8a8b3;
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
+        .success-message {
+            color: #90ee90;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
+        .protected-solution {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -422,13 +555,79 @@
                     </p>
                 </div>
             </div>
-            <div class="slide-number">1 / 20</div>
+            <div class="slide-number">1 / 24</div>
         </div>
 
-        <!-- Slide 2: ¿Por qué evitar los if? -->
+        <!-- Slide 2: Roadmap del Aprendizaje -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>🗺️ Tu Aprendizaje</h2>
+                <p class="subtitle">De código con IFs complejos a código limpio y extensible</p>
+            </div>
+            <div class="content">
+                <!-- Learning Path -->
+                <div style="display: flex; justify-content: center; align-items: center; gap: 20px; margin-bottom: 30px;">
+                    <div style="text-align: center; background: rgba(255,107,107,0.2); padding: 15px; border-radius: 10px; border: 2px solid #ff6b6b;">
+                        <div style="font-size: 1.5em; margin-bottom: 8px;">😵</div>
+                        <div style="font-weight: bold; color: #ff6b6b;">PROBLEMA</div>
+                        <div style="font-size: 0.8em;">IFs complejos</div>
+                    </div>
+                    <div style="font-size: 1.5em;">→</div>
+                    <div style="text-align: center; background: rgba(255,215,0,0.2); padding: 15px; border-radius: 10px; border: 2px solid #ffd700;">
+                        <div style="font-size: 1.5em; margin-bottom: 8px;">📚</div>
+                        <div style="font-weight: bold; color: #ffd700;">PATTERNS</div>
+                        <div style="font-size: 0.8em;">4+ técnicas</div>
+                    </div>
+                    <div style="font-size: 1.5em;">→</div>
+                    <div style="text-align: center; background: rgba(144,238,144,0.2); padding: 15px; border-radius: 10px; border: 2px solid #90ee90;">
+                        <div style="font-size: 1.5em; margin-bottom: 8px;">🎯</div>
+                        <div style="font-weight: bold; color: #90ee90;">SOLUCIÓN</div>
+                        <div style="font-size: 0.8em;">Código limpio</div>
+                    </div>
+                </div>
+
+                <!-- Patterns Overview -->
+                <div class="card">
+                    <h3>🧰 Las 4 Herramientas que Aprenderás</h3>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 20px;">
+                        <div style="background: rgba(102, 126, 234, 0.1); padding: 15px; border-radius: 10px;">
+                            <div style="font-weight: bold; color: #667eea; margin-bottom: 8px;">📋 Dictionary Pattern</div>
+                            <div style="font-size: 0.9em;">Para mapeos simples clave → valor</div>
+                            <div style="font-size: 0.8em; color: #a8a8b3; margin-top: 5px;">⏱️ 15 mins | 🎯 Fácil</div>
+                        </div>
+                        
+                        <div style="background: rgba(255, 193, 7, 0.1); padding: 15px; border-radius: 10px;">
+                            <div style="font-weight: bold; color: #ffc107; margin-bottom: 8px;">⚡ Strategy Pattern</div>
+                            <div style="font-size: 0.9em;">Para algoritmos complejos intercambiables</div>
+                            <div style="font-size: 0.8em; color: #a8a8b3; margin-top: 5px;">⏱️ 45 mins | 🎯 Intermedio</div>
+                        </div>
+                        
+                        <div style="background: rgba(255, 107, 107, 0.1); padding: 15px; border-radius: 10px;">
+                            <div style="font-weight: bold; color: #ff6b6b; margin-bottom: 8px;">🔄 State Pattern</div>
+                            <div style="font-size: 0.9em;">Para workflows con transiciones</div>
+                            <div style="font-size: 0.8em; color: #a8a8b3; margin-top: 5px;">⏱️ 60 mins | 🎯 Avanzado</div>
+                        </div>
+                        
+                        <div style="background: rgba(135, 206, 235, 0.1); padding: 15px; border-radius: 10px;">
+                            <div style="font-weight: bold; color: #87ceeb; margin-bottom: 8px;">👥 Polimorfismo</div>
+                            <div style="font-size: 0.9em;">Para jerarquías naturales de tipos</div>
+                            <div style="font-size: 0.8em; color: #a8a8b3; margin-top: 5px;">⏱️ 30 mins | 🎯 Básico</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight" style="text-align: center; margin-top: 20px;">
+                    <strong>🎯 Meta de hoy:</strong> Transformar código con 20+ IFs en código con 0 IFs usando estos 4 patrones
+                </div>
+            </div>
+            <div class="slide-number">2 / 24</div>
+        </div>
+
+        <!-- Slide 3: ¿Por qué evitar los if? -->
         <div class="slide">
             <div class="slide-header">
                 <h2>¿Por qué evitar los if?</h2>
+                <p class="subtitle">El código real que enfrentas día a día</p>
             </div>
             <div class="content">
                 <div class="card">
@@ -475,10 +674,10 @@
                     <p><strong>💡 Objetivo:</strong> No eliminar todos los if, sino reemplazar la lógica de negocio compleja con diseños más robustos, flexibles y orientados a objetos.</p>
                 </div>
             </div>
-            <div class="slide-number">2 / 20</div>
+            <div class="slide-number">3 / 24</div>
         </div>
 
-        <!-- Slide 3: Clase 1 - Diccionarios al Rescate -->
+        <!-- Slide 4: Clase 1 - Diccionarios al Rescate -->
         <div class="slide">
             <div class="slide-header">
                 <h2>Clase 1: Adiós al switch</h2>
@@ -517,7 +716,7 @@
                     <p><strong>🚨 Problema:</strong> Si añadimos WhatsAppNotifier, TENEMOS que modificar esta clase. Viola Open/Closed Principle.</p>
                 </div>
             </div>
-            <div class="slide-number">3 / 20</div>
+            <div class="slide-number">4 / 24</div>
         </div>
 
         <!-- Slide 4: Solución con Diccionarios -->
@@ -575,7 +774,7 @@
                     <p><strong>✅ Ventaja:</strong> Para añadir WhatsAppNotifier, simplemente añadimos una entrada al diccionario. ¡Cumple Open/Closed!</p>
                 </div>
             </div>
-            <div class="slide-number">4 / 20</div>
+            <div class="slide-number">5 / 24</div>
         </div>
 
         <!-- Slide 5: Ejemplo Práctico - Calculadora -->
@@ -638,6 +837,122 @@
                     </div>
                 </div>
 
+                <!-- Func and Lambda Explanation -->
+                <div class="card" style="margin: 20px 0; background: rgba(102, 126, 234, 0.1); border-left: 4px solid #667eea;">
+                    <div style="padding: 20px;">
+                        <h3>🧠 ¿Qué significan estos símbolos raros?</h3>
+                        
+                        <!-- Simple Visual Explanation -->
+                        <div style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 10px; margin: 15px 0; text-align: center;">
+                            <div style="font-size: 1.4em; color: #90ee90; margin-bottom: 10px;">
+                                <code>Dictionary&lt;char, Func&lt;int, int, int&gt;&gt;</code>
+                            </div>
+                            <div style="display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap; font-size: 0.9em;">
+                                <div style="background: rgba(255,100,100,0.2); padding: 8px 12px; border-radius: 5px;">
+                                    <strong>char</strong><br><small>Operador: '+', '-', '*'</small>
+                                </div>
+                                <span style="font-size: 1.5em;">→</span>
+                                <div style="background: rgba(100,255,100,0.2); padding: 8px 12px; border-radius: 5px;">
+                                    <strong>Func</strong><br><small>Función que hace algo</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="two-column" style="gap: 30px; font-size: 0.9em;">
+                            <div>
+                                <h4 style="color: #667eea; margin-bottom: 15px;">🔍 Func&lt;int, int, int&gt; Desglosado</h4>
+                                <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; font-family: monospace;">
+                                    <div style="margin-bottom: 8px;"><span style="color: #ff6b6b;">Func</span><span style="color: #4ecdc4;">&lt;</span><span style="color: #ffe66d;">int, int,</span> <span style="color: #95e1d3;">int</span><span style="color: #4ecdc4;">&gt;</span></div>
+                                    <div style="font-size: 0.8em; font-family: sans-serif;">
+                                        <div>📥 <span style="color: #ffe66d;">Parámetro 1:</span> int a</div>
+                                        <div>📥 <span style="color: #ffe66d;">Parámetro 2:</span> int b</div>
+                                        <div>📤 <span style="color: #95e1d3;">Retorna:</span> int resultado</div>
+                                    </div>
+                                </div>
+                                <p style="margin-top: 10px; font-size: 0.85em; color: #a8a8b3;">
+                                    💡 <strong>Analogía:</strong> Como una receta que toma 2 ingredientes (int, int) y produce 1 plato (int)
+                                </p>
+                            </div>
+                            <div>
+                                <h4 style="color: #667eea; margin-bottom: 15px;">⚡ Lambda: (a, b) => a + b</h4>
+                                <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; font-family: monospace;">
+                                    <div style="margin-bottom: 8px;"><span style="color: #ff6b6b;">(a, b)</span> <span style="color: #4ecdc4;">=></span> <span style="color: #95e1d3;">a + b</span></div>
+                                    <div style="font-size: 0.8em; font-family: sans-serif;">
+                                        <div>📝 <span style="color: #ff6b6b;">Parámetros</span></div>
+                                        <div>🔄 <span style="color: #4ecdc4;">"Se convierte en"</span></div>
+                                        <div>🎯 <span style="color: #95e1d3;">Lo que devuelve</span></div>
+                                    </div>
+                                </div>
+                                <p style="margin-top: 10px; font-size: 0.85em; color: #a8a8b3;">
+                                    💡 <strong>Se lee:</strong> "Toma a y b, y devuelve a más b"
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- Three Clear Forms -->
+                        <div style="margin-top: 25px;">
+                            <h4 style="color: #667eea; margin-bottom: 15px;">🔄 Tres maneras de escribir lo mismo:</h4>
+                            
+                            <!-- Form 1: Lambda (Recommended) -->
+                            <div style="margin-bottom: 20px; background: rgba(144,238,144,0.1); padding: 15px; border-radius: 8px; border-left: 4px solid #90ee90;">
+                                <div style="display: flex; align-items: center; margin-bottom: 8px;">
+                                    <span style="background: #90ee90; color: black; padding: 4px 8px; border-radius: 4px; font-size: 0.8em; font-weight: bold;">✅ RECOMENDADO</span>
+                                    <span style="margin-left: 10px; font-weight: bold;">1. Lambda Expression</span>
+                                </div>
+                                <div class="code-block" style="background: rgba(0,0,0,0.3); margin: 0;">
+{ <span class="string">'+'</span>, (a, b) => a + b }
+                                </div>
+                                <p style="font-size: 0.8em; margin: 8px 0 0 0; color: #a8a8b3;">
+                                    📖 <strong>Más simple y directo.</strong> Úsala cuando la lógica cabe en una línea.
+                                </p>
+                            </div>
+
+                            <!-- Form 2: Anonymous Method -->
+                            <div style="margin-bottom: 20px; background: rgba(255,215,0,0.1); padding: 15px; border-radius: 8px; border-left: 4px solid #ffd700;">
+                                <div style="display: flex; align-items: center; margin-bottom: 8px;">
+                                    <span style="background: #ffd700; color: black; padding: 4px 8px; border-radius: 4px; font-size: 0.8em; font-weight: bold;">⚠️ MÉTODO ANÓNIMO</span>
+                                    <span style="margin-left: 10px; font-weight: bold;">2. Estilo Clásico</span>
+                                </div>
+                                <div class="code-block" style="background: rgba(0,0,0,0.3); margin: 0;">
+{ <span class="string">'+'</span>, <span class="keyword">delegate</span>(<span class="type">int</span> a, <span class="type">int</span> b) 
+  { 
+      <span class="keyword">return</span> a + b; 
+  } 
+}
+                                </div>
+                                <p style="font-size: 0.8em; margin: 8px 0 0 0; color: #a8a8b3;">
+                                    📖 <strong>Más verboso.</strong> Úsalo cuando necesites múltiples líneas de código.
+                                </p>
+                            </div>
+
+                            <!-- Form 3: Named Method -->
+                            <div style="margin-bottom: 20px; background: rgba(135,206,235,0.1); padding: 15px; border-radius: 8px; border-left: 4px solid #87ceeb;">
+                                <div style="display: flex; align-items: center; margin-bottom: 8px;">
+                                    <span style="background: #87ceeb; color: black; padding: 4px 8px; border-radius: 4px; font-size: 0.8em; font-weight: bold;">🔧 MÉTODO SEPARADO</span>
+                                    <span style="margin-left: 10px; font-weight: bold;">3. Función Reutilizable</span>
+                                </div>
+                                <div class="code-block" style="background: rgba(0,0,0,0.3); margin: 0;">
+<span class="comment">// Definir método separado</span>
+<span class="keyword">private static int</span> <span class="method">Sumar</span>(<span class="type">int</span> a, <span class="type">int</span> b)
+{
+    <span class="keyword">return</span> a + b;
+}
+
+<span class="comment">// Usar en el diccionario</span>
+{ <span class="string">'+'</span>, Sumar }
+                                </div>
+                                <p style="font-size: 0.8em; margin: 8px 0 0 0; color: #a8a8b3;">
+                                    📖 <strong>Para lógica compleja o reutilizable.</strong> Mejor testing y debugging.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="highlight" style="text-align: center; margin-top: 20px;">
+                            <strong>💡 Regla de oro:</strong> Lambda para lógica simple, métodos separados para lógica compleja
+                        </div>
+                    </div>
+                </div>
+
                 <div class="grid" style="margin-top: 20px;">
                     <div class="card">
                         <h3>✅ Beneficios</h3>
@@ -659,10 +974,74 @@
                     </div>
                 </div>
             </div>
-            <div class="slide-number">5 / 20</div>
+            <div class="slide-number">6 / 24</div>
         </div>
 
-        <!-- Slide 6: Clase 2 - Strategy Pattern -->
+        <!-- Slide 7: Transición a Strategy Pattern -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>🔄 Checkpoint: Dictionary vs Strategy</h2>
+                <p class="subtitle">¿Cuándo Dictionary no es suficiente?</p>
+            </div>
+            <div class="content">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                    <div class="card" style="background: rgba(144,238,144,0.1);">
+                        <h3 style="color: #90ee90;">✅ Dictionary Pattern Funciona</h3>
+                        <div style="margin-top: 15px; font-size: 0.9em;">
+                            <div style="margin-bottom: 10px;">🎯 <strong>Mapeo simple:</strong></div>
+                            <ul style="margin-left: 20px; font-size: 0.85em;">
+                                <li>Clave → Valor/Función</li>
+                                <li>Sin lógica compleja</li>
+                                <li>Resultado directo</li>
+                            </ul>
+                            
+                            <div style="margin: 15px 0 10px;">💡 <strong>Ejemplos:</strong></div>
+                            <div style="font-size: 0.8em; color: #a8a8b3;">
+                                • "email" → EmailNotifier<br>
+                                • "+" → (a,b) => a + b<br>
+                                • "PDF" → PdfExporter
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card" style="background: rgba(255,193,7,0.1);">
+                        <h3 style="color: #ffc107;">⚡ Necesitas Strategy Pattern</h3>
+                        <div style="margin-top: 15px; font-size: 0.9em;">
+                            <div style="margin-bottom: 10px;">🚨 <strong>Algoritmos complejos:</strong></div>
+                            <ul style="margin-left: 20px; font-size: 0.85em;">
+                                <li>Múltiples variables de entrada</li>
+                                <li>Lógica condicional dentro del algoritmo</li>
+                                <li>Estado/configuración propia</li>
+                            </ul>
+                            
+                            <div style="margin: 15px 0 10px;">💡 <strong>Ejemplos:</strong></div>
+                            <div style="font-size: 0.8em; color: #a8a8b3;">
+                                • Cálculo de precios con descuentos<br>
+                                • Algoritmos de validación complejos<br>
+                                • Procesamiento con múltiples reglas
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight" style="text-align: center; margin-top: 25px;">
+                    <div style="font-size: 1.1em; font-weight: bold; margin-bottom: 10px;">🤔 Pregunta Clave para Decidir:</div>
+                    <div style="font-size: 1.2em; color: #ffc107;">
+                        "¿La lógica es un mapeo directo o requiere cálculos/validaciones complejas?"
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: center; margin-top: 25px;">
+                    <div style="background: rgba(102,126,234,0.2); padding: 15px; border-radius: 10px; text-align: center;">
+                        <div style="font-weight: bold; color: #667eea; margin-bottom: 5px;">🎯 Próximo Paso:</div>
+                        <div style="font-size: 0.9em;">Aprenderás Strategy Pattern para casos complejos</div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">7 / 24</div>
+        </div>
+
+        <!-- Slide 8: Clase 2 - Strategy Pattern -->
         <div class="slide">
             <div class="slide-header">
                 <h2>Clase 2: El Patrón Strategy</h2>
@@ -707,10 +1086,10 @@
                     <p><strong>🚨 Problema:</strong> Este método crece con cada nueva compañía y se vuelve más frágil. Viola SRP y OCP.</p>
                 </div>
             </div>
-            <div class="slide-number">6 / 20</div>
+            <div class="slide-number">11 / 24</div>
         </div>
 
-        <!-- Slide 7: Strategy Pattern - Solución -->
+        <!-- Slide 9: Strategy Pattern - Solución -->
         <div class="slide">
             <div class="slide-header">
                 <h2>Solución Paso a Paso: Strategy Pattern</h2>
@@ -776,10 +1155,10 @@
                     <p><strong>✅ Ventaja:</strong> Para añadir "Estafeta", creamos EstafetaShippingStrategy. ShippingCalculator no cambia.</p>
                 </div>
             </div>
-            <div class="slide-number">7 / 20</div>
+            <div class="slide-number">11 / 24</div>
         </div>
 
-        <!-- Slide 8: Strategy Pattern - Ejercicio -->
+        <!-- Slide 9: Strategy Pattern - Ejercicio -->
         <div class="slide">
             <div class="slide-header">
                 <h2>Ejercicio: Sistema de Exportación</h2>
@@ -872,7 +1251,7 @@
                     </div>
                 </div>
             </div>
-            <div class="slide-number">8 / 20</div>
+            <div class="slide-number">11 / 24</div>
         </div>
 
         <!-- Slide 9: Clase 3 - State Pattern -->
@@ -919,7 +1298,7 @@
                     <p><strong>🚨 Problema:</strong> Lógica de transición dispersa y compleja. Añadir "En Revisión" requiere modificar todos los métodos.</p>
                 </div>
             </div>
-            <div class="slide-number">9 / 20</div>
+            <div class="slide-number">11 / 24</div>
         </div>
 
         <!-- Slide 10: State Pattern - Solución -->
@@ -1019,7 +1398,7 @@ doc.<span class="method">Archive</span>(); <span class="comment">// Draft → Ar
                     <p><strong>✅ Ventaja:</strong> Toda la lógica de un estado está en una clase. Para añadir "En Revisión", creamos ReviewState sin tocar Document.</p>
                 </div>
             </div>
-            <div class="slide-number">10 / 20</div>
+            <div class="slide-number">11 / 24</div>
         </div>
 
         <!-- Slide 11: State Pattern - Ticket Support -->
@@ -1132,7 +1511,7 @@ doc.<span class="method">Archive</span>(); <span class="comment">// Draft → Ar
                     </div>
                 </div>
             </div>
-            <div class="slide-number">11 / 20</div>
+            <div class="slide-number">11 / 24</div>
         </div>
 
         <!-- Slide 12: Clase 4 - Polimorfismo -->
@@ -1181,7 +1560,7 @@ doc.<span class="method">Archive</span>(); <span class="comment">// Draft → Ar
                     <p><strong>🚨 Problema:</strong> Viola OCP. Cada nueva forma requiere modificar el calculador. Type checking es anti-OOP.</p>
                 </div>
             </div>
-            <div class="slide-number">12 / 20</div>
+            <div class="slide-number">12 / 24</div>
         </div>
 
         <!-- Slide 13: Polimorfismo - Solución -->
@@ -1270,7 +1649,7 @@ doc.<span class="method">Archive</span>(); <span class="comment">// Draft → Ar
                     <p><strong>✅ Ventaja:</strong> Agregar Pentagon requiere solo crear la clase. AreaCalculator no cambia. Polimorfismo = OCP automático.</p>
                 </div>
             </div>
-            <div class="slide-number">13 / 20</div>
+            <div class="slide-number">13 / 24</div>
         </div>
 
         <!-- Slide 14: Polimorfismo - Ejercicio Empleados -->
@@ -1328,7 +1707,7 @@ doc.<span class="method">Archive</span>(); <span class="comment">// Draft → Ar
     <span class="keyword">public decimal</span> Salary { <span class="keyword">get</span>; <span class="keyword">set</span>; }
 
     <span class="keyword">public override decimal</span> <span class="method">CalculateBonus</span>()
-        => Salary * 0.20m; <span class="comment">// 20% del salario</span>
+        => Salary * 0.20m; <span class="comment">// 24% del salario</span>
 }
 
 <span class="keyword">public class</span> <span class="type">Developer</span> : <span class="type">Employee</span>
@@ -1379,7 +1758,7 @@ doc.<span class="method">Archive</span>(); <span class="comment">// Draft → Ar
                     </div>
                 </div>
             </div>
-            <div class="slide-number">14 / 20</div>
+            <div class="slide-number">14 / 24</div>
         </div>
 
         <!-- Slide 15: Comparación de Patrones -->
@@ -1463,7 +1842,7 @@ doc.<span class="method">Archive</span>(); <span class="comment">// Draft → Ar
                     </div>
                 </div>
             </div>
-            <div class="slide-number">15 / 20</div>
+            <div class="slide-number">15 / 24</div>
         </div>
 
         <!-- Slide 16: Casos de Uso en Fintech -->
@@ -1580,7 +1959,7 @@ doc.<span class="method">Archive</span>(); <span class="comment">// Draft → Ar
                     </div>
                 </div>
             </div>
-            <div class="slide-number">16 / 20</div>
+            <div class="slide-number">16 / 24</div>
         </div>
 
         <!-- Slide 17: Métricas y Testing -->
@@ -1673,10 +2052,420 @@ doc.<span class="method">Archive</span>(); <span class="comment">// Draft → Ar
                     <p><strong>💡 Beneficio Clave:</strong> Cada patrón hace el código más testeable. Strategy permite mockear algoritmos, State permite testear transiciones, Polimorfismo permite testear cada tipo independientemente.</p>
                 </div>
             </div>
-            <div class="slide-number">17 / 20</div>
+            <div class="slide-number">17 / 24</div>
         </div>
 
-        <!-- Slide 18: Ejercicios Prácticos -->
+        <!-- Slide 18: Cuándo Usar Cada Patrón -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>🎯 Cuándo Usar Cada Patrón</h2>
+                <p class="subtitle">Checklist simple para estudiantes</p>
+            </div>
+            <div class="content">
+                
+                <!-- Quick Decision Checklist -->
+                <div class="card" style="background: linear-gradient(135deg, rgba(0,123,255,0.1) 0%, rgba(40,167,69,0.1) 100%); margin-bottom: 25px;">
+                    <h3 style="text-align: center; margin-bottom: 20px;">🚦 DECISIÓN RÁPIDA - Responde estas preguntas:</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px;">
+                        <div>
+                            <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                                <div style="font-weight: bold; color: #90ee90; margin-bottom: 8px;">❓ ¿Es solo un mapeo?</div>
+                                <div style="font-size: 0.9em;">¿Solo necesitas convertir A → B?</div>
+                                <div style="color: #90ee90; font-weight: bold; margin-top: 5px;">✅ SÍ → Dictionary Pattern</div>
+                            </div>
+                            
+                            <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">
+                                <div style="font-weight: bold; color: #ffd700; margin-bottom: 8px;">❓ ¿Son diferentes algoritmos?</div>
+                                <div style="font-size: 0.9em;">¿La lógica cambia completamente?</div>
+                                <div style="color: #ffd700; font-weight: bold; margin-top: 5px;">✅ SÍ → Strategy Pattern</div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                                <div style="font-weight: bold; color: #ff6b6b; margin-bottom: 8px;">❓ ¿Hay estados y transiciones?</div>
+                                <div style="font-size: 0.9em;">¿El comportamiento depende del estado?</div>
+                                <div style="color: #ff6b6b; font-weight: bold; margin-top: 5px;">✅ SÍ → State Pattern</div>
+                            </div>
+                            
+                            <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">
+                                <div style="font-weight: bold; color: #87ceeb; margin-bottom: 8px;">❓ ¿Son tipos relacionados?</div>
+                                <div style="font-size: 0.9em;">¿Herencia natural entre clases?</div>
+                                <div style="color: #87ceeb; font-weight: bold; margin-top: 5px;">✅ SÍ → Polimorfismo</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Scenarios -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="card">
+                        <h3>🟢 USAR CUANDO...</h3>
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <div style="border-left: 4px solid #90ee90; padding-left: 12px;">
+                                <div style="font-weight: bold; color: #90ee90;">Dictionary Pattern</div>
+                                <div style="font-size: 0.85em;">
+                                    • Calculadora (operador → función)<br>
+                                    • Menú de opciones<br>
+                                    • Configuraciones simples<br>
+                                    • Factory básico
+                                </div>
+                            </div>
+                            
+                            <div style="border-left: 4px solid #ffd700; padding-left: 12px;">
+                                <div style="font-weight: bold; color: #ffd700;">Strategy Pattern</div>
+                                <div style="font-size: 0.85em;">
+                                    • Sistema de precios complejos<br>
+                                    • Algoritmos de ordenamiento<br>
+                                    • Validadores con lógica<br>
+                                    • Métodos de pago
+                                </div>
+                            </div>
+                            
+                            <div style="border-left: 4px solid #ff6b6b; padding-left: 12px;">
+                                <div style="font-weight: bold; color: #ff6b6b;">State Pattern</div>
+                                <div style="font-size: 0.85em;">
+                                    • Workflow de documentos<br>
+                                    • Estados de pedido<br>
+                                    • Máquinas de estado<br>
+                                    • Juegos con niveles
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>🔴 NO USAR CUANDO...</h3>
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <div style="border-left: 4px solid #ff6b6b; padding-left: 12px;">
+                                <div style="font-weight: bold; color: #ff6b6b;">Dictionary Pattern</div>
+                                <div style="font-size: 0.85em;">
+                                    • Necesitas validaciones complejas<br>
+                                    • La lógica tiene muchas condiciones<br>
+                                    • Requires estado interno<br>
+                                    • Lógica de negocio compleja
+                                </div>
+                            </div>
+                            
+                            <div style="border-left: 4px solid #ff6b6b; padding-left: 12px;">
+                                <div style="font-weight: bold; color: #ff6b6b;">Strategy Pattern</div>
+                                <div style="font-size: 0.85em;">
+                                    • Solo 2-3 opciones simples<br>
+                                    • Los algoritmos nunca cambian<br>
+                                    • Performance super crítica<br>
+                                    • Mapeo directo sin lógica
+                                </div>
+                            </div>
+                            
+                            <div style="border-left: 4px solid #ff6b6b; padding-left: 12px;">
+                                <div style="font-weight: bold; color: #ff6b6b;">State Pattern</div>
+                                <div style="font-size: 0.85em;">
+                                    • No hay transiciones de estado<br>
+                                    • Comportamiento no cambia<br>
+                                    • Solo validaciones simples<br>
+                                    • Estados independientes
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 20px;">
+                    <h3>🚀 Nivel Avanzado</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+                        <div style="border-left: 4px solid #ff6b6b; padding-left: 15px;">
+                            <h4>🔄 State Pattern</h4>
+                            <p style="font-size: 0.85em; margin: 5px 0;">Workflows con transiciones</p>
+                            <div class="highlight" style="font-size: 0.8em; padding: 8px;">
+                                ✅ Order processing, FSM<br>
+                                ❌ Flags booleanos simples
+                            </div>
+                        </div>
+                        <div style="border-left: 4px solid #ff6b6b; padding-left: 15px;">
+                            <h4>🎭 Polimorfismo</h4>
+                            <p style="font-size: 0.85em; margin: 5px 0;">Elimina type checking</p>
+                            <div class="highlight" style="font-size: 0.8em; padding: 8px;">
+                                ✅ Jerarquías naturales<br>
+                                ❌ No hay relación "es-un"
+                            </div>
+                        </div>
+                        <div style="border-left: 4px solid #ff6b6b; padding-left: 15px;">
+                            <h4>👁️ Visitor Pattern</h4>
+                            <p style="font-size: 0.85em; margin: 5px 0;">Múltiples operaciones en jerarquía</p>
+                            <div class="highlight" style="font-size: 0.8em; padding: 8px;">
+                                ✅ Compiladores, AST<br>
+                                ❌ Jerarquía cambia mucho
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">18 / 24</div>
+        </div>
+
+        <!-- Slide 19: Guía de Decisión Práctica -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>🧭 Guía de Decisión Práctica</h2>
+                <p class="subtitle">Diagrama de flujo simple para decidir</p>
+            </div>
+            <div class="content">
+                
+                <!-- Flow Chart Style Decision Tree -->
+                <div style="display: flex; flex-direction: column; gap: 20px; align-items: center;">
+                    
+                    <!-- Start -->
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px 30px; border-radius: 25px; text-align: center; font-weight: bold; font-size: 1.1em;">
+                        🚀 EMPEZAR AQUÍ
+                    </div>
+                    
+                    <!-- First Question -->
+                    <div style="background: rgba(255,193,7,0.2); border: 3px solid #ffd700; padding: 20px; border-radius: 15px; text-align: center; max-width: 600px;">
+                        <div style="font-weight: bold; font-size: 1.1em; margin-bottom: 10px;">❓ ¿Qué necesitas hacer?</div>
+                        <div style="font-size: 0.95em; color: #666;">Piensa en tu problema específico...</div>
+                    </div>
+                    
+                    <!-- Decision Branches -->
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; width: 100%;">
+                        
+                        <!-- Branch 1: Simple Mapping -->
+                        <div style="text-align: center;">
+                            <div style="background: rgba(144,238,144,0.2); border: 2px solid #90ee90; padding: 20px; border-radius: 15px; margin-bottom: 15px;">
+                                <div style="font-size: 1.1em; font-weight: bold; color: #2d8659; margin-bottom: 10px;">📋 MAPEO SIMPLE</div>
+                                <div style="font-size: 0.9em; margin-bottom: 15px;">
+                                    "Necesito convertir algo directo:"<br>
+                                    • Operador → Función<br>
+                                    • Código → Descripción<br>
+                                    • Tipo → Acción
+                                </div>
+                                <div style="background: #90ee90; color: white; padding: 10px; border-radius: 8px; font-weight: bold;">
+                                    ✅ Dictionary Pattern
+                                </div>
+                                <div style="font-size: 0.8em; margin-top: 8px; color: #666;">
+                                    ⏱️ 15 mins | 🧠 Fácil
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Branch 2: Complex Logic -->
+                        <div style="text-align: center;">
+                            <div style="background: rgba(255,215,0,0.2); border: 2px solid #ffd700; padding: 20px; border-radius: 15px; margin-bottom: 15px;">
+                                <div style="font-size: 1.1em; font-weight: bold; color: #b8860b; margin-bottom: 10px;">⚡ LÓGICA COMPLEJA</div>
+                                <div style="font-size: 0.9em; margin-bottom: 15px;">
+                                    "La lógica es diferente:"<br>
+                                    • Algoritmos variables<br>
+                                    • Cálculos complejos<br>
+                                    • Reglas de negocio
+                                </div>
+                                <div style="background: #ffd700; color: #333; padding: 10px; border-radius: 8px; font-weight: bold;">
+                                    ✅ Strategy Pattern
+                                </div>
+                                <div style="font-size: 0.8em; margin-top: 8px; color: #666;">
+                                    ⏱️ 45 mins | 🧠 Intermedio
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    <!-- Second Row -->
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; width: 100%;">
+                        
+                        <!-- Branch 3: State Transitions -->
+                        <div style="text-align: center;">
+                            <div style="background: rgba(255,107,107,0.2); border: 2px solid #ff6b6b; padding: 20px; border-radius: 15px; margin-bottom: 15px;">
+                                <div style="font-size: 1.1em; font-weight: bold; color: #c92a2a; margin-bottom: 10px;">🔄 ESTADOS & FLUJOS</div>
+                                <div style="font-size: 0.9em; margin-bottom: 15px;">
+                                    "Hay cambios de estado:"<br>
+                                    • Workflow de docs<br>
+                                    • Estados de pedido<br>
+                                    • Máquina de estado
+                                </div>
+                                <div style="background: #ff6b6b; color: white; padding: 10px; border-radius: 8px; font-weight: bold;">
+                                    ✅ State Pattern
+                                </div>
+                                <div style="font-size: 0.8em; margin-top: 8px; color: #666;">
+                                    ⏱️ 60 mins | 🧠 Avanzado
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Branch 4: Related Types -->
+                        <div style="text-align: center;">
+                            <div style="background: rgba(135,206,235,0.2); border: 2px solid #87ceeb; padding: 20px; border-radius: 15px; margin-bottom: 15px;">
+                                <div style="font-size: 1.1em; font-weight: bold; color: #4682b4; margin-bottom: 10px;">👥 TIPOS RELACIONADOS</div>
+                                <div style="font-size: 0.9em; margin-bottom: 15px;">
+                                    "Herencia natural:"<br>
+                                    • Formas geométricas<br>
+                                    • Tipos de empleados<br>
+                                    • Animales del zoo
+                                </div>
+                                <div style="background: #87ceeb; color: white; padding: 10px; border-radius: 8px; font-weight: bold;">
+                                    ✅ Polimorfismo
+                                </div>
+                                <div style="font-size: 0.8em; margin-top: 8px; color: #666;">
+                                    ⏱️ 30 mins | 🧠 Básico
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+
+                <!-- Quick Reference Card -->
+                <div class="card" style="background: rgba(0,0,0,0.3); border: 2px solid rgba(255,255,255,0.3); margin-top: 25px;">
+                    <h3 style="text-align: center; margin-bottom: 20px;">🎯 REGLAS DE ORO PARA ESTUDIANTES</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px;">
+                        <div>
+                            <div style="background: rgba(144,238,144,0.3); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                                <div style="font-weight: bold; color: #90ee90; margin-bottom: 8px;">🟢 EMPEZAR CON:</div>
+                                <div style="font-size: 0.9em;">
+                                    1. Dictionary si es mapeo directo<br>
+                                    2. Polimorfismo si hay herencia<br>
+                                    3. Strategy si la lógica es diferente<br>
+                                    4. State si hay transiciones
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div style="background: rgba(255,107,107,0.3); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                                <div style="font-weight: bold; color: #ff6b6b; margin-bottom: 8px;">🔴 EVITAR:</div>
+                                <div style="font-size: 0.9em;">
+                                    • Strategy para 2-3 casos simples<br>
+                                    • State sin transiciones reales<br>
+                                    • Dictionary para lógica compleja<br>
+                                    • Polimorfismo forzado
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 20px; font-style: italic; color: #a8a8b3;">
+                        💡 <strong>Tip:</strong> Si tienes dudas, pregúntate: "¿Es simple o complejo?" y "¿Cambia el comportamiento o solo el valor?"
+                    </div>
+                </div>
+
+                <!-- AI Assistant Section -->
+                <div class="card" style="background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%); border: 2px solid rgba(102,126,234,0.3); margin-top: 25px;">
+                    <h3 style="text-align: center; margin-bottom: 20px;">🤖 Cómo Usar IA como Herramienta de Aprendizaje</h3>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px;">
+                        <div>
+                            <h4 style="color: #90ee90; margin-bottom: 15px;">✅ PROMPTS EFECTIVOS</h4>
+                            <div style="background: rgba(144,238,144,0.2); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                                <div style="font-weight: bold; margin-bottom: 8px;">🎯 Para Análisis de Patrones:</div>
+                                <div style="font-size: 0.85em; font-family: monospace; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 5px;">
+                                    "Tengo este código con muchos IF statements para calcular precios. ¿Qué preguntas debo hacerme para elegir entre Dictionary Pattern, Strategy Pattern o Factory? No me des la solución, guíame con preguntas."
+                                </div>
+                            </div>
+
+                            <div style="background: rgba(144,238,144,0.2); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                                <div style="font-weight: bold; margin-bottom: 8px;">🔍 Para Validación de Decisiones:</div>
+                                <div style="font-size: 0.85em; font-family: monospace; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 5px;">
+                                    "Creo que mi problema necesita Strategy Pattern porque [explica tu razonamiento]. ¿Estoy en lo correcto? ¿Qué pros y contras debería considerar?"
+                                </div>
+                            </div>
+
+                            <div style="background: rgba(144,238,144,0.2); padding: 15px; border-radius: 10px;">
+                                <div style="font-weight: bold; margin-bottom: 8px;">📚 Para Aprendizaje Paso a Paso:</div>
+                                <div style="font-size: 0.85em; font-family: monospace; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 5px;">
+                                    "Quiero refactorizar este código usando [patrón elegido]. Explícame paso a paso QUÉ hacer primero, no me escribas el código. Quiero entender el proceso."
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 style="color: #ff6b6b; margin-bottom: 15px;">❌ EVITAR ESTOS PROMPTS</h4>
+                            <div style="background: rgba(255,107,107,0.2); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                                <div style="font-weight: bold; margin-bottom: 8px;">🚫 Demasiado Directo:</div>
+                                <div style="font-size: 0.85em; font-family: monospace; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 5px;">
+                                    "Refactoriza este código usando patrones NoIF"
+                                </div>
+                                <div style="font-size: 0.8em; color: #ff6b6b; margin-top: 5px;">
+                                    ❌ No aprendes el proceso de decisión
+                                </div>
+                            </div>
+
+                            <div style="background: rgba(255,107,107,0.2); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                                <div style="font-weight: bold; margin-bottom: 8px;">🚫 Sin Contexto:</div>
+                                <div style="font-size: 0.85em; font-family: monospace; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 5px;">
+                                    "¿Qué patrón usar?"
+                                </div>
+                                <div style="font-size: 0.8em; color: #ff6b6b; margin-top: 5px;">
+                                    ❌ Respuesta genérica sin valor
+                                </div>
+                            </div>
+
+                            <div style="background: rgba(255,107,107,0.2); padding: 15px; border-radius: 10px;">
+                                <div style="font-weight: bold; margin-bottom: 8px;">🚫 Sin Esfuerzo:</div>
+                                <div style="font-size: 0.85em; font-family: monospace; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 5px;">
+                                    "Hazme los ejercicios de la clase"
+                                </div>
+                                <div style="font-size: 0.8em; color: #ff6b6b; margin-top: 5px;">
+                                    ❌ Pierdes la oportunidad de aprender
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Workflow con IA -->
+                    <div style="margin-top: 25px;">
+                        <h4 style="text-align: center; margin-bottom: 15px;">🔄 Workflow Recomendado: Aprende Con IA</h4>
+                        <div style="display: flex; justify-content: center; gap: 30px; align-items: center;">
+                            <div style="text-align: center; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; flex: 1;">
+                                <div style="font-size: 1.2em; margin-bottom: 8px;">1️⃣</div>
+                                <div style="font-weight: bold; margin-bottom: 5px;">ANALIZA TÚ PRIMERO</div>
+                                <div style="font-size: 0.8em;">Identifica el problema y haz tu mejor intento de clasificarlo</div>
+                            </div>
+                            <div style="font-size: 1.5em;">→</div>
+                            <div style="text-align: center; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; flex: 1;">
+                                <div style="font-size: 1.2em; margin-bottom: 8px;">2️⃣</div>
+                                <div style="font-weight: bold; margin-bottom: 5px;">PIDE GUÍA, NO SOLUCIÓN</div>
+                                <div style="font-size: 0.8em;">Usa la IA como mentor que te hace preguntas</div>
+                            </div>
+                            <div style="font-size: 1.5em;">→</div>
+                            <div style="text-align: center; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; flex: 1;">
+                                <div style="font-size: 1.2em; margin-bottom: 8px;">3️⃣</div>
+                                <div style="font-weight: bold; margin-bottom: 5px;">VALIDA TU DECISIÓN</div>
+                                <div style="font-size: 0.8em;">Confirma si tu razonamiento es correcto</div>
+                            </div>
+                            <div style="font-size: 1.5em;">→</div>
+                            <div style="text-align: center; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; flex: 1;">
+                                <div style="font-size: 1.2em; margin-bottom: 8px;">4️⃣</div>
+                                <div style="font-weight: bold; margin-bottom: 5px;">IMPLEMENTA TÚ</div>
+                                <div style="font-size: 0.8em;">Escribe el código y pide review después</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ejemplos Prácticos -->
+                    <div style="margin-top: 25px;">
+                        <h4 style="text-align: center; margin-bottom: 15px;">💬 Ejemplos de Conversación Efectiva</h4>
+                        <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; font-size: 0.8em;">
+                            <div style="color: #87ceeb; font-weight: bold;">👨‍💻 Estudiante:</div>
+                            <div style="margin: 5px 0; font-family: monospace;">"Tengo un sistema que calcula comisiones bancarias. Hay 5 tipos de cuenta con reglas diferentes. ¿Debería usar Dictionary o Strategy? Mi análisis: creo que Strategy porque las reglas son complejas, pero no estoy seguro."</div>
+                            
+                            <div style="color: #90ee90; font-weight: bold; margin-top: 15px;">🤖 IA:</div>
+                            <div style="margin: 5px 0; font-style: italic;">"Buen análisis inicial. Para ayudarte a decidir: ¿Las reglas son simples mapeos (ej: TipoCuenta → Porcentaje) o hay lógica compleja (ej: cálculos con múltiples variables, validaciones, condiciones)? ¿Crees que podrían cambiar frecuentemente?"</div>
+                            
+                            <div style="color: #87ceeb; font-weight: bold; margin-top: 15px;">👨‍💻 Estudiante:</div>
+                            <div style="margin: 5px 0; font-family: monospace;">"Las reglas incluyen validaciones de saldo mínimo, cálculos con rango de montos, y bonificaciones por antigüedad. Sí, el banco cambia las reglas cada 6 meses."</div>
+                            
+                            <div style="color: #90ee90; font-weight: bold; margin-top: 15px;">🤖 IA:</div>
+                            <div style="margin: 5px 0; font-style: italic;">"Perfecto! Identificaste: lógica compleja + cambios frecuentes = Strategy Pattern. ¿Puedes diseñar la interface ICommissionStrategy? ¿Qué método(s) tendría?"</div>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 20px; background: rgba(255,193,7,0.2); padding: 10px; border-radius: 8px;">
+                        <strong>🎯 Recuerda:</strong> La IA es tu <em>sparring partner</em>, no tu reemplazo. Úsala para validar tu razonamiento, no para evitar pensar.
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">19 / 24</div>
+        </div>
+
+        <!-- Slide 20: Ejercicios Prácticos -->
         <div class="slide">
             <div class="slide-header">
                 <h2>Ejercicios Prácticos</h2>
@@ -1752,23 +2541,235 @@ doc.<span class="method">Archive</span>(); <span class="comment">// Draft → Ar
                     <p style="margin-top: 10px; font-size: 0.9em; color: #a8a8b3;"><em>Tiempo: 30 minutos | Presentación: 10 minutos por equipo</em></p>
                 </div>
 
+                <!-- Soluciones -->
                 <div class="card">
                     <h3>💡 Soluciones Ejercicio 1</h3>
-                    <details style="margin-top: 10px;">
-                        <summary style="cursor: pointer; color: #667eea;">Ver Respuestas</summary>
-                        <div style="margin-top: 10px; font-size: 0.9em;">
-                            <p><strong>A) Notificaciones:</strong> <span class="smell-indicator good">Dictionary</span> - Mapeo simple canal → implementación</p>
-                            <p><strong>B) Estados de Pedido:</strong> <span class="smell-indicator good">State</span> - Comportamiento cambia por estado con transiciones</p>
-                            <p><strong>C) Impuestos por País:</strong> <span class="smell-indicator good">Strategy</span> - Algoritmos complejos intercambiables</p>
-                            <p><strong>D) Métricas de Reportes:</strong> <span class="smell-indicator good">Polimorfismo</span> - Jerarquía natural de tipos de reporte</p>
+                    <div style="margin-top: 15px;">
+                        <button onclick="requestSolution('solution1')" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: all 0.3s ease;">
+                            🔓 Ver Respuestas (Requiere Clave)
+                        </button>
+                        
+                        <!-- Loader -->
+                        <div id="loader1" class="solution-loader">
+                            <div class="spinner"></div>
+                            <p>Verificando acceso...</p>
                         </div>
-                    </details>
+                        
+                        <!-- Protected Solution -->
+                        <div id="solution1" class="protected-solution" style="margin-top: 15px; font-size: 0.9em;">
+                            <div style="padding: 15px; background: rgba(144,238,144,0.1); border-radius: 10px; border-left: 4px solid #90ee90;">
+                                <h4 style="color: #90ee90; margin-bottom: 10px;">✅ Respuestas Correctas:</h4>
+                                <p><strong>A) Notificaciones:</strong> <span class="smell-indicator good">Dictionary</span> - Mapeo simple canal → implementación</p>
+                                <p><strong>B) Estados de Pedido:</strong> <span class="smell-indicator good">State</span> - Comportamiento cambia por estado con transiciones</p>
+                                <p><strong>C) Impuestos por País:</strong> <span class="smell-indicator good">Strategy</span> - Algoritmos complejos intercambiables</p>
+                                <p><strong>D) Métricas de Reportes:</strong> <span class="smell-indicator good">Polimorfismo</span> - Jerarquía natural de tipos de reporte</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>💡 Solución Ejercicio 2: Refactoring</h3>
+                    <div style="margin-top: 15px;">
+                        <button onclick="requestSolution('solution2')" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: all 0.3s ease;">
+                            🔓 Ver Solución Completa (Requiere Clave)
+                        </button>
+                        
+                        <!-- Loader -->
+                        <div id="loader2" class="solution-loader">
+                            <div class="spinner"></div>
+                            <p>Cargando solución detallada...</p>
+                        </div>
+                        
+                        <!-- Protected Solution -->
+                        <div id="solution2" class="protected-solution" style="margin-top: 15px;">
+                            <h4>Paso 1: Interface y Strategies</h4>
+                            <div class="code-block good" style="font-size: 0.75em; margin-top: 10px;">
+<span class="keyword">public interface</span> <span class="type">IDiscountStrategy</span>
+{
+    <span class="keyword">decimal</span> <span class="method">CalculateDiscount</span>(<span class="type">Customer</span> customer, <span class="type">Order</span> order);
+    <span class="keyword">string</span> CustomerType { <span class="keyword">get</span>; }
+}
+
+<span class="keyword">public class</span> <span class="type">VipDiscountStrategy</span> : <span class="type">IDiscountStrategy</span>
+{
+    <span class="keyword">public string</span> CustomerType => <span class="string">"VIP"</span>;
+    
+    <span class="keyword">public decimal</span> <span class="method">CalculateDiscount</span>(<span class="type">Customer</span> customer, <span class="type">Order</span> order)
+    {
+        <span class="keyword">return</span> order.Amount > 1000 ? order.Amount * 0.20m : order.Amount * 0.15m;
+    }
+}
+
+<span class="keyword">public class</span> <span class="type">PremiumDiscountStrategy</span> : <span class="type">IDiscountStrategy</span>
+{
+    <span class="keyword">public string</span> CustomerType => <span class="string">"Premium"</span>;
+    
+    <span class="keyword">public decimal</span> <span class="method">CalculateDiscount</span>(<span class="type">Customer</span> customer, <span class="type">Order</span> order)
+    {
+        <span class="keyword">return</span> customer.YearsActive > 5 ? order.Amount * 0.12m : order.Amount * 0.08m;
+    }
+}
+
+<span class="keyword">public class</span> <span class="type">StandardDiscountStrategy</span> : <span class="type">IDiscountStrategy</span>
+{
+    <span class="keyword">public string</span> CustomerType => <span class="string">"Standard"</span>;
+    
+    <span class="keyword">public decimal</span> <span class="method">CalculateDiscount</span>(<span class="type">Customer</span> customer, <span class="type">Order</span> order)
+    {
+        <span class="keyword">return</span> order.Amount > 500 ? order.Amount * 0.05m : 0;
+    }
+}
+                            </div>
+                            
+                            <h4>Paso 2: Calculator Refactorizado</h4>
+                            <div class="code-block good" style="font-size: 0.75em; margin-top: 10px;">
+<span class="keyword">public class</span> <span class="type">DiscountCalculator</span>
+{
+    <span class="keyword">private readonly</span> <span class="type">Dictionary</span>&lt;<span class="type">string</span>, <span class="type">IDiscountStrategy</span>&gt; _strategies;
+
+    <span class="keyword">public</span> <span class="method">DiscountCalculator</span>()
+    {
+        _strategies = <span class="keyword">new</span> <span class="type">Dictionary</span>&lt;<span class="type">string</span>, <span class="type">IDiscountStrategy</span>&gt;
+        {
+            [<span class="string">"VIP"</span>] = <span class="keyword">new</span> <span class="type">VipDiscountStrategy</span>(),
+            [<span class="string">"Premium"</span>] = <span class="keyword">new</span> <span class="type">PremiumDiscountStrategy</span>(),
+            [<span class="string">"Standard"</span>] = <span class="keyword">new</span> <span class="type">StandardDiscountStrategy</span>()
+        };
+    }
+
+    <span class="keyword">public decimal</span> <span class="method">CalculateDiscount</span>(<span class="type">Customer</span> customer, <span class="type">Order</span> order)
+    {
+        <span class="keyword">var</span> strategy = _strategies.GetValueOrDefault(customer.Type) 
+                        ?? _strategies[<span class="string">"Standard"</span>];
+        <span class="keyword">return</span> strategy.CalculateDiscount(customer, order);
+    }
+}
+                            </div>
+
+                            <h4>Paso 3: Tests Unitarios</h4>
+                            <div class="code-block" style="font-size: 0.7em; margin-top: 10px;">
+[<span class="type">Test</span>]
+<span class="keyword">public void</span> <span class="method">VipStrategy_HighAmount_Returns20Percent</span>()
+{
+    <span class="comment">// Arrange</span>
+    <span class="keyword">var</span> strategy = <span class="keyword">new</span> <span class="type">VipDiscountStrategy</span>();
+    <span class="keyword">var</span> customer = <span class="keyword">new</span> <span class="type">Customer</span> { Type = <span class="string">"VIP"</span> };
+    <span class="keyword">var</span> order = <span class="keyword">new</span> <span class="type">Order</span> { Amount = 1500m };
+
+    <span class="comment">// Act</span>
+    <span class="keyword">var</span> result = strategy.CalculateDiscount(customer, order);
+
+    <span class="comment">// Assert</span>
+    <span class="type">Assert</span>.AreEqual(300m, result); <span class="comment">// 1500 * 0.20</span>
+}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>💡 Solución Ejercicio 3: Sistema Completo</h3>
+                    <div style="margin-top: 15px;">
+                        <button onclick="requestSolution('solution3')" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: all 0.3s ease;">
+                            🔓 Ver Arquitectura de Solución (Requiere Clave)
+                        </button>
+                        
+                        <!-- Loader -->
+                        <div id="loader3" class="solution-loader">
+                            <div class="spinner"></div>
+                            <p>Construyendo arquitectura...</p>
+                        </div>
+                        
+                        <!-- Protected Solution -->
+                        <div id="solution3" class="protected-solution" style="margin-top: 15px;">
+                            <h4>Componentes del Sistema</h4>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 0.85em;">
+                                <div>
+                                    <h5 style="color: #ffd700;">🔹 Strategy: Validaciones</h5>
+                                    <div class="code-block" style="font-size: 0.7em;">
+<span class="keyword">public interface</span> <span class="type">ITransactionValidator</span>
+{
+    <span class="type">ValidationResult</span> <span class="method">Validate</span>(<span class="type">Transaction</span> transaction);
+    <span class="keyword">string</span> TransactionType { <span class="keyword">get</span>; }
+}
+
+<span class="keyword">public class</span> <span class="type">TransferValidator</span> : <span class="type">ITransactionValidator</span>
+{
+    <span class="keyword">public string</span> TransactionType => <span class="string">"Transfer"</span>;
+    
+    <span class="keyword">public</span> <span class="type">ValidationResult</span> <span class="method">Validate</span>(<span class="type">Transaction</span> t)
+    {
+        <span class="comment">// Validar saldo, cuentas, límites</span>
+        <span class="keyword">return new</span> <span class="type">ValidationResult</span> { IsValid = <span class="keyword">true</span> };
+    }
+}
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <h5 style="color: #ff6b6b;">🔹 State: Estados</h5>
+                                    <div class="code-block" style="font-size: 0.7em;">
+<span class="keyword">public interface</span> <span class="type">ITransactionState</span>
+{
+    <span class="keyword">void</span> <span class="method">Process</span>(<span class="type">Transaction</span> transaction);
+    <span class="keyword">void</span> <span class="method">Cancel</span>(<span class="type">Transaction</span> transaction);
+    <span class="keyword">string</span> StateName { <span class="keyword">get</span>; }
+}
+
+<span class="keyword">public class</span> <span class="type">PendingState</span> : <span class="type">ITransactionState</span>
+{
+    <span class="keyword">public string</span> StateName => <span class="string">"Pending"</span>;
+    
+    <span class="keyword">public void</span> <span class="method">Process</span>(<span class="type">Transaction</span> t)
+    {
+        <span class="comment">// Cambiar a ProcessingState</span>
+        t.SetState(<span class="keyword">new</span> <span class="type">ProcessingState</span>());
+    }
+}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h4>Integración Completa</h4>
+                            <div class="code-block" style="font-size: 0.7em; margin-top: 15px;">
+<span class="keyword">public class</span> <span class="type">TransactionProcessor</span>
+{
+    <span class="keyword">private readonly</span> <span class="type">Dictionary</span>&lt;<span class="type">string</span>, <span class="type">ITransactionValidator</span>&gt; _validators;
+    <span class="keyword">private readonly</span> <span class="type">Dictionary</span>&lt;<span class="type">string</span>, <span class="type">INotificationChannel</span>&gt; _channels;
+
+    <span class="keyword">public async</span> <span class="type">Task</span>&lt;<span class="type">ProcessResult</span>&gt; <span class="method">ProcessTransaction</span>(<span class="type">Transaction</span> transaction)
+    {
+        <span class="comment">// 1. Strategy: Validar según tipo</span>
+        <span class="keyword">var</span> validator = _validators[transaction.Type];
+        <span class="keyword">var</span> validation = validator.Validate(transaction);
+        
+        <span class="keyword">if</span> (!validation.IsValid)
+            <span class="keyword">return</span> <span class="type">ProcessResult</span>.Failed(validation.Errors);
+
+        <span class="comment">// 2. State: Procesar según estado actual</span>
+        transaction.Process();
+
+        <span class="comment">// 3. Dictionary: Notificar por canal preferido</span>
+        <span class="keyword">var</span> channel = _channels[transaction.User.PreferredChannel];
+        <span class="keyword">await</span> channel.SendAsync($<span class="string">"Transacción {transaction.Id} procesada"</span>);
+
+        <span class="keyword">return</span> <span class="type">ProcessResult</span>.Success();
+    }
+}
+                            </div>
+
+                            <div class="highlight" style="margin-top: 15px; text-align: center; font-size: 0.85em;">
+                                <strong>🎯 Resultado:</strong> Sistema flexible que combina 3 patrones sin IF statements complejos
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="slide-number">18 / 20</div>
+            <div class="slide-number">20 / 24</div>
         </div>
 
-        <!-- Slide 19: Evolución y Patrones Avanzados -->
+        <!-- Slide 21: Evolución y Patrones Avanzados -->
         <div class="slide">
             <div class="slide-header">
                 <h2>Evolución: Patrones Avanzados</h2>
@@ -1897,10 +2898,10 @@ gateway = <span class="keyword">new</span> <span class="type">MetricsPaymentGate
                     <p><strong>🔄 Evolución Natural:</strong> Dictionary → Strategy → Strategy + Factory → Abstract Factory + DI Container → CQRS + Event Sourcing</p>
                 </div>
             </div>
-            <div class="slide-number">19 / 20</div>
+            <div class="slide-number">21 / 24</div>
         </div>
 
-        <!-- Slide 20: Conclusiones -->
+        <!-- Slide 22: Conclusiones -->
         <div class="slide">
             <div class="slide-header">
                 <h2>Conclusiones y Próximos Pasos</h2>
@@ -1971,13 +2972,32 @@ gateway = <span class="keyword">new</span> <span class="type">MetricsPaymentGate
                     <p style="text-align: center; margin-top: 10px; color: #a8a8b3;">— Martin Fowler, adaptado</p>
                 </div>
             </div>
-            <div class="slide-number">20 / 20</div>
+            <div class="slide-number">22 / 24</div>
         </div>
 
     <!-- Instructor Info -->
     <div class="instructor-info">
         <div class="instructor-name">Alejandro Sfrede</div>
         <div class="instructor-title">Área de Arquitectura</div>
+    </div>
+
+    <!-- Password Modal -->
+    <div id="passwordModal" class="password-modal">
+        <div class="modal-content">
+            <h3>🔐 Acceso a Soluciones</h3>
+            <p style="margin-bottom: 20px; color: #a8a8b3;">
+                Para acceder a las soluciones, ingresa la clave que te proporcionó el instructor:
+            </p>
+            <input type="password" id="passwordInput" class="password-input" placeholder="Ingresa la clave de acceso">
+            <div id="passwordMessage" class="error-message" style="display: none;"></div>
+            <div class="modal-buttons">
+                <button id="confirmPassword" class="modal-btn modal-btn-confirm">🔓 Acceder</button>
+                <button id="cancelPassword" class="modal-btn modal-btn-cancel">❌ Cancelar</button>
+            </div>
+            <div style="margin-top: 20px; font-size: 0.8em; color: #666;">
+                💡 <strong>Tip:</strong> Si no conoces la clave, consulta con tu instructor
+            </div>
+        </div>
     </div>
 
     <!-- Navigation -->
@@ -2114,6 +3134,183 @@ gateway = <span class="keyword">new</span> <span class="type">MetricsPaymentGate
 
         // Initialize
         showSlide(0);
+
+        // ===== SOLUTION PROTECTION SYSTEM =====
+        
+        let activeSolutionTarget = null;
+        const authTokens = [
+            String.fromCharCode(102,105,110,116,101,120,97,49),
+            String.fromCharCode(102,105,110,116,101,120,97,50), 
+            String.fromCharCode(102,105,110,116,101,120,97,51)
+        ];
+
+        function requestSolution(solutionId) {
+            console.log('Requesting solution:', solutionId);
+            activeSolutionTarget = solutionId;
+            
+            // Show loader first
+            const loaderId = `loader${solutionId.slice(-1)}`;
+            const loader = document.getElementById(loaderId);
+            console.log('Looking for loader:', loaderId, loader);
+            
+            if (loader) {
+                loader.style.display = 'block';
+            }
+            
+            // Simulate loading delay
+            setTimeout(() => {
+                if (loader) {
+                    loader.style.display = 'none';
+                }
+                showPasswordModal();
+            }, 2000);
+        }
+
+        function showPasswordModal() {
+            const modal = document.getElementById('passwordModal');
+            const passwordInput = document.getElementById('passwordInput');
+            const messageDiv = document.getElementById('passwordMessage');
+            
+            modal.classList.add('show');
+            passwordInput.value = '';
+            messageDiv.style.display = 'none';
+            
+            // Focus after animation
+            setTimeout(() => {
+                passwordInput.focus();
+            }, 100);
+        }
+
+        function hidePasswordModal() {
+            const modal = document.getElementById('passwordModal');
+            modal.classList.remove('show');
+            activeSolutionTarget = null;
+        }
+
+        function checkPassword() {
+            const userInput = document.getElementById('passwordInput').value.toLowerCase().trim();
+            const messageDiv = document.getElementById('passwordMessage');
+            
+            console.log('Validating access token...');
+            console.log('Target:', activeSolutionTarget);
+            
+            if (authTokens.includes(userInput)) {
+                messageDiv.style.display = 'block';
+                messageDiv.className = 'success-message';
+                messageDiv.textContent = '✅ Acceso concedido! Cargando solución...';
+                
+                // Store the target before clearing it
+                const targetSolution = activeSolutionTarget;
+                
+                setTimeout(() => {
+                    hidePasswordModal();
+                    showSolution(targetSolution);
+                }, 1500);
+            } else {
+                messageDiv.style.display = 'block';
+                messageDiv.className = 'error-message';
+                messageDiv.innerHTML = `
+                    ❌ Clave incorrecta.<br>
+                    <small>Pista: La clave es "fintexa" seguido de un número del 1 al 3</small>
+                `;
+            }
+        }
+
+        function showSolution(solutionId) {
+            console.log('Showing solution for:', solutionId);
+            
+            const solutionDiv = document.getElementById(solutionId);
+            if (!solutionDiv) {
+                console.error('Solution div not found:', solutionId);
+                return;
+            }
+            
+            console.log('Solution div found:', solutionDiv);
+            console.log('Current display:', window.getComputedStyle(solutionDiv).display);
+            console.log('Has protected-solution class:', solutionDiv.classList.contains('protected-solution'));
+            
+            // Find the button by looking in the parent container
+            const parentDiv = solutionDiv.parentElement;
+            const button = parentDiv.querySelector('button[onclick*="' + solutionId + '"]');
+            
+            if (button) {
+                console.log('Hiding button:', button);
+                button.style.display = 'none';
+            } else {
+                console.log('Button not found for:', solutionId);
+            }
+            
+            // Remove the protected-solution class first (this removes display: none)
+            solutionDiv.classList.remove('protected-solution');
+            
+            // Force show the solution div with important and add styles
+            solutionDiv.style.cssText = 'display: block !important; visibility: visible !important; opacity: 0; transform: translateY(20px); transition: all 0.5s ease;';
+            
+            console.log('After style changes - display:', window.getComputedStyle(solutionDiv).display);
+            console.log('After style changes - visibility:', window.getComputedStyle(solutionDiv).visibility);
+            
+            // Check if solution already has the success header
+            const existingHeader = solutionDiv.querySelector('[data-success-header]');
+            if (!existingHeader) {
+                // Add success header first
+                const successHeader = document.createElement('div');
+                successHeader.setAttribute('data-success-header', 'true');
+                successHeader.innerHTML = `
+                    <div style="background: rgba(144,238,144,0.2); padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center; border: 2px solid #90ee90;">
+                        <h4 style="color: #90ee90; margin: 0;">🔓 Acceso Autorizado - Solución Desbloqueada</h4>
+                        <p style="margin: 5px 0 0 0; font-size: 0.9em; color: #a8a8b3;">Ahora puedes ver la solución completa</p>
+                    </div>
+                `;
+                solutionDiv.insertBefore(successHeader, solutionDiv.firstChild);
+            }
+            
+            // Animate in with a small delay to ensure the DOM has updated
+            requestAnimationFrame(() => {
+                setTimeout(() => {
+                    solutionDiv.style.opacity = '1';
+                    solutionDiv.style.transform = 'translateY(0)';
+                    console.log('Animation completed for:', solutionId);
+                    console.log('Final display state:', window.getComputedStyle(solutionDiv).display);
+                }, 50);
+            });
+        }
+
+        // Event listeners for modal
+        document.getElementById('confirmPassword').addEventListener('click', checkPassword);
+        document.getElementById('cancelPassword').addEventListener('click', hidePasswordModal);
+        
+        // Enter key support
+        document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('passwordModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                hidePasswordModal();
+            }
+        });
+
+        // Debug function to test solutions
+        window.testSolution = function(solutionId) {
+            showSolution(solutionId);
+        };
+
+        // Emergency function to show all solutions (for testing)
+        window.showAllSolutions = function() {
+            console.log('Showing all solutions...');
+            showSolution('solution1');
+            showSolution('solution2');  
+            showSolution('solution3');
+        };
+
+        // Test access function
+        window.testAccess = function(token) {
+            document.getElementById('passwordInput').value = token;
+            checkPassword();
+        };
     </script>
 </body>
 </html>
