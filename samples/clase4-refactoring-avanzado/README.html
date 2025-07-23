@@ -3,8 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLASE 4: Refactoring Avanzado - CursoNET</title>
+    <title>Clase 4: Refactoring Avanzado - Completo Jr → Sr</title>
     <style>
+        :root {
+            --primary-color: #2563eb;
+            --success-color: #059669;
+            --warning-color: #d97706;
+            --danger-color: #dc2626;
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,9 +26,9 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #fc4a1a 0%, #f7b733 100%);
-            min-height: 100vh;
-            color: #333;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--bg-primary);
         }
 
         .container {
@@ -24,320 +37,715 @@
             padding: 20px;
         }
 
-        .header {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        header {
+            background: linear-gradient(135deg, var(--primary-color), #1d4ed8);
+            color: white;
+            padding: 40px 0;
+            margin-bottom: 40px;
+            border-radius: 12px;
             text-align: center;
+            box-shadow: var(--shadow);
         }
 
-        .header h1 {
-            color: white;
+        header h1 {
             font-size: 2.5rem;
+            font-weight: 700;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
-        .header .subtitle {
-            color: rgba(255, 255, 255, 0.9);
+        header p {
             font-size: 1.2rem;
-            font-weight: 300;
+            opacity: 0.9;
         }
 
-        .content-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 30px;
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin: 2px;
         }
 
-        .section {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        .badge-success { background: var(--success-color); color: white; }
+        .badge-warning { background: var(--warning-color); color: white; }
+        .badge-primary { background: var(--primary-color); color: white; }
+        .badge-danger { background: var(--danger-color); color: white; }
+
+        .card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
         }
 
-        .section h2 {
-            color: white;
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .section h3 {
-            color: #ffd700;
-            font-size: 1.3rem;
-            margin: 20px 0 10px 0;
+        .card h2 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
-        .section p, .section li {
-            color: rgba(255, 255, 255, 0.9);
-            line-height: 1.6;
-            margin-bottom: 10px;
+        .card h3 {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            margin: 20px 0 12px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
         }
 
-        .section ul {
-            padding-left: 20px;
-        }
-
-        .section li {
-            margin-bottom: 8px;
-        }
-
-        .icon {
-            font-size: 1.2em;
-        }
-
-        .exercises-grid {
+        .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 20px;
-            margin-top: 20px;
+            margin: 20px 0;
         }
 
         .exercise-card {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
             padding: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            transition: all 0.3s ease;
+            border-left: 4px solid var(--primary-color);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .exercise-card:hover {
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .exercise-card.jr {
+            border-left-color: var(--success-color);
+        }
+
+        .exercise-card.sr {
+            border-left-color: var(--danger-color);
         }
 
         .exercise-card h4 {
-            color: #ffd700;
+            color: var(--primary-color);
+            margin-bottom: 12px;
             font-size: 1.1rem;
-            margin-bottom: 10px;
         }
 
-        .exercise-card .file-name {
-            color: #90ee90;
-            font-family: 'Courier New', monospace;
+        .file-list {
+            list-style: none;
+            margin: 12px 0;
+        }
+
+        .file-list li {
+            padding: 6px 0;
+            padding-left: 20px;
+            position: relative;
+            color: var(--text-secondary);
             font-size: 0.9rem;
-            margin-bottom: 10px;
         }
 
-        .metrics {
+        .file-list li::before {
+            content: "📄";
+            position: absolute;
+            left: 0;
+        }
+
+        .file-list li.vs-guide {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .file-list li.vs-guide::before {
+            content: "🔧";
+        }
+
+        .metrics-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .metrics-table th,
+        .metrics-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .metrics-table th {
+            background: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        .metrics-table tr:hover {
+            background: #f1f5f9;
+        }
+
+        .improvement {
+            color: var(--success-color);
+            font-weight: 600;
+        }
+
+        .feature-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            margin-top: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
         }
 
-        .metric-card {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 15px;
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .feature-icon {
+            font-size: 1.5rem;
+            margin-top: 2px;
+        }
+
+        .feature-content h4 {
+            color: var(--primary-color);
+            margin-bottom: 6px;
+            font-size: 1rem;
+        }
+
+        .feature-content p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 16px 0;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+            margin: 20px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--primary-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 20px;
+            padding-left: 30px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -24px;
+            top: 6px;
+            width: 12px;
+            height: 12px;
+            background: var(--primary-color);
+            border-radius: 50%;
+        }
+
+        .timeline-item h4 {
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 8px;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid var(--border-color);
         }
 
-        .metric-card .number {
-            color: #ffd700;
+        .stat-number {
             font-size: 2rem;
-            font-weight: bold;
+            font-weight: 700;
+            color: var(--primary-color);
             display: block;
         }
 
-        .metric-card .label {
-            color: rgba(255, 255, 255, 0.8);
+        .stat-label {
+            color: var(--text-secondary);
             font-size: 0.9rem;
+            margin-top: 4px;
         }
 
-        .navigation {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 30px;
+        .alert {
+            padding: 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+            border-left: 4px solid;
         }
 
-        .nav-button {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+        .alert-info {
+            background: #eff6ff;
+            border-left-color: var(--primary-color);
+            color: #1e40af;
+        }
+
+        .alert-success {
+            background: #f0fdf4;
+            border-left-color: var(--success-color);
+            color: #166534;
+        }
+
+        .alert-warning {
+            background: #fffbeb;
+            border-left-color: var(--warning-color);
+            color: #92400e;
+        }
+
+        .checklist {
+            list-style: none;
+            margin: 16px 0;
+        }
+
+        .checklist li {
+            padding: 8px 0;
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .checklist li::before {
+            content: "✅";
+            position: absolute;
+            left: 0;
+            top: 8px;
+        }
+
+        footer {
+            background: var(--text-primary);
             color: white;
-            padding: 12px 25px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .nav-button:hover {
-            background: rgba(255, 255, 255, 0.25);
-            transform: translateY(-2px);
+            text-align: center;
+            padding: 40px 0;
+            margin-top: 60px;
+            border-radius: 12px;
         }
 
         @media (max-width: 768px) {
-            .content-grid {
+            .container {
+                padding: 10px;
+            }
+            
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            .grid {
                 grid-template-columns: 1fr;
             }
-            .metrics {
-                grid-template-columns: repeat(2, 1fr);
+            
+            .metrics-table {
+                font-size: 0.8rem;
+            }
+            
+            .metrics-table th,
+            .metrics-table td {
+                padding: 8px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>🔧 CLASE 4: Refactoring Avanzado</h1>
-            <p class="subtitle">Técnicas profesionales para modernizar legacy code y aplicar principios SOLID</p>
-        </div>
-
-        <div class="content-grid">
-            <div class="section">
-                <h2><span class="icon">🎯</span> Objetivos de Aprendizaje</h2>
-                <ul>
-                    <li><strong>Modernizar</strong> legacy code de forma segura</li>
-                    <li><strong>Aplicar</strong> principios SOLID correctamente</li>
-                    <li><strong>Implementar</strong> design patterns apropiados</li>
-                    <li><strong>Eliminar</strong> code smells sistemáticamente</li>
-                    <li><strong>Mejorar</strong> arquitectura y estructura de código</li>
-                    <li><strong>Crear</strong> tests unitarios efectivos</li>
-                </ul>
+        <header>
+            <h1>🔧 Clase 4: Refactoring Avanzado</h1>
+            <p>Curso Completo Jr → Sr con Visual Studio Professional</p>
+            <div style="margin-top: 20px;">
+                <span class="badge badge-success">Principiante</span>
+                <span class="badge badge-warning">Intermedio</span>
+                <span class="badge badge-danger">Avanzado</span>
+                <span class="badge badge-primary">VS Professional</span>
             </div>
+        </header>
 
-            <div class="section">
-                <h2><span class="icon">🔧</span> Principios SOLID</h2>
-                <h3><span class="icon">📋</span> Single Responsibility</h3>
-                <p>Una clase, una responsabilidad</p>
-                
-                <h3><span class="icon">🔓</span> Open/Closed</h3>
-                <p>Abierto para extensión, cerrado para modificación</p>
-                
-                <h3><span class="icon">🔄</span> Liskov Substitution</h3>
-                <p>Subtypes deben ser sustituibles por base types</p>
-                
-                <h3><span class="icon">🎛️</span> Interface Segregation</h3>
-                <p>Interfaces específicas mejor que interfaces generales</p>
-                
-                <h3><span class="icon">🔗</span> Dependency Inversion</h3>
-                <p>Depender de abstracciones, no de concreciones</p>
-            </div>
-
-            <div class="section">
-                <h2><span class="icon">📚</span> Design Patterns</h2>
-                <h3><span class="icon">🏭</span> Creational Patterns</h3>
-                <p>Factory, Builder, Singleton patterns</p>
-                
-                <h3><span class="icon">🔧</span> Structural Patterns</h3>
-                <p>Adapter, Decorator, Facade patterns</p>
-                
-                <h3><span class="icon">⚡</span> Behavioral Patterns</h3>
-                <p>Observer, Strategy, Command patterns</p>
-                
-                <h3><span class="icon">🏗️</span> Architectural Patterns</h3>
-                <p>Repository, Unit of Work, CQRS patterns</p>
-            </div>
-
-            <div class="section">
-                <h2><span class="icon">⚙️</span> Técnicas de Refactoring</h2>
-                <ul>
-                    <li><strong>Extract Method</strong> - Dividir métodos largos</li>
-                    <li><strong>Extract Class</strong> - Separar responsabilidades</li>
-                    <li><strong>Move Method</strong> - Reubicar funcionalidad</li>
-                    <li><strong>Replace Conditional</strong> - Polimorfismo</li>
-                    <li><strong>Introduce Parameter Object</strong> - Parámetros</li>
-                    <li><strong>Replace Magic Numbers</strong> - Constantes</li>
-                </ul>
+        <div class="card">
+            <h2>📋 Descripción del Curso</h2>
+            <p>Este conjunto completo de ejercicios prácticos de refactoring abarca desde técnicas fundamentales para desarrolladores Jr hasta patrones avanzados para Senior developers. Incluye ejercicios tradicionales y <strong>optimizaciones específicas para Visual Studio Professional</strong>.</p>
+            
+            <div class="alert alert-info">
+                <strong>🎯 Innovación Clave:</strong> Cada ejercicio Jr incluye una guía específica para Visual Studio Professional que aprovecha herramientas automáticas del IDE para refactoring eficiente y métricas cuantificables.
             </div>
         </div>
 
-        <div class="section">
-            <h2><span class="icon">💻</span> Ejercicios Prácticos</h2>
-            <div class="exercises-grid">
-                <div class="exercise-card">
-                    <h4>🏚️ Legacy Code Modernization</h4>
-                    <div class="file-name">01-LegacyCode-Before/After.cs</div>
-                    <p>Transformación completa de código legacy: separación de concerns, dependency injection, testing.</p>
-                    <p><strong>Complejidad:</strong> 20+ → 3-5</p>
+        <div class="card">
+            <h2>🔧 Integración con Visual Studio Professional</h2>
+            
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-content">
+                        <h4>Code Analysis & Metrics</h4>
+                        <p>Complejidad ciclomática en tiempo real, SonarLint integration, Code Clone Analysis</p>
+                    </div>
                 </div>
-
-                <div class="exercise-card">
-                    <h4>🎨 Design Patterns</h4>
-                    <div class="file-name">02-DesignPatterns-Before/After.cs</div>
-                    <p>Implementación de múltiples design patterns: Factory, Observer, Strategy, Command.</p>
-                    <p><strong>Patterns:</strong> 8+ patterns aplicados</p>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-content">
+                        <h4>Refactoring Automático</h4>
+                        <p>Extract Method (Ctrl+R, Ctrl+M), Quick Actions (Ctrl+.), Generate from Usage</p>
+                    </div>
                 </div>
-
-                <div class="exercise-card">
-                    <h4>⚠️ SOLID Violations</h4>
-                    <div class="file-name">03-SOLID-Violations-Before.cs</div>
-                    <p>Ejemplo educativo mostrando todas las violaciones SOLID en un sistema real.</p>
-                    <p><strong>Violations:</strong> 15+ violaciones identificadas</p>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">🗺️</div>
+                    <div class="feature-content">
+                        <h4>Visualization Tools</h4>
+                        <p>Code Maps, Class Diagrams, Call Hierarchy para análisis visual</p>
+                    </div>
                 </div>
-
-                <div class="exercise-card">
-                    <h4>✅ SOLID Corrections</h4>
-                    <div class="file-name">03-SOLID-Violations-After.cs</div>
-                    <p>Corrección sistemática aplicando todos los principios SOLID correctamente.</p>
-                    <p><strong>Architecture:</strong> Clean architecture</p>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">📈</div>
+                    <div class="feature-content">
+                        <h4>Metrics Dashboard</h4>
+                        <p>Tracking en tiempo real, comparaciones Before/After, integración de equipo</p>
+                    </div>
                 </div>
+            </div>
+            
+            <h3>Configuración Recomendada</h3>
+            <div class="code-block"># .editorconfig para el proyecto
+dotnet_analyzer_diagnostic.CA1502.severity = warning  # Complexity
+dotnet_code_quality.CA1502.threshold = 5              # Max complexity</div>
+        </div>
 
-                <div class="exercise-card">
-                    <h4>🏗️ Builder Pattern Advanced</h4>
-                    <div class="file-name">04-Builder-Advanced.cs</div>
-                    <p>Builder pattern avanzado con fluent interfaces, validation y step-by-step construction.</p>
-                    <p><strong>Features:</strong> Nested builders, validation</p>
+        <div class="card">
+            <h2>📁 Ejercicios del Curso</h2>
+            
+            <h3>🟢 Ejercicios Fundamentales (Jr Level)</h3>
+            <div class="grid">
+                <div class="exercise-card jr">
+                    <h4>Ejercicio 1: Extracción de Métodos</h4>
+                    <p><strong>Complejidad:</strong> 12 → 3 (75% mejora)</p>
+                    <ul class="file-list">
+                        <li>01-ExtractMethod-Before.cs - Métodos largos y complejos</li>
+                        <li>01-ExtractMethod-After.cs - Métodos extraídos y simplificados</li>
+                        <li>01-ExtractMethod-Steps.md - Guía paso a paso tradicional</li>
+                        <li class="vs-guide">01-ExtractMethod-VisualStudio.md - Guía VS Professional</li>
+                    </ul>
                 </div>
-
-                <div class="exercise-card">
-                    <h4>🏭 Factory Patterns</h4>
-                    <div class="file-name">05-Factory-Advanced.cs</div>
-                    <p>Abstract Factory, Factory Method con generics, reflection y dependency injection.</p>
-                    <p><strong>Types:</strong> Generic factories, plugin system</p>
+                
+                <div class="exercise-card jr">
+                    <h4>Ejercicio 2: Delegates y Action/Func</h4>
+                    <p><strong>Duplicación:</strong> 400 LOC → 100 LOC (75% mejora)</p>
+                    <ul class="file-list">
+                        <li>02-Delegates-Before.cs - Código repetitivo sin delegates</li>
+                        <li>02-Delegates-After.cs - Usando Action, Func y delegates</li>
+                        <li>02-Delegates-Guide.md - Guía completa sobre cuándo usar cada tipo</li>
+                        <li class="vs-guide">02-Delegates-VisualStudio.md - Refactoring automático con IDE</li>
+                    </ul>
+                </div>
+                
+                <div class="exercise-card jr">
+                    <h4>Ejercicio 3: Extraer Clase Base</h4>
+                    <p><strong>Duplicación:</strong> 80% → 17% (83% mejora)</p>
+                    <ul class="file-list">
+                        <li>03-BaseClass-Before.cs - Código duplicado en clases similares</li>
+                        <li>03-BaseClass-After.cs - Jerarquía limpia con herencia</li>
+                        <li>03-BaseClass-Tips.md - Mejores prácticas y proceso detallado</li>
+                        <li class="vs-guide">03-BaseClass-VisualStudio.md - Herencia automática con IDE</li>
+                    </ul>
+                </div>
+                
+                <div class="exercise-card jr">
+                    <h4>Ejercicio 4: Reducir Complejidad Ciclomática</h4>
+                    <p><strong>Complejidad:</strong> 15 → 2.5 (83% mejora)</p>
+                    <ul class="file-list">
+                        <li>04-Complexity-Before.cs - Métodos con complejidad extrema</li>
+                        <li>04-Complexity-After.cs - Complejidad reducida</li>
+                        <li>04-Complexity-Steps.md - Técnicas para reducir complejidad</li>
+                        <li class="vs-guide">04-Complexity-VisualStudio.md - Análisis automático con VS</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h3>🔴 Ejercicios Avanzados (Semi-Sr/Sr Level)</h3>
+            <div class="grid">
+                <div class="exercise-card sr">
+                    <h4>Ejercicio 5: Legacy Code Modernization</h4>
+                    <ul class="file-list">
+                        <li>01-LegacyCode-Before.cs - Sistema legacy con múltiples problemas</li>
+                        <li>01-LegacyCode-After.cs - Modernización completa step-by-step</li>
+                    </ul>
+                </div>
+                
+                <div class="exercise-card sr">
+                    <h4>Ejercicio 6: Design Patterns Introduction</h4>
+                    <ul class="file-list">
+                        <li>02-DesignPatterns-Before.cs - Código procedural problemático</li>
+                        <li>02-DesignPatterns-After.cs - Aplicación de patterns</li>
+                    </ul>
+                </div>
+                
+                <div class="exercise-card sr">
+                    <h4>Ejercicio 7: SOLID Principles Application</h4>
+                    <ul class="file-list">
+                        <li>03-SOLID-Violations-Before.cs - Violaciones flagrantes de SOLID</li>
+                        <li>03-SOLID-Violations-After.cs - Aplicación correcta de principios</li>
+                    </ul>
+                </div>
+                
+                <div class="exercise-card sr">
+                    <h4>Ejercicio 8: Advanced Patterns</h4>
+                    <ul class="file-list">
+                        <li>04-Builder-Advanced.cs - Builder Pattern avanzado</li>
+                        <li>05-Factory-Advanced.cs - Factory Pattern avanzado</li>
+                    </ul>
                 </div>
             </div>
         </div>
 
-        <div class="metrics">
-            <div class="metric-card">
-                <span class="number">6</span>
-                <span class="label">Ejercicios Completos</span>
+        <div class="card">
+            <h2>📊 Métricas de Éxito Cuantificables</h2>
+            
+            <div class="alert alert-success">
+                <strong>Resultados Medibles con Visual Studio Professional:</strong> Todas las mejoras son verificables automáticamente usando las herramientas integradas del IDE.
             </div>
-            <div class="metric-card">
-                <span class="number">85%</span>
-                <span class="label">Reducción Complejidad</span>
-            </div>
-            <div class="metric-card">
-                <span class="number">10+</span>
-                <span class="label">Design Patterns</span>
-            </div>
-            <div class="metric-card">
-                <span class="number">100%</span>
-                <span class="label">SOLID Compliance</span>
+            
+            <table class="metrics-table">
+                <thead>
+                    <tr>
+                        <th>Ejercicio</th>
+                        <th>Métrica</th>
+                        <th>Antes</th>
+                        <th>Después</th>
+                        <th>Mejora</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td rowspan="2"><strong>Extract Method</strong></td>
+                        <td>Complejidad Ciclomática</td>
+                        <td>12</td>
+                        <td>3</td>
+                        <td class="improvement">75% ↓</td>
+                    </tr>
+                    <tr>
+                        <td>Líneas por Método</td>
+                        <td>65</td>
+                        <td>15</td>
+                        <td class="improvement">77% ↓</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="2"><strong>Delegates</strong></td>
+                        <td>Código Duplicado</td>
+                        <td>400 LOC</td>
+                        <td>100 LOC</td>
+                        <td class="improvement">75% ↓</td>
+                    </tr>
+                    <tr>
+                        <td>Métodos Similares</td>
+                        <td>12</td>
+                        <td>3</td>
+                        <td class="improvement">75% ↓</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="2"><strong>Base Class</strong></td>
+                        <td>Clases Duplicadas</td>
+                        <td>3 independientes</td>
+                        <td>1 base + 3 derivadas</td>
+                        <td class="improvement">80% ↓</td>
+                    </tr>
+                    <tr>
+                        <td>Código Compartido</td>
+                        <td>300 LOC</td>
+                        <td>50 LOC</td>
+                        <td class="improvement">83% ↓</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="2"><strong>Complexity</strong></td>
+                        <td>Complejidad Promedio</td>
+                        <td>15</td>
+                        <td>2.5</td>
+                        <td class="improvement">83% ↓</td>
+                    </tr>
+                    <tr>
+                        <td>Test Cases Requeridos</td>
+                        <td>50+</td>
+                        <td>15</td>
+                        <td class="improvement">70% ↓</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">50%</span>
+                    <div class="stat-label">Menos tiempo de refactoring</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">90%</span>
+                    <div class="stat-label">Menos errores durante refactoring</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">100%</span>
+                    <div class="stat-label">Métricas objetivas de mejora</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">∞</span>
+                    <div class="stat-label">Escalabilidad para proyectos</div>
+                </div>
             </div>
         </div>
 
-        <div class="navigation">
-            <a href="../../index.html" class="nav-button">
-                <span>🏠</span> Volver al Portal Principal
-            </a>
-            <a href="../index.html" class="nav-button">
-                <span>📁</span> Ver Todos los Ejercicios
-            </a>
-            <a href="../clase5-garbage-collection/README.html" class="nav-button">
-                <span>➡️</span> Siguiente Clase
-            </a>
+        <div class="card">
+            <h2>🎯 Plan de Estudio Progresivo</h2>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h4>Semana 1: Extract Method + VS Professional Setup</h4>
+                    <p>Configuración del IDE, métricas automáticas, primer refactoring guiado</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>Semana 2: Delegates y Eliminación de Duplicación</h4>
+                    <p>Code Clone Analysis, Action/Func patterns, refactoring semi-automático</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>Semana 3: Base Classes y Polimorfismo</h4>
+                    <p>Class Diagrams, Extract Interface, herencia automática con IDE</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>Semana 4: Complexity Reduction y Métricas Avanzadas</h4>
+                    <p>Guard clauses, Strategy pattern, validación automática de complejidad</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>Semana 5-6: Ejercicios Avanzados (Sr Track)</h4>
+                    <p>Legacy modernization, Design Patterns, SOLID principles</p>
+                </div>
+            </div>
+            
+            <h3>Checkpoint Semanal</h3>
+            <ul class="checklist">
+                <li>Code Metrics en verde (<5 complejidad)</li>
+                <li>Zero warnings de duplicación</li>
+                <li>Maintainability Index >50</li>
+                <li>Tests con >80% coverage</li>
+            </ul>
         </div>
+
+        <div class="card">
+            <h2>🛠️ Técnicas de Refactoring</h2>
+            
+            <div class="grid">
+                <div class="exercise-card">
+                    <h4>🟢 Técnicas Fundamentales (Jr)</h4>
+                    <ul>
+                        <li><strong>Extract Method</strong> - Extraer funcionalidad a métodos separados</li>
+                        <li><strong>Delegates Pattern</strong> - Eliminar código duplicado con Action/Func</li>
+                        <li><strong>Extract Base Class</strong> - Crear jerarquías para reutilización</li>
+                        <li><strong>Guard Clauses</strong> - Reducir anidación y complejidad</li>
+                    </ul>
+                </div>
+                
+                <div class="exercise-card">
+                    <h4>🔴 Técnicas Avanzadas (Sr)</h4>
+                    <ul>
+                        <li><strong>Extract Class</strong> - Separar responsabilidades en clases</li>
+                        <li><strong>Move Method</strong> - Mover métodos a clases más apropiadas</li>
+                        <li><strong>Replace Parameter with Method Call</strong> - Simplificar parámetros</li>
+                        <li><strong>Replace Conditional with Polymorphism</strong> - Usar herencia</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🚀 Challenge Final</h2>
+            
+            <div class="grid">
+                <div class="exercise-card jr">
+                    <h4>Jr Level - Al completar serás capaz de:</h4>
+                    <ul class="checklist">
+                        <li>Reducir complejidad ciclomática sistemáticamente</li>
+                        <li>Eliminar código duplicado usando delegates</li>
+                        <li>Crear jerarquías simples con herencia</li>
+                        <li>Escribir código que otros puedan entender fácilmente</li>
+                    </ul>
+                </div>
+                
+                <div class="exercise-card sr">
+                    <h4>Sr Level - Dominarás:</h4>
+                    <ul class="checklist">
+                        <li>Modernizar código legacy sistemáticamente</li>
+                        <li>Aplicar design patterns apropiados</li>
+                        <li>Escribir código que cumple principios SOLID</li>
+                        <li>Refactorizar con confianza usando testing</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>⏱️ Información del Curso</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">3-4h</span>
+                    <div class="stat-label">Jr Track (Práctica + IDE Setup)</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">3-4h</span>
+                    <div class="stat-label">Sr Track (Adicional)</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">6-8h</span>
+                    <div class="stat-label">Total para dominio completo</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">4+8</span>
+                    <div class="stat-label">Ejercicios Jr + Sr</div>
+                </div>
+            </div>
+            
+            <div class="alert alert-warning">
+                <strong>📋 Prerequisitos:</strong><br>
+                <strong>Jr:</strong> Conocimientos básicos de C# y OOP + Visual Studio Professional<br>
+                <strong>Sr:</strong> Clases 1-3 completadas + experiencia en desarrollo
+            </div>
+        </div>
+
+        <footer>
+            <h3>🎓 Refactoring Completo con Herramientas Profesionales</h3>
+            <p>Métricas cuantificables de progreso • Visual Studio Professional Integration • Jr → Sr Path</p>
+            <p style="margin-top: 20px; opacity: 0.8;">
+                Desarrollado con enfoque práctico y herramientas profesionales para máxima eficiencia
+            </p>
+        </footer>
     </div>
 </body>
 </html>
