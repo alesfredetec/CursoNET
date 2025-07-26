@@ -1,0 +1,16 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Personal Information Calculator", "Personal Information Calculator\Personal Information Calculator.csproj", "{741273FC-0F8A-4210-90F9-E41084DC4BC0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fix Data Type and Conversion Bugs", "Fix Data Type and Conversion Bugs\Fix Data Type and Conversion Bugs.csproj", "{5DA83676-B942-4E18-AD06-E125441431CB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ejercicio Personalizado - CSharpFundamentals (Extension)", "Ejercicio Personalizado - CSharpFundamentals (Extension)\Ejercicio Personalizado - CSharpFundamentals (Extension).csproj", "{40DA789C-BC2D-4CF7-B85D-049B66398657}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+EndGlobal

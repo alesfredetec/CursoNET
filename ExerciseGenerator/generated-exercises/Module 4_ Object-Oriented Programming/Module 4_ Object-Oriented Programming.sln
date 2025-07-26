@@ -1,0 +1,14 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ejercicio Personalizado - BasicOOP (Implementation)", "Ejercicio Personalizado - BasicOOP (Implementation)\Ejercicio Personalizado - BasicOOP (Implementation).csproj", "{1BD3166A-F0EC-4F0D-A035-A403236AB94B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ejercicio Personalizado - AdvancedOOP (Implementation)", "Ejercicio Personalizado - AdvancedOOP (Implementation)\Ejercicio Personalizado - AdvancedOOP (Implementation).csproj", "{7C5B0D89-788D-4887-88E0-DB5D43EF5D50}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+EndGlobal

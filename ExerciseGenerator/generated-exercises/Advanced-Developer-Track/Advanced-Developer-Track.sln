@@ -1,0 +1,18 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ejercicio Personalizado - DesignPatterns (Design)", "Ejercicio Personalizado - DesignPatterns (Design)\Ejercicio Personalizado - DesignPatterns (Design).csproj", "{D3EA447B-3A62-4779-B33E-DD132678C197}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ejercicio Personalizado - AsyncProgramming (Performance)", "Ejercicio Personalizado - AsyncProgramming (Performance)\Ejercicio Personalizado - AsyncProgramming (Performance).csproj", "{B43A3918-A84E-4B39-AEC6-7B1266258EB3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ejercicio Personalizado - EntityFramework (Implementation)", "Ejercicio Personalizado - EntityFramework (Implementation)\Ejercicio Personalizado - EntityFramework (Implementation).csproj", "{9D76EB44-72B6-46D5-B97D-CEBC6010E034}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ejercicio Personalizado - AspNetCore (Implementation)", "Ejercicio Personalizado - AspNetCore (Implementation)\Ejercicio Personalizado - AspNetCore (Implementation).csproj", "{355B01D5-9DEF-46F7-B033-1202894136BB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+EndGlobal

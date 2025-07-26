@@ -1,0 +1,14 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ejercicio Personalizado - MethodsAndParameters (Implementation)", "Ejercicio Personalizado - MethodsAndParameters (Implementation)\Ejercicio Personalizado - MethodsAndParameters (Implementation).csproj", "{E3086B2E-8449-443F-BBD5-432554BF7431}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ejercicio Personalizado - MethodsAndParameters (Extension)", "Ejercicio Personalizado - MethodsAndParameters (Extension)\Ejercicio Personalizado - MethodsAndParameters (Extension).csproj", "{8E3A5395-C84B-4555-9CE8-20CD3FEAC868}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+EndGlobal

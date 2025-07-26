@@ -1,0 +1,116 @@
+{
+  "metadata": {
+    "id": "adv-dp-001-strategy-factory",
+    "title": "Patrón Strategy + Factory - Sistema de Procesamiento de Pagos",
+    "topicId": "design-patterns",
+    "exerciseTypeId": "implementation",
+    "skillLevelId": "advanced",
+    "context": "enterprise-payment-system",
+    "estimatedMinutes": 90,
+    "version": "1.0",
+    "author": "CursoNET",
+    "tags": ["strategy-pattern", "factory-pattern", "payment-processing", "enterprise"]
+  },
+  "content": {
+    "description": "Implementa un sistema empresarial de procesamiento de pagos que combina los patrones Strategy y Factory. El sistema debe manejar múltiples métodos de pago (tarjeta de crédito, PayPal, transferencia bancaria) con diferentes proveedores y configuraciones.",
+    "learningObjectives": [
+      "Aplicar el patrón Strategy para intercambiar algoritmos de pago dinámicamente",
+      "Implementar el patrón Factory para crear estrategias de pago apropiadas",
+      "Diseñar una arquitectura extensible para nuevos métodos de pago",
+      "Manejar configuraciones complejas y validaciones de negocio",
+      "Implementar logging y manejo de errores en sistemas empresariales"
+    ],
+    "prerequisites": [
+      "Conocimiento sólido de C# y programación orientada a objetos",
+      "Comprensión de patrones de diseño básicos",
+      "Experiencia con interfaces y polimorfismo",
+      "Familiaridad con dependency injection",
+      "Conceptos de arquitectura empresarial"
+    ],
+    "problemStatement": "Una empresa de comercio electrónico necesita un sistema robusto de procesamiento de pagos que pueda manejar múltiples métodos de pago de diferentes proveedores. El sistema debe ser extensible para agregar nuevos métodos sin modificar código existente, y debe incluir validaciones, logging y manejo de errores apropiados para un entorno empresarial.",
+    "technicalRequirements": [
+      "Implementar el patrón Strategy para diferentes métodos de pago",
+      "Crear un Factory para instanciar las estrategias apropiadas",
+      "Diseñar interfaces claras y extensibles",
+      "Incluir validaciones de datos de entrada",
+      "Implementar logging y manejo de excepciones",
+      "Agregar configuración para diferentes proveedores",
+      "Crear al menos 3 estrategias de pago diferentes"
+    ],
+    "successCriteria": [
+      "El sistema procesa pagos correctamente para todos los métodos implementados",
+      "Las nuevas estrategias se pueden agregar sin modificar código existente",
+      "Todas las validaciones funcionan correctamente",
+      "El logging registra todas las operaciones importantes",
+      "Las excepciones se manejan apropiadamente",
+      "El código sigue principios SOLID",
+      "Los tests unitarios cubren todos los escenarios críticos"
+    ],
+    "instructions": [
+      "1. Analiza el código inicial y identifica los patrones a implementar",
+      "2. Diseña las interfaces IPaymentStrategy e IPaymentStrategyFactory",
+      "3. Implementa las estrategias concretas para cada método de pago",
+      "4. Crea el factory para instanciar las estrategias",
+      "5. Implementa el PaymentProcessor que usa las estrategias",
+      "6. Agrega validaciones y manejo de errores",
+      "7. Implementa logging y configuración",
+      "8. Ejecuta las pruebas y verifica todos los escenarios"
+    ]
+  },
+  "files": {
+    "beforeCodeFile": "before.cs",
+    "afterCodeFile": "after.cs",
+    "starterTemplateFile": "starter.cs",
+    "unitTestsFile": "tests.cs",
+    "projectFile": "project.csproj",
+    "additionalFiles": {
+      "appsettings.json": "appsettings.json",
+      "PaymentConfig.cs": "PaymentConfig.cs",
+      "README.md": "README.md"
+    },
+    "configFiles": {
+      "launchSettings.json": "Properties/launchSettings.json"
+    }
+  },
+  "extensions": [
+    "Agregar soporte para pagos recurrentes/suscripciones",
+    "Implementar patrón Command para deshacer transacciones",
+    "Crear un sistema de callbacks para notificaciones de pago",
+    "Agregar soporte para múltiples monedas con conversión",
+    "Implementar rate limiting y throttling",
+    "Crear un dashboard de monitoreo de transacciones"
+  ],
+  "pedagogical": {
+    "keyConceptsToReinforce": [
+      "Patrón Strategy: Encapsulación de algoritmos intercambiables",
+      "Patrón Factory: Creación controlada de objetos",
+      "Principio Abierto/Cerrado: Extensible sin modificación",
+      "Inversión de dependencias: Depender de abstracciones",
+      "Single Responsibility: Cada clase tiene una responsabilidad"
+    ],
+    "commonPitfalls": [
+      "No validar datos de entrada antes del procesamiento",
+      "Crear dependencias directas entre estrategias y factory",
+      "No manejar apropiadamente las excepciones de red/API",
+      "Hardcodear configuraciones en lugar de usar inyección",
+      "No implementar logging suficiente para debugging",
+      "Crear estrategias demasiado acopladas al contexto específico"
+    ],
+    "progressionPath": [
+      "Comenzar con una implementación básica sin patrones",
+      "Identificar código duplicado y responsabilidades mezcladas",
+      "Refactorizar introduciendo el patrón Strategy",
+      "Agregar el Factory para centralizar la creación",
+      "Mejorar con validaciones y manejo de errores",
+      "Finalizar con logging y configuración empresarial"
+    ],
+    "assessmentCriteria": [
+      "Corrección en la implementación de los patrones",
+      "Calidad del diseño de interfaces",
+      "Robustez del manejo de errores",
+      "Completitud de las validaciones",
+      "Claridad y mantenibilidad del código",
+      "Cobertura y calidad de los tests"
+    ]
+  }
+}

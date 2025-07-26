@@ -1,0 +1,119 @@
+{
+  "metadata": {
+    "id": "csharpfundamentals-refactoring-beginner-variables",
+    "title": "Refactorizar Variables con Nombres Poco Descriptivos",
+    "topicId": "CSharpFundamentals",
+    "exerciseTypeId": "Refactoring",
+    "skillLevelId": "Beginner",
+    "context": "Variables",
+    "estimatedMinutes": 20,
+    "complexityScore": 2,
+    "tags": ["variables", "naming", "readability", "conventions"],
+    "version": "1.0",
+    "lastUpdated": "2025-01-25T15:30:00Z",
+    "author": "Sistema de Ejercicios",
+    "reviewStatus": "Approved"
+  },
+  "content": {
+    "description": "Refactorizar un programa mal escrito que tiene nombres de variables poco descriptivos, tipos de datos inapropiados y formato deficiente. Este ejercicio ayudará a practicar la elección de nombres apropiados de variables, selección de tipos de datos correctos, formato de código adecuado y seguimiento de convenciones de nomenclatura de C#.",
+    "learningObjectives": [
+      "Identificar nombres de variables inapropiados y tipos de datos",
+      "Aplicar convenciones de nomenclatura de C# consistentemente",
+      "Elegir el tipo de dato más apropiado para cada variable",
+      "Mejorar la legibilidad del código mediante mejor formato"
+    ],
+    "prerequisites": [
+      "Comprensión de tipos de datos de C#",
+      "Conocimiento básico de convenciones de nomenclatura de C#",
+      "Familiaridad con sintaxis de declaración de variables"
+    ],
+    "problemStatement": "El siguiente código funciona pero está mal escrito con nombres de variables pobres, tipos de datos incorrectos y formato deficiente. Tu tarea es refactorizarlo para seguir las mejores prácticas de C# manteniendo la misma funcionalidad.\n\nEnfócate en:\n- Usar nombres de variables descriptivos\n- Elegir tipos de datos apropiados\n- Seguir convenciones de nomenclatura de C# (camelCase para variables locales, PascalCase para métodos)\n- Mejorar la estructura y legibilidad del código",
+    "technicalRequirements": [
+      "Mantener exactamente la misma funcionalidad",
+      "Usar nombres de variables descriptivos que expliquen su propósito",
+      "Elegir el tipo de dato más apropiado para cada variable",
+      "Seguir las convenciones de nomenclatura de C#",
+      "Agregar comentarios significativos donde sea útil"
+    ],
+    "successCriteria": [
+      "El código produce salida idéntica al original",
+      "Todos los nombres de variables son descriptivos y siguen convenciones",
+      "Los tipos de datos son apropiados para los datos almacenados",
+      "El código está bien formateado y es legible",
+      "Los comentarios explican lógica compleja"
+    ],
+    "instructions": "1. Analiza el código proporcionado e identifica problemas de nomenclatura y tipos\n2. Refactoriza los nombres de variables para que sean descriptivos\n3. Verifica que los tipos de datos sean apropiados\n4. Mejora el formato y estructura del código\n5. Agrega comentarios donde sea necesario\n6. Prueba que la funcionalidad permanezca igual",
+    "hints": [
+      "Usa nombres que describan el propósito de la variable, no solo su tipo",
+      "Para división, considera usar 'double' en lugar de 'int' para obtener decimales",
+      "La interpolación de strings ($\"...\") es más legible que la concatenación",
+      "Los comentarios deben explicar el 'por qué', no el 'qué'"
+    ],
+    "expectedOutput": "El programa debe solicitar nombre y dos números, luego mostrar comparación, operaciones matemáticas y clasificación del resultado de multiplicación."
+  },
+  "files": {
+    "beforeCodeFile": "before.cs",
+    "afterCodeFile": "after.cs",
+    "starterTemplateFile": "starter.cs",
+    "unitTestsFile": "tests.cs",
+    "projectFile": "project.csproj"
+  },
+  "extensions": [
+    "Add input validation to ensure numeric inputs are valid",
+    "Extract calculations into separate methods for better testability",
+    "Add XML documentation comments for the main method",
+    "Implement error handling for invalid input using TryParse",
+    "Create a Calculator class to encapsulate the functionality"
+  ],
+  "pedagogical": {
+    "keyConcepts": [
+      "Descriptive variable naming",
+      "C# naming conventions (camelCase, PascalCase)",
+      "Appropriate data type selection",
+      "String interpolation vs concatenation",
+      "Code formatting and indentation",
+      "Meaningful comments"
+    ],
+    "commonPitfalls": [
+      "Using single-letter variable names that don't convey meaning",
+      "Inconsistent formatting making code hard to read",
+      "Using wrong data types (int for division instead of double)",
+      "String concatenation instead of interpolation",
+      "Missing null checks when reading user input",
+      "Not following C# naming conventions consistently"
+    ],
+    "explanation": "La refactorización se centra en hacer el código más legible y mantenible mediante nombres descriptivos de variables, tipos de datos apropiados, formato consistente y mejores prácticas de C#. Los cambios clave incluyen: reemplazar variables de una letra con nombres descriptivos, usar double para división para obtener resultados precisos, aplicar interpolación de strings para mejor legibilidad, y agregar comentarios que explican la lógica.",
+    "teachingTips": [
+      "Emphasize that good variable names are self-documenting",
+      "Show how proper formatting makes code easier to debug",
+      "Demonstrate the difference between int and double division",
+      "Explain when to use camelCase vs PascalCase in C#",
+      "Point out how string interpolation is more readable than concatenation"
+    ],
+    "relatedConcepts": [
+      "Code readability and maintainability",
+      "C# coding standards and conventions",
+      "Data type selection and conversion",
+      "String manipulation best practices",
+      "Code review and refactoring techniques"
+    ],
+    "furtherReading": [
+      "Microsoft C# Coding Conventions",
+      "Clean Code by Robert C. Martin - Chapter on Meaningful Names",
+      "C# Programming Guide - Variables and Data Types",
+      "Effective C# by Bill Wagner - Items on naming and formatting"
+    ],
+    "assessmentCriteria": [
+      "Variable names clearly indicate their purpose",
+      "Proper use of data types for different operations",
+      "Consistent application of C# naming conventions",
+      "Code formatting follows standard practices",
+      "Functional equivalence with original code"
+    ],
+    "difficultyFactors": [
+      "Identifying all variables that need renaming",
+      "Understanding when to use different data types",
+      "Balancing descriptiveness with conciseness in naming"
+    ]
+  }
+}

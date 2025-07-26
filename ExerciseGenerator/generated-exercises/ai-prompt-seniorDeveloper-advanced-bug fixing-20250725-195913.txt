@@ -1,0 +1,275 @@
+# PROMPT GENERADO AUTOMÁTICAMENTE
+# Template: seniorDeveloper
+# Skill Level: advanced
+# Topic: bug fixing
+# Exercise Type: test and debug
+# Context: bank wallet
+# Duration: 65 minutes
+# Generated: 2025-07-25 19:59:13
+# Length: 7.966 characters
+
+---
+
+# 🏗️ DESAFÍO TÉCNICO SENIOR: bug fixing - bank wallet
+
+## 📊 ESPECIFICACIONES TÉCNICAS
+
+### 🎯 Contexto Empresarial
+**Dominio**: bank wallet | **Complejidad**: advanced | **Tipo**: test and debug | **Tiempo**: 65min
+
+### 🏢 Contexto del Proyecto
+- **Ecosistema**: bug 1 - bug fixing
+- **Metodología**: inter
+- **Tech Lead**: Mentor: ale, Style: inter, Domain: all
+- **Stack Focus**: all
+
+## 🔧 ANÁLISIS ARQUITECTÓNICO REQUERIDO
+
+### 🏗️ Dimensiones Técnicas a Considerar
+
+#### **1. Architectural Patterns & Design**
+```csharp
+// Evaluar y aplicar patrones apropiados para bug fixing:
+// - Domain-Driven Design principles
+// - SOLID compliance y código mantenible
+// - Enterprise Integration Patterns donde aplique
+// - Performance patterns para bank wallet workloads
+```
+
+#### **2. Scalability & Performance**
+```yaml
+Consideraciones_Performance:
+  - Complexity analysis: Time/Space para operaciones críticas
+  - Memory management: GC pressure y object pooling
+  - Concurrency: Thread safety y async patterns
+  - I/O optimization: Minimizar latencia en bank wallet scenarios
+  
+Scalability_Factors:
+  - Horizontal scaling capabilities
+  - Caching strategies (local, distributed)
+  - Database access patterns y N+1 prevention
+  - Resource utilization efficiency
+```
+
+#### **3. Code Quality & Maintainability**
+```yaml
+Quality_Standards:
+  - Clean Architecture compliance
+  - Dependency injection y testability
+  - Error handling robusто y logging estratégico
+  - API design y contract evolution
+  
+Maintainability_Metrics:
+  - Cyclomatic complexity < 10 por método
+  - Test coverage > 85% con mutation testing
+  - Zero technical debt crítico
+  - Documentation para decisiones arquitectónicas
+```
+
+## 💼 ESPECIFICACIÓN DEL DESAFÍO
+
+### 🎯 Objective Statement
+```typescript
+interface TechnicalChallenge {
+  domain: 'bank wallet';
+  coreCompetency: 'bug fixing';
+  deliverable: 'test and debug';
+  complexity: 'advanced';
+  constraints: {
+    timeBox: 65 minutes;
+    qualityGates: 'Enterprise-ready code';
+    testStrategy: 'Comprehensive automated testing';
+    documentation: 'Architectural decision records';
+  };
+}
+```
+
+### 🏗️ Architectural Requirements
+
+#### **Functional Requirements**
+- **Core Business Logic**: Implementar bug fixing siguiendo domain model de bank wallet
+- **Integration Points**: Definir contratos y abstractions para external dependencies
+- **Data Consistency**: Asegurar ACID properties donde sea crítico
+- **Business Rules**: Encapsular reglas de negocio con validación robusta
+
+#### **Non-Functional Requirements**
+```yaml
+Performance:
+  - Response time: P95 < 100ms para operaciones críticas
+  - Throughput: Soportar carga concurrente típica de bank wallet
+  - Resource utilization: CPU < 70%, Memory growth linear
+  
+Reliability:
+  - Error rate: < 0.1% bajo condiciones normales
+  - Recovery time: < 30s para transient failures
+  - Circuit breaker patterns para external dependencies
+  
+Maintainability:
+  - Code coverage: > 85% con meaningful tests
+  - Documentation: ADRs para decisiones arquitectónicas
+  - Refactoring safety: Comprehensive regression testing
+  
+Security:
+  - Input validation y sanitization
+  - Authorization/Authentication según contexto
+  - Secure coding practices (OWASP compliance)
+```
+
+### 🔬 Technical Implementation Strategy
+
+#### **Phase 1: Architecture Design (25% del tiempo)**
+```csharp
+// 1. Domain Modeling
+public class bank walletDomainModel {
+    // Definir entities, value objects, aggregates
+    // Identificar bounded contexts
+    // Establecer ubiquitous language
+}
+
+// 2. Dependency Structure
+public interface Ibug fixingService {
+    // Definir contratos claros
+    // Abstractions para external dependencies
+    // Error handling strategies
+}
+
+// 3. Data Access Strategy
+public class bug fixingRepository {
+    // Repository pattern implementation
+    // Query optimization strategies
+    // Connection management
+}
+```
+
+#### **Phase 2: Core Implementation (50% del tiempo)**
+```csharp
+// Implementación siguiendo:
+// - SOLID principles estrictamente
+// - Command/Query Responsibility Separation donde aplique
+// - Decorator pattern para cross-cutting concerns
+// - Strategy pattern para variabilidad de business rules
+```
+
+#### **Phase 3: Quality Assurance (25% del tiempo)**
+```csharp
+// Testing Strategy:
+// - Unit tests con AAA pattern
+// - Integration tests para external dependencies
+// - Performance tests para operaciones críticas
+// - Contract tests para API boundaries
+```
+
+## 🔍 EVALUATION CRITERIA FOR SENIOR DEVELOPERS
+
+### 🏆 Technical Excellence Indicators
+
+#### **Architecture & Design (40%)**
+```yaml
+Excellent:
+  - Proper separation of concerns y layering
+  - Appropriate design patterns usage
+  - Clean abstractions y loose coupling
+  - Scalability considerations implemented
+  
+Good:
+  - Solid structure con minor violations
+  - Some design patterns appropriately used
+  - Generally good separation of concerns
+  - Basic scalability awareness
+  
+Needs_Improvement:
+  - Tight coupling o God objects
+  - Missing abstractions
+  - Poor separation of concerns
+  - No scalability considerations
+```
+
+#### **Code Quality & Craftsmanship (30%)**
+```yaml
+Metrics_to_Evaluate:
+  - Cyclomatic complexity distribution
+  - Method y class size appropriateness
+  - Naming conventions y expressiveness
+  - Error handling completeness
+  - Resource management (IDisposable, async/await)
+  
+Craftsmanship_Indicators:
+  - Self-documenting code
+  - Consistent coding style
+  - Appropriate comments (why, not what)
+  - Refactoring-friendly structure
+```
+
+#### **Testing & Validation (20%)**
+```yaml
+Testing_Quality:
+  - Test coverage breadth y depth
+  - Test maintainability
+  - Edge cases coverage
+  - Performance test inclusion
+  
+Validation_Completeness:
+  - Input validation robustness
+  - Business rule enforcement
+  - Error scenario handling
+  - Integration point validation
+```
+
+#### **Enterprise Readiness (10%)**
+```yaml
+Production_Readiness:
+  - Logging y monitoring hooks
+  - Configuration management
+  - Deployment considerations
+  - Documentation quality
+  
+Operational_Excellence:
+  - Health checks implementation
+  - Graceful degradation patterns
+  - Resource cleanup
+  - Performance monitoring points
+```
+
+## 🚀 DELIVERABLES EXPECTED
+
+### 📦 Code Artifacts
+1. **Production-ready implementation** de bug fixing para bank wallet
+2. **Comprehensive test suite** con diferentes niveles de testing
+3. **Configuration y setup** para diferentes environments
+4. **Documentation** incluyendo ADRs y API contracts
+
+### 📊 Technical Artifacts
+1. **Architecture diagram** mostrando component relationships
+2. **Performance benchmarks** con baseline metrics
+3. **Security analysis** y threat model considerations
+4. **Deployment guide** con infrastructure requirements
+
+### 🎯 Senior-Level Expectations
+```yaml
+Demonstration_of_Expertise:
+  - Anticipar y resolver problemas complejos
+  - Balancear trade-offs arquitectónicos efectivamente
+  - Implementar patterns apropiados sin over-engineering
+  - Crear código que otros seniors puedan extender fácilmente
+  
+Leadership_Indicators:
+  - Code que sirve como reference implementation
+  - Decisiones técnicas bien documentadas y justificadas
+  - Consideración de team scalability y knowledge transfer
+  - Proactive identification de technical risks
+```
+
+---
+
+## 🎯 CHALLENGE DIRECTIVE
+
+**Desarrollar una implementación enterprise-grade de bug fixing en el contexto de bank wallet que demuestre mastery técnico a nivel senior, incluyendo:**
+
+1. **Architectural sophistication** apropiada para el dominio
+2. **Performance optimization** con métricas y benchmarks
+3. **Production-ready quality** con comprehensive testing
+4. **Team scalability** considerations y documentation
+5. **Future extensibility** sin over-engineering
+6. **Operational excellence** con monitoring y observability
+
+**El resultado debe ser código que un CTO estaría orgulloso de tener en producción y que otros desarrolladores senior usarían como reference implementation.**

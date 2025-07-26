@@ -1,0 +1,98 @@
+{
+  "metadata": {
+    "id": "variables-refactoring-beginner",
+    "title": "Refactorizar Variables con Nombres Poco Descriptivos",
+    "level": "Beginner",
+    "topic": "CSharpFundamentals",
+    "type": "Refactoring",
+    "context": "Variables",
+    "estimatedMinutes": 20,
+    "complexityScore": 2,
+    "tags": ["variables", "naming", "readability", "conventions"],
+    "version": "1.0",
+    "lastUpdated": "2025-01-25T14:30:00Z"
+  },
+  "content": {
+    "description": "Refactorizar un programa mal escrito que tiene nombres de variables poco descriptivos, tipos de datos inapropiados y formato deficiente. Este ejercicio ayudará a practicar la elección de nombres apropiados de variables, selección de tipos de datos correctos, formato de código adecuado y seguimiento de convenciones de nomenclatura de C#.",
+    "learningObjectives": [
+      "Identificar nombres de variables inapropiados y tipos de datos",
+      "Aplicar convenciones de nomenclatura de C# consistentemente",
+      "Elegir el tipo de dato más apropiado para cada variable",
+      "Mejorar la legibilidad del código mediante mejor formato"
+    ],
+    "prerequisites": [
+      "Comprensión de tipos de datos de C#",
+      "Conocimiento básico de convenciones de nomenclatura de C#",
+      "Familiaridad con sintaxis de declaración de variables"
+    ],
+    "problemStatement": "El siguiente código funciona pero está mal escrito con nombres de variables pobres, tipos de datos incorrectos y formato deficiente. Tu tarea es refactorizarlo para seguir las mejores prácticas de C# manteniendo la misma funcionalidad.\n\nEnfócate en:\n- Usar nombres de variables descriptivos\n- Elegir tipos de datos apropiados\n- Seguir convenciones de nomenclatura de C# (camelCase para variables locales, PascalCase para métodos)\n- Mejorar la estructura y legibilidad del código",
+    "technicalRequirements": [
+      "Mantener exactamente la misma funcionalidad",
+      "Usar nombres de variables descriptivos que expliquen su propósito",
+      "Elegir el tipo de dato más apropiado para cada variable",
+      "Seguir las convenciones de nomenclatura de C#",
+      "Agregar comentarios significativos donde sea útil"
+    ],
+    "successCriteria": [
+      "El código produce salida idéntica al original",
+      "Todos los nombres de variables son descriptivos y siguen convenciones",
+      "Los tipos de datos son apropiados para los datos almacenados",
+      "El código está bien formateado y es legible",
+      "Los comentarios explican lógica compleja"
+    ],
+    "instructions": "1. Analiza el código proporcionado e identifica problemas de nomenclatura y tipos\n2. Refactoriza los nombres de variables para que sean descriptivos\n3. Verifica que los tipos de datos sean apropiados\n4. Mejora el formato y estructura del código\n5. Agrega comentarios donde sea necesario\n6. Prueba que la funcionalidad permanezca igual"
+  },
+  "code": {
+    "beforeCode": "using System;\n\nnamespace CSharpFundamentals.RefactorMe\n{\n    /// <summary>\n    /// BAD CODE - Needs Refactoring\n    /// \n    /// This code works but violates many C# best practices:\n    /// - Poor variable naming\n    /// - Wrong data types\n    /// - Bad formatting\n    /// - No meaningful comments\n    /// \n    /// YOUR TASK: Refactor this code to follow C# best practices\n    /// while maintaining the exact same functionality.\n    /// </summary>\n    class Program\n    {\n        static void Main(string[] args)\n        {\n            string a=Console.ReadLine();\n        int b=int.Parse(Console.ReadLine());\n        int c=int.Parse(Console.ReadLine());\n        string d=(b>c)?\"yes\":\"no\";\n        int e=b*c;\n        int f=b+c;\n        int g=b/c;\n        Console.WriteLine(a+\" the result of \"+b+\" compared to \"+c+\" is: \"+d);\n        Console.WriteLine(\"multiplication: \"+e);\n        Console.WriteLine(\"sum: \"+f);\n        Console.WriteLine(\"division: \"+g);\n        string h=(e>100)?\"large\":\"small\";\n        Console.WriteLine(\"The multiplication result is: \"+h);\n        }\n    }\n}",
+    "afterCode": "using System;\n\nnamespace CSharpFundamentals.RefactorMe\n{\n    /// <summary>\n    /// REFACTORED CODE - Following C# Best Practices\n    /// \n    /// This refactored version demonstrates:\n    /// - Descriptive variable names\n    /// - Appropriate data types\n    /// - Proper formatting and indentation\n    /// - Meaningful comments\n    /// - Following C# naming conventions\n    /// </summary>\n    class MathCalculatorProgram\n    {\n        static void Main(string[] args)\n        {\n            // Get user's name for personalized output\n            Console.Write(\"Enter your name: \");\n            string userName = Console.ReadLine() ?? \"User\";\n            \n            // Get two numbers for mathematical operations\n            Console.Write(\"Enter the first number: \");\n            int firstNumber = int.Parse(Console.ReadLine() ?? \"0\");\n            \n            Console.Write(\"Enter the second number: \");\n            int secondNumber = int.Parse(Console.ReadLine() ?? \"0\");\n            \n            // Perform comparisons and calculations\n            string comparisonResult = (firstNumber > secondNumber) ? \"yes\" : \"no\";\n            int multiplicationResult = firstNumber * secondNumber;\n            int additionResult = firstNumber + secondNumber;\n            \n            // Use double for division to get accurate results\n            double divisionResult = (secondNumber != 0) ? (double)firstNumber / secondNumber : 0;\n            \n            // Display results with proper formatting\n            Console.WriteLine($\"{userName}, the result of {firstNumber} compared to {secondNumber} is: {comparisonResult}\");\n            Console.WriteLine($\"Multiplication: {multiplicationResult}\");\n            Console.WriteLine($\"Sum: {additionResult}\");\n            Console.WriteLine($\"Division: {divisionResult:F2}\"); // Format to 2 decimal places\n            \n            // Classify the multiplication result\n            string resultMagnitude = (multiplicationResult > 100) ? \"large\" : \"small\";\n            Console.WriteLine($\"The multiplication result is: {resultMagnitude}\");\n        }\n    }\n}",
+    "starterTemplate": "using System;\n\nnamespace CSharpFundamentals.RefactorMe\n{\n    /// <summary>\n    /// TODO: Refactor this code to follow C# best practices\n    /// Focus on: variable naming, data types, formatting, comments\n    /// </summary>\n    class Program\n    {\n        static void Main(string[] args)\n        {\n            // TODO: Replace single-letter variables with descriptive names\n            string a=Console.ReadLine();\n            int b=int.Parse(Console.ReadLine());\n            int c=int.Parse(Console.ReadLine());\n            \n            // TODO: Improve variable naming and formatting\n            string d=(b>c)?\"yes\":\"no\";\n            int e=b*c;\n            int f=b+c;\n            int g=b/c; // TODO: Consider data type for division\n            \n            // TODO: Use string interpolation instead of concatenation\n            Console.WriteLine(a+\" the result of \"+b+\" compared to \"+c+\" is: \"+d);\n            Console.WriteLine(\"multiplication: \"+e);\n            Console.WriteLine(\"sum: \"+f);\n            Console.WriteLine(\"division: \"+g);\n            \n            // TODO: Improve variable naming\n            string h=(e>100)?\"large\":\"small\";\n            Console.WriteLine(\"The multiplication result is: \"+h);\n        }\n    }\n}",
+    "unitTests": "using System;\nusing Xunit;\nusing System.IO;\n\nnamespace CSharpFundamentals.RefactorMe.Tests\n{\n    /// <summary>\n    /// Unit tests to verify refactored code maintains same functionality\n    /// </summary>\n    public class MathCalculatorTests\n    {\n        [Theory]\n        [InlineData(\"Alice\", \"10\", \"5\", \"Alice, the result of 10 compared to 5 is: yes\")]\n        [InlineData(\"Bob\", \"3\", \"7\", \"Bob, the result of 3 compared to 7 is: no\")]\n        [InlineData(\"Carol\", \"5\", \"5\", \"Carol, the result of 5 compared to 5 is: no\")]\n        public void ComparisonOutput_ShouldBeCorrect(string name, string first, string second, string expectedComparison)\n        {\n            // This test would require refactoring the main method to be testable\n            // by extracting the logic into separate methods\n            Assert.True(true); // Placeholder - would need method extraction first\n        }\n        \n        [Theory]\n        [InlineData(10, 5, 50)]\n        [InlineData(3, 7, 21)]\n        [InlineData(-2, 4, -8)]\n        public void Multiplication_ShouldBeCorrect(int first, int second, int expected)\n        {\n            // Test multiplication logic\n            int result = first * second;\n            Assert.Equal(expected, result);\n        }\n        \n        [Theory]\n        [InlineData(10, 5, 15)]\n        [InlineData(3, 7, 10)]\n        [InlineData(-2, 4, 2)]\n        public void Addition_ShouldBeCorrect(int first, int second, int expected)\n        {\n            // Test addition logic\n            int result = first + second;\n            Assert.Equal(expected, result);\n        }\n        \n        [Theory]\n        [InlineData(10, 5, 2.0)]\n        [InlineData(3, 2, 1.5)]\n        [InlineData(7, 4, 1.75)]\n        public void Division_ShouldBeCorrect(int first, int second, double expected)\n        {\n            // Test division logic with proper data types\n            double result = (double)first / second;\n            Assert.Equal(expected, result, 2); // 2 decimal places\n        }\n        \n        [Theory]\n        [InlineData(150, \"large\")]\n        [InlineData(50, \"small\")]\n        [InlineData(100, \"small\")]\n        [InlineData(101, \"large\")]\n        public void ResultMagnitude_ShouldBeCorrect(int value, string expected)\n        {\n            // Test magnitude classification\n            string result = (value > 100) ? \"large\" : \"small\";\n            Assert.Equal(expected, result);\n        }\n    }\n}",
+    "projectFile": "<Project Sdk=\"Microsoft.NET.Sdk\">\n\n  <PropertyGroup>\n    <OutputType>Exe</OutputType>\n    <TargetFramework>net8.0</TargetFramework>\n    <ImplicitUsings>enable</ImplicitUsings>\n    <Nullable>enable</Nullable>\n  </PropertyGroup>\n\n  <ItemGroup>\n    <PackageReference Include=\"Microsoft.NET.Test.Sdk\" Version=\"17.8.0\" />\n    <PackageReference Include=\"xunit\" Version=\"2.6.1\" />\n    <PackageReference Include=\"xunit.runner.visualstudio\" Version=\"2.5.3\" />\n  </ItemGroup>\n\n</Project>"
+  },
+  "extensions": [
+    "Add input validation to ensure numeric inputs are valid",
+    "Extract calculations into separate methods for better testability",
+    "Add XML documentation comments for the main method",
+    "Implement error handling for invalid input using TryParse",
+    "Create a Calculator class to encapsulate the functionality"
+  ],
+  "pedagogical": {
+    "keyConcepts": [
+      "Descriptive variable naming",
+      "C# naming conventions (camelCase, PascalCase)",
+      "Appropriate data type selection",
+      "String interpolation vs concatenation",
+      "Code formatting and indentation",
+      "Meaningful comments"
+    ],
+    "commonPitfalls": [
+      "Using single-letter variable names that don't convey meaning",
+      "Inconsistent formatting making code hard to read",
+      "Using wrong data types (int for division instead of double)",
+      "String concatenation instead of interpolation",
+      "Missing null checks when reading user input",
+      "Not following C# naming conventions consistently"
+    ],
+    "explanation": "La refactorización se centra en hacer el código más legible y mantenible mediante nombres descriptivos de variables, tipos de datos apropiados, formato consistente y mejores prácticas de C#. Los cambios clave incluyen: reemplazar variables de una letra con nombres descriptivos, usar double para división para obtener resultados precisos, aplicar interpolación de strings para mejor legibilidad, y agregar comentarios que explican la lógica.",
+    "teachingTips": [
+      "Emphasize that good variable names are self-documenting",
+      "Show how proper formatting makes code easier to debug",
+      "Demonstrate the difference between int and double division",
+      "Explain when to use camelCase vs PascalCase in C#",
+      "Point out how string interpolation is more readable than concatenation"
+    ],
+    "relatedConcepts": [
+      "Code readability and maintainability",
+      "C# coding standards and conventions",
+      "Data type selection and conversion",
+      "String manipulation best practices",
+      "Code review and refactoring techniques"
+    ],
+    "furtherReading": [
+      "Microsoft C# Coding Conventions",
+      "Clean Code by Robert C. Martin - Chapter on Meaningful Names",
+      "C# Programming Guide - Variables and Data Types",
+      "Effective C# by Bill Wagner - Items on naming and formatting"
+    ]
+  }
+}

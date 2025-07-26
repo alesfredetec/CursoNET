@@ -1,0 +1,152 @@
+{
+  "topicDependencies": {
+    "CSharpFundamentals": {
+      "requires": [],
+      "recommends": [],
+      "description": "Foundation topic - no dependencies"
+    },
+    "ControlStructures": {
+      "requires": ["CSharpFundamentals"],
+      "recommends": [],
+      "description": "Requires understanding of basic C# syntax and variables"
+    },
+    "MethodsAndParameters": {
+      "requires": ["CSharpFundamentals", "ControlStructures"],
+      "recommends": [],
+      "description": "Requires understanding of variables and control flow"
+    },
+    "BasicOOP": {
+      "requires": ["MethodsAndParameters"],
+      "recommends": ["ControlStructures"],
+      "description": "Requires solid understanding of methods and program structure"
+    },
+    "AdvancedOOP": {
+      "requires": ["BasicOOP"],
+      "recommends": ["MethodsAndParameters"],
+      "description": "Requires solid foundation in basic OOP concepts"
+    },
+    "LINQ": {
+      "requires": ["BasicOOP", "ControlStructures"],
+      "recommends": ["AdvancedOOP"],
+      "description": "Requires understanding of objects and collections"
+    },
+    "DelegatesAndEvents": {
+      "requires": ["AdvancedOOP"],
+      "recommends": ["MethodsAndParameters"],
+      "description": "Requires advanced OOP understanding including interfaces"
+    },
+    "FileIO": {
+      "requires": ["BasicOOP"],
+      "recommends": ["AdvancedOOP"],
+      "description": "Requires understanding of objects and exception handling"
+    },
+    "UnitTesting": {
+      "requires": ["MethodsAndParameters"],
+      "recommends": ["BasicOOP"],
+      "description": "Requires ability to write and organize methods"
+    },
+    "DesignPatterns": {
+      "requires": ["AdvancedOOP", "DelegatesAndEvents"],
+      "recommends": ["UnitTesting"],
+      "description": "Requires mastery of OOP principles and advanced concepts"
+    },
+    "EntityFramework": {
+      "requires": ["AdvancedOOP", "LINQ"],
+      "recommends": ["DesignPatterns"],
+      "description": "Requires understanding of objects, queries, and data modeling"
+    },
+    "AspNetCore": {
+      "requires": ["AdvancedOOP", "DelegatesAndEvents"],
+      "recommends": ["EntityFramework", "UnitTesting"],
+      "description": "Requires advanced OOP and understanding of event-driven programming"
+    },
+    "AsyncProgramming": {
+      "requires": ["AdvancedOOP", "DelegatesAndEvents"],
+      "recommends": ["AspNetCore"],
+      "description": "Requires understanding of delegates, events, and advanced concepts"
+    },
+    "PerformanceOptimization": {
+      "requires": ["LINQ", "AsyncProgramming"],
+      "recommends": ["EntityFramework"],
+      "description": "Requires understanding of queries, async patterns, and advanced concepts"
+    }
+  },
+  "exerciseTypeDependencies": {
+    "Implementation": {
+      "minimumLevel": "Beginner",
+      "recommendedTopics": [],
+      "description": "Basic exercise type suitable for all levels"
+    },
+    "Refactoring": {
+      "minimumLevel": "Beginner",
+      "recommendedTopics": ["CSharpFundamentals"],
+      "description": "Requires basic understanding to improve existing code"
+    },
+    "DebugFix": {
+      "minimumLevel": "Beginner",
+      "recommendedTopics": ["CSharpFundamentals"],
+      "description": "Requires basic understanding to identify and fix issues"
+    },
+    "Design": {
+      "minimumLevel": "Intermediate",
+      "recommendedTopics": ["BasicOOP", "AdvancedOOP"],
+      "description": "Requires understanding of software design principles"
+    },
+    "Testing": {
+      "minimumLevel": "Intermediate",
+      "recommendedTopics": ["MethodsAndParameters", "BasicOOP"],
+      "description": "Requires ability to write and test methods and classes"
+    },
+    "Performance": {
+      "minimumLevel": "Intermediate",
+      "recommendedTopics": ["LINQ", "AdvancedOOP"],
+      "description": "Requires understanding of algorithms and data structures"
+    },
+    "Extension": {
+      "minimumLevel": "Beginner",
+      "recommendedTopics": ["BasicOOP"],
+      "description": "Requires understanding of code structure and patterns"
+    },
+    "Integration": {
+      "minimumLevel": "Intermediate",
+      "recommendedTopics": ["AdvancedOOP", "DelegatesAndEvents"],
+      "description": "Requires understanding of system architecture and interfaces"
+    }
+  },
+  "skillLevelProgression": {
+    "Beginner": {
+      "nextLevel": "Intermediate",
+      "requiredTopics": ["CSharpFundamentals", "ControlStructures"],
+      "minimumExercisesCompleted": 5,
+      "recommendedExerciseTypes": ["Implementation", "Refactoring", "DebugFix"]
+    },
+    "Intermediate": {
+      "nextLevel": "Advanced",
+      "requiredTopics": ["BasicOOP", "MethodsAndParameters", "LINQ"],
+      "minimumExercisesCompleted": 8,
+      "recommendedExerciseTypes": ["Design", "Testing", "Performance", "Extension"]
+    },
+    "Advanced": {
+      "nextLevel": null,
+      "requiredTopics": ["AdvancedOOP", "DesignPatterns"],
+      "minimumExercisesCompleted": 10,
+      "recommendedExerciseTypes": ["Design", "Integration", "Performance"]
+    }
+  },
+  "validationRules": {
+    "topicValidation": {
+      "maxDependencyDepth": 5,
+      "circularDependencyCheck": true,
+      "requiredFields": ["requires", "recommends", "description"]
+    },
+    "exerciseTypeValidation": {
+      "validSkillLevels": ["Beginner", "Intermediate", "Advanced"],
+      "requiredFields": ["minimumLevel", "recommendedTopics", "description"]
+    }
+  },
+  "metadata": {
+    "version": "1.0",
+    "lastUpdated": "2025-01-25T15:00:00Z",
+    "description": "Configuration file defining dependencies and progression rules between topics and exercise types"
+  }
+}

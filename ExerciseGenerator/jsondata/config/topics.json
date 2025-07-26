@@ -1,0 +1,177 @@
+{
+  "topics": [
+    {
+      "id": "CSharpFundamentals",
+      "displayName": "C# Fundamentals",
+      "description": "Basic C# programming concepts including variables, data types, operators, and basic syntax",
+      "pathName": "csharp-fundamentals",
+      "skillLevels": ["Beginner", "Intermediate"],
+      "prerequisites": [],
+      "estimatedHours": 20,
+      "category": "Programming Basics",
+      "tags": ["syntax", "variables", "operators", "basic-concepts"],
+      "difficulty": 1
+    },
+    {
+      "id": "ControlStructures",
+      "displayName": "Control Structures",
+      "description": "Conditional statements, loops, and program flow control",
+      "pathName": "control-structures",
+      "skillLevels": ["Beginner", "Intermediate"],
+      "prerequisites": ["CSharpFundamentals"],
+      "estimatedHours": 15,
+      "category": "Programming Basics",
+      "tags": ["if-else", "loops", "switch", "flow-control"],
+      "difficulty": 2
+    },
+    {
+      "id": "MethodsAndParameters",
+      "displayName": "Methods and Parameters",
+      "description": "Method definition, parameters, return values, and method overloading",
+      "pathName": "methods-parameters",
+      "skillLevels": ["Beginner", "Intermediate"],
+      "prerequisites": ["CSharpFundamentals", "ControlStructures"],
+      "estimatedHours": 18,
+      "category": "Programming Basics",
+      "tags": ["methods", "parameters", "return-values", "overloading"],
+      "difficulty": 2
+    },
+    {
+      "id": "BasicOOP",
+      "displayName": "Basic Object-Oriented Programming",
+      "description": "Classes, objects, properties, constructors, and basic inheritance",
+      "pathName": "basic-oop",
+      "skillLevels": ["Beginner", "Intermediate"],
+      "prerequisites": ["MethodsAndParameters"],
+      "estimatedHours": 25,
+      "category": "Object-Oriented Programming",
+      "tags": ["classes", "objects", "properties", "constructors", "inheritance"],
+      "difficulty": 3
+    },
+    {
+      "id": "AdvancedOOP",
+      "displayName": "Advanced Object-Oriented Programming",
+      "description": "Polymorphism, abstract classes, interfaces, and advanced inheritance",
+      "pathName": "advanced-oop",
+      "skillLevels": ["Intermediate", "Advanced"],
+      "prerequisites": ["BasicOOP"],
+      "estimatedHours": 30,
+      "category": "Object-Oriented Programming",
+      "tags": ["polymorphism", "interfaces", "abstract-classes", "advanced-inheritance"],
+      "difficulty": 4
+    },
+    {
+      "id": "LINQ",
+      "displayName": "LINQ and Functional Programming",
+      "description": "Language Integrated Query, lambda expressions, and functional programming concepts",
+      "pathName": "linq",
+      "skillLevels": ["Intermediate", "Advanced"],
+      "prerequisites": ["BasicOOP", "ControlStructures"],
+      "estimatedHours": 20,
+      "category": "Data Processing",
+      "tags": ["linq", "lambda", "functional-programming", "queries"],
+      "difficulty": 4
+    },
+    {
+      "id": "DelegatesAndEvents",
+      "displayName": "Delegates and Events",
+      "description": "Delegates, events, event handling, and callback mechanisms",
+      "pathName": "delegates-events",
+      "skillLevels": ["Intermediate", "Advanced"],
+      "prerequisites": ["AdvancedOOP"],
+      "estimatedHours": 15,
+      "category": "Advanced Concepts",
+      "tags": ["delegates", "events", "callbacks", "event-handling"],
+      "difficulty": 4
+    },
+    {
+      "id": "FileIO",
+      "displayName": "File I/O and Data Persistence",
+      "description": "File operations, streams, serialization, and data persistence",
+      "pathName": "file-io",
+      "skillLevels": ["Intermediate", "Advanced"],
+      "prerequisites": ["BasicOOP"],
+      "estimatedHours": 18,
+      "category": "Data Management",
+      "tags": ["file-io", "streams", "serialization", "persistence"],
+      "difficulty": 3
+    },
+    {
+      "id": "UnitTesting",
+      "displayName": "Unit Testing",
+      "description": "Test-driven development, unit testing frameworks, and testing best practices",
+      "pathName": "unit-testing",
+      "skillLevels": ["Intermediate", "Advanced"],
+      "prerequisites": ["MethodsAndParameters"],
+      "estimatedHours": 22,
+      "category": "Quality Assurance",
+      "tags": ["unit-testing", "tdd", "test-frameworks", "testing-practices"],
+      "difficulty": 3
+    },
+    {
+      "id": "DesignPatterns",
+      "displayName": "Design Patterns",
+      "description": "Common design patterns including Singleton, Factory, Observer, and Strategy",
+      "pathName": "design-patterns",
+      "skillLevels": ["Advanced"],
+      "prerequisites": ["AdvancedOOP", "DelegatesAndEvents"],
+      "estimatedHours": 35,
+      "category": "Software Architecture",
+      "tags": ["design-patterns", "architecture", "gof-patterns", "software-design"],
+      "difficulty": 5
+    },
+    {
+      "id": "EntityFramework",
+      "displayName": "Entity Framework",
+      "description": "Object-relational mapping, database operations, and Entity Framework Core",
+      "pathName": "entity-framework",
+      "skillLevels": ["Advanced"],
+      "prerequisites": ["AdvancedOOP", "LINQ"],
+      "estimatedHours": 40,
+      "category": "Data Access",
+      "tags": ["entity-framework", "orm", "database", "ef-core"],
+      "difficulty": 5
+    },
+    {
+      "id": "AspNetCore",
+      "displayName": "ASP.NET Core",
+      "description": "Web development with ASP.NET Core, MVC pattern, and API development",
+      "pathName": "aspnet-core",
+      "skillLevels": ["Advanced"],
+      "prerequisites": ["AdvancedOOP", "DelegatesAndEvents"],
+      "estimatedHours": 50,
+      "category": "Web Development",
+      "tags": ["aspnet-core", "mvc", "web-api", "web-development"],
+      "difficulty": 5
+    },
+    {
+      "id": "AsyncProgramming",
+      "displayName": "Asynchronous Programming",
+      "description": "Async/await, Task-based programming, and concurrent programming concepts",
+      "pathName": "async-programming",
+      "skillLevels": ["Advanced"],
+      "prerequisites": ["AdvancedOOP", "DelegatesAndEvents"],
+      "estimatedHours": 25,
+      "category": "Advanced Concepts",
+      "tags": ["async", "await", "tasks", "concurrency"],
+      "difficulty": 5
+    },
+    {
+      "id": "PerformanceOptimization",
+      "displayName": "Performance Optimization",
+      "description": "Performance analysis, optimization techniques, and profiling",
+      "pathName": "performance-optimization",
+      "skillLevels": ["Advanced"],
+      "prerequisites": ["LINQ", "AsyncProgramming"],
+      "estimatedHours": 30,
+      "category": "Performance",
+      "tags": ["performance", "optimization", "profiling", "benchmarking"],
+      "difficulty": 5
+    }
+  ],
+  "metadata": {
+    "version": "1.0",
+    "lastUpdated": "2025-01-25T15:00:00Z",
+    "description": "Configuration file defining all available topics for exercise generation"
+  }
+}

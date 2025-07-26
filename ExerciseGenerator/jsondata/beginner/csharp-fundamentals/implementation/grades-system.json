@@ -1,0 +1,105 @@
+{
+  "metadata": {
+    "id": "grades-system-implementation-beginner",
+    "title": "Implementar Sistema de Calificaciones Escolares",
+    "level": "Beginner",
+    "topic": "CSharpFundamentals",
+    "type": "Implementation",
+    "context": "ControlFlow",
+    "estimatedMinutes": 30,
+    "complexityScore": 4,
+    "tags": ["control-structures", "loops", "conditionals", "input-validation", "collections"],
+    "version": "1.0",
+    "lastUpdated": "2025-01-25T14:30:00Z"
+  },
+  "content": {
+    "description": "Crear un sistema que evalúe calificaciones y determine el rendimiento académico usando estructuras de control. Este ejercicio te ayudará a practicar bucles para entrada repetitiva de datos, condicionales para validación y lógica de negocio, switch expressions para simplificar código, y manejo de entrada de usuario con validación.",
+    "learningObjectives": [
+      "Implementar bucles para entrada repetitiva de datos",
+      "Usar condicionales para validación y lógica de negocio",
+      "Aplicar switch expressions para simplificar código",
+      "Manejar entrada de usuario con validación",
+      "Trabajar con colecciones básicas (List<T>)"
+    ],
+    "prerequisites": [
+      "Comprensión básica de estructuras de control (if, while, for)",
+      "Conocimiento de tipos de datos básicos",
+      "Familiaridad con entrada y salida de consola",
+      "Conceptos básicos de validación de datos"
+    ],
+    "problemStatement": "Necesitas crear un Sistema de Calificaciones Escolares que:\n\n1. Solicite al usuario ingresar calificaciones (0-100) de forma repetitiva\n2. Determine la letra correspondiente para cada calificación (A, B, C, D, F)\n3. Calcule el promedio de múltiples calificaciones\n4. Determine si el estudiante aprobó o reprobó (promedio >= 60)\n5. Muestre estadísticas finales incluyendo distribución por letras\n6. Valide toda la entrada del usuario para evitar errores\n\nEl programa debe manejar entrada inválida elegantemente y permitir al usuario ingresar múltiples calificaciones antes de mostrar los resultados finales.",
+    "technicalRequirements": [
+      "Usar un bucle para permitir entrada múltiple de calificaciones",
+      "Implementar validación de entrada usando TryParse",
+      "Usar switch expression para conversión de número a letra",
+      "Calcular estadísticas usando métodos de LINQ básicos",
+      "Manejar casos edge como división por cero",
+      "Proporcionar salida formateada y legible"
+    ],
+    "successCriteria": [
+      "El programa compila y ejecuta sin errores",
+      "Acepta múltiples calificaciones con validación apropiada",
+      "Convierte números a letras correctamente (A: 90+, B: 80-89, C: 70-79, D: 60-69, F: <60)",
+      "Calcula promedio con precisión de 2 decimales",
+      "Determina correctamente aprobado/reprobado basado en promedio >= 60",
+      "Muestra distribución de calificaciones por letra",
+      "Maneja entrada inválida sin crashear"
+    ],
+    "instructions": "1. Crea la estructura básica del programa con bucle principal\n2. Implementa validación de entrada para calificaciones\n3. Agrega lógica de conversión número-a-letra usando switch expression\n4. Calcula estadísticas (promedio, máximo, mínimo)\n5. Implementa determinación de aprobado/reprobado\n6. Agrega funcionalidad de distribución por letras\n7. Prueba con diferentes casos incluyendo entrada inválida"
+  },
+  "code": {
+    "beforeCode": "// TODO: Implementar un sistema de calificaciones que:\n// 1. Solicite al usuario ingresar una calificación (0-100)\n// 2. Determine la letra correspondiente (A, B, C, D, F)\n// 3. Calcule el promedio de múltiples calificaciones\n// 4. Determine si el estudiante aprobó o reprobó\n// 5. Muestre estadísticas finales\n\nusing System;\n\nclass SistemaCalificaciones \n{\n    static void Main() \n    {\n        // Su implementación aquí...\n    }\n}",
+    "afterCode": "using System;\nusing System.Collections.Generic;\nusing System.Linq;\n\nclass SistemaCalificaciones \n{\n    static void Main() \n    {\n        Console.WriteLine(\"=== Sistema de Calificaciones Escolares ===\");\n        \n        List<double> calificaciones = new List<double>();\n        string continuar = \"s\";\n        \n        // Recopilar calificaciones\n        while (continuar.ToLower() == \"s\")\n        {\n            Console.Write(\"Ingrese una calificación (0-100): \");\n            \n            if (double.TryParse(Console.ReadLine(), out double calificacion))\n            {\n                if (calificacion >= 0 && calificacion <= 100)\n                {\n                    calificaciones.Add(calificacion);\n                    string letra = ObtenerLetraCalificacion(calificacion);\n                    Console.WriteLine($\"Calificación: {calificacion:F1} - Letra: {letra}\");\n                }\n                else\n                {\n                    Console.WriteLine(\"Error: La calificación debe estar entre 0 y 100.\");\n                }\n            }\n            else\n            {\n                Console.WriteLine(\"Error: Ingrese un número válido.\");\n            }\n            \n            Console.Write(\"¿Desea ingresar otra calificación? (s/n): \");\n            continuar = Console.ReadLine() ?? \"n\";\n        }\n        \n        // Mostrar estadísticas\n        if (calificaciones.Count > 0)\n        {\n            MostrarEstadisticas(calificaciones);\n        }\n        else\n        {\n            Console.WriteLine(\"No se ingresaron calificaciones.\");\n        }\n    }\n    \n    static string ObtenerLetraCalificacion(double calificacion)\n    {\n        // Uso de switch expression (C# 8.0+)\n        return calificacion switch\n        {\n            >= 90 => \"A\",\n            >= 80 => \"B\",\n            >= 70 => \"C\",\n            >= 60 => \"D\",\n            _ => \"F\"\n        };\n    }\n    \n    static void MostrarEstadisticas(List<double> calificaciones)\n    {\n        double promedio = calificaciones.Average();\n        double maxima = calificaciones.Max();\n        double minima = calificaciones.Min();\n        bool aprobo = promedio >= 60;\n        \n        Console.WriteLine(\"\\n=== Estadísticas Finales ===\");\n        Console.WriteLine($\"Total de calificaciones: {calificaciones.Count}\");\n        Console.WriteLine($\"Promedio: {promedio:F2} ({ObtenerLetraCalificacion(promedio)})\");\n        Console.WriteLine($\"Calificación más alta: {maxima:F1}\");\n        Console.WriteLine($\"Calificación más baja: {minima:F1}\");\n        Console.WriteLine($\"Estado: {(aprobo ? \"APROBADO\" : \"REPROBADO\")}\");\n        \n        // Mostrar distribución de calificaciones\n        var distribucion = calificaciones\n            .GroupBy(c => ObtenerLetraCalificacion(c))\n            .OrderBy(g => g.Key);\n            \n        Console.WriteLine(\"\\nDistribución por letra:\");\n        foreach (var grupo in distribucion)\n        {\n            Console.WriteLine($\"  {grupo.Key}: {grupo.Count()} calificación(es)\");\n        }\n    }\n}",
+    "starterTemplate": "using System;\nusing System.Collections.Generic;\nusing System.Linq;\n\nclass SistemaCalificaciones \n{\n    static void Main() \n    {\n        Console.WriteLine(\"=== Sistema de Calificaciones Escolares ===\");\n        \n        // TODO: Crear lista para almacenar calificaciones\n        List<double> calificaciones = new List<double>();\n        string continuar = \"s\";\n        \n        // TODO: Implementar bucle para recopilar calificaciones\n        while (continuar.ToLower() == \"s\")\n        {\n            Console.Write(\"Ingrese una calificación (0-100): \");\n            \n            // TODO: Implementar validación con TryParse\n            if (double.TryParse(Console.ReadLine(), out double calificacion))\n            {\n                // TODO: Validar rango de calificación\n                if (calificacion >= 0 && calificacion <= 100)\n                {\n                    calificaciones.Add(calificacion);\n                    // TODO: Mostrar letra correspondiente\n                    string letra = ObtenerLetraCalificacion(calificacion);\n                    Console.WriteLine($\"Calificación: {calificacion:F1} - Letra: {letra}\");\n                }\n                else\n                {\n                    Console.WriteLine(\"Error: La calificación debe estar entre 0 y 100.\");\n                }\n            }\n            else\n            {\n                Console.WriteLine(\"Error: Ingrese un número válido.\");\n            }\n            \n            // TODO: Preguntar si continuar\n            Console.Write(\"¿Desea ingresar otra calificación? (s/n): \");\n            continuar = Console.ReadLine() ?? \"n\";\n        }\n        \n        // TODO: Mostrar estadísticas si hay calificaciones\n        if (calificaciones.Count > 0)\n        {\n            MostrarEstadisticas(calificaciones);\n        }\n        else\n        {\n            Console.WriteLine(\"No se ingresaron calificaciones.\");\n        }\n    }\n    \n    // TODO: Implementar método que convierte número a letra\n    static string ObtenerLetraCalificacion(double calificacion)\n    {\n        // TODO: Usar switch expression\n        return calificacion switch\n        {\n            >= 90 => \"A\", // 90-100: Excelente\n            >= 80 => \"B\", // 80-89: Bueno\n            >= 70 => \"C\", // 70-79: Regular\n            >= 60 => \"D\", // 60-69: Suficiente\n            _ => \"F\"       // 0-59: Insuficiente\n        };\n    }\n    \n    // TODO: Implementar método que muestra estadísticas\n    static void MostrarEstadisticas(List<double> calificaciones)\n    {\n        // TODO: Calcular estadísticas básicas\n        double promedio = calificaciones.Average();\n        double maxima = calificaciones.Max();\n        double minima = calificaciones.Min();\n        bool aprobo = promedio >= 60;\n        \n        // TODO: Mostrar estadísticas formateadas\n        Console.WriteLine(\"\\n=== Estadísticas Finales ===\");\n        Console.WriteLine($\"Total de calificaciones: {calificaciones.Count}\");\n        Console.WriteLine($\"Promedio: {promedio:F2} ({ObtenerLetraCalificacion(promedio)})\");\n        Console.WriteLine($\"Calificación más alta: {maxima:F1}\");\n        Console.WriteLine($\"Calificación más baja: {minima:F1}\");\n        Console.WriteLine($\"Estado: {(aprobo ? \"APROBADO\" : \"REPROBADO\")}\");\n        \n        // TODO: Mostrar distribución por letras usando LINQ\n        var distribucion = calificaciones\n            .GroupBy(c => ObtenerLetraCalificacion(c))\n            .OrderBy(g => g.Key);\n            \n        Console.WriteLine(\"\\nDistribución por letra:\");\n        foreach (var grupo in distribucion)\n        {\n            Console.WriteLine($\"  {grupo.Key}: {grupo.Count()} calificación(es)\");\n        }\n    }\n}",
+    "unitTests": "using System;\nusing System.Collections.Generic;\nusing Xunit;\n\nnamespace SistemaCalificaciones.Tests\n{\n    public class CalificacionesTests\n    {\n        [Theory]\n        [InlineData(95, \"A\")]\n        [InlineData(90, \"A\")]\n        [InlineData(85, \"B\")]\n        [InlineData(80, \"B\")]\n        [InlineData(75, \"C\")]\n        [InlineData(70, \"C\")]\n        [InlineData(65, \"D\")]\n        [InlineData(60, \"D\")]\n        [InlineData(55, \"F\")]\n        [InlineData(0, \"F\")]\n        public void ObtenerLetraCalificacion_DebeRetornarLetraCorrecta(double calificacion, string letraEsperada)\n        {\n            // Arrange & Act\n            string resultado = ObtenerLetraCalificacionTest(calificacion);\n            \n            // Assert\n            Assert.Equal(letraEsperada, resultado);\n        }\n        \n        [Theory]\n        [InlineData(new double[] { 90, 80, 70 }, 80.0)]\n        [InlineData(new double[] { 100, 95, 85 }, 93.33)]\n        [InlineData(new double[] { 60, 70, 80, 90 }, 75.0)]\n        public void CalcularPromedio_DebeSerCorrecto(double[] calificaciones, double promedioEsperado)\n        {\n            // Arrange\n            var lista = new List<double>(calificaciones);\n            \n            // Act\n            double promedio = CalcularPromedioTest(lista);\n            \n            // Assert\n            Assert.Equal(promedioEsperado, promedio, 2);\n        }\n        \n        [Theory]\n        [InlineData(new double[] { 90, 80, 70 }, true)]\n        [InlineData(new double[] { 50, 40, 30 }, false)]\n        [InlineData(new double[] { 60 }, true)]\n        [InlineData(new double[] { 59.9 }, false)]\n        public void DeterminarAprobacion_DebeSerCorrecta(double[] calificaciones, bool debioAprobar)\n        {\n            // Arrange\n            var lista = new List<double>(calificaciones);\n            double promedio = CalcularPromedioTest(lista);\n            \n            // Act\n            bool aprobo = promedio >= 60;\n            \n            // Assert\n            Assert.Equal(debioAprobar, aprobo);\n        }\n        \n        [Fact]\n        public void ValidarRango_CalificacionValida_DebeRetornarTrue()\n        {\n            // Arrange\n            double calificacion = 85;\n            \n            // Act\n            bool esValida = ValidarRangoTest(calificacion);\n            \n            // Assert\n            Assert.True(esValida);\n        }\n        \n        [Theory]\n        [InlineData(-1)]\n        [InlineData(101)]\n        [InlineData(150)]\n        public void ValidarRango_CalificacionInvalida_DebeRetornarFalse(double calificacion)\n        {\n            // Arrange & Act\n            bool esValida = ValidarRangoTest(calificacion);\n            \n            // Assert\n            Assert.False(esValida);\n        }\n        \n        // Métodos de prueba que replican la lógica del programa principal\n        private string ObtenerLetraCalificacionTest(double calificacion)\n        {\n            return calificacion switch\n            {\n                >= 90 => \"A\",\n                >= 80 => \"B\",\n                >= 70 => \"C\",\n                >= 60 => \"D\",\n                _ => \"F\"\n            };\n        }\n        \n        private double CalcularPromedioTest(List<double> calificaciones)\n        {\n            return calificaciones.Count > 0 ? calificaciones.Sum() / calificaciones.Count : 0;\n        }\n        \n        private bool ValidarRangoTest(double calificacion)\n        {\n            return calificacion >= 0 && calificacion <= 100;\n        }\n    }\n}",
+    "projectFile": "<Project Sdk=\"Microsoft.NET.Sdk\">\n\n  <PropertyGroup>\n    <OutputType>Exe</OutputType>\n    <TargetFramework>net8.0</TargetFramework>\n    <ImplicitUsings>enable</ImplicitUsings>\n    <Nullable>enable</Nullable>\n  </PropertyGroup>\n\n  <ItemGroup>\n    <PackageReference Include=\"Microsoft.NET.Test.Sdk\" Version=\"17.8.0\" />\n    <PackageReference Include=\"xunit\" Version=\"2.6.1\" />\n    <PackageReference Include=\"xunit.runner.visualstudio\" Version=\"2.5.3\" />\n  </ItemGroup>\n\n</Project>"
+  },
+  "extensions": [
+    "Agregar soporte para calificaciones ponderadas (diferentes pesos para exámenes, tareas, etc.)",
+    "Implementar persistencia guardando calificaciones en archivo JSON",
+    "Agregar funcionalidad para múltiples estudiantes con nombres",
+    "Crear menú interactivo con opciones para ver, agregar, eliminar calificaciones",
+    "Implementar estadísticas avanzadas como desviación estándar y percentiles",
+    "Agregar exportación de reportes en formato CSV o HTML"
+  ],
+  "pedagogical": {
+    "keyConcepts": [
+      "Bucles while para entrada repetitiva",
+      "Validación de entrada con TryParse",
+      "Switch expressions (C# 8.0+)",
+      "List<T> y operaciones básicas",
+      "LINQ básico (Average, Max, Min, GroupBy)",
+      "Formateo de números con especificadores"
+    ],
+    "commonPitfalls": [
+      "No validar la entrada del usuario, causando excepciones",
+      "Usar bucles infinitos sin condición de salida clara",
+      "No manejar listas vacías al calcular estadísticas",
+      "Usar switch statement tradicional en lugar de switch expression",
+      "No formatear números apropiadamente en la salida",
+      "Dividir por cero cuando no hay calificaciones"
+    ],
+    "explanation": "Este ejercicio combina múltiples estructuras de control en un contexto práctico. Los estudiantes aprenden a usar bucles para entrada repetitiva, validación robusta de datos, y operaciones de colección básicas. El switch expression demuestra sintaxis moderna de C#, mientras que LINQ introduce conceptos de programación funcional de manera gradual.",
+    "teachingTips": [
+      "Emphasize the importance of input validation in real applications",
+      "Show how switch expressions are more concise than traditional switch statements",
+      "Demonstrate the power of LINQ methods for data analysis",
+      "Explain why double.TryParse is safer than double.Parse",
+      "Point out how meaningful variable names improve code readability"
+    ],
+    "relatedConcepts": [
+      "Error handling and exception safety",
+      "User interface design principles",
+      "Data validation and sanitization",
+      "Collection manipulation and LINQ",
+      "String formatting and interpolation"
+    ],
+    "furtherReading": [
+      "Microsoft C# Programming Guide - Control Statements",
+      "LINQ Documentation and Examples",
+      "C# Switch Expressions and Pattern Matching",
+      "Best Practices for User Input Validation",
+      "Working with Collections in C#"
+    ]
+  }
+}

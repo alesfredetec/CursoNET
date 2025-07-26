@@ -1,0 +1,72 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>CursoNET.ExerciseGenerator</RootNamespace>
+    <AssemblyName>DotNetExerciseGenerator</AssemblyName>
+    <Version>1.0.0</Version>
+    <Authors>CursoNET Team</Authors>
+    <Description>Comprehensive .NET Exercise Generator Agent for Educational Purposes</Description>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>true</SelfContained>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="8.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="ExerciseTypes.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="DotNetExerciseGenerator.cs" />
+    <Compile Include="IExerciseTopicGenerator.cs" />
+    <Compile Include="Generators\CSharpFundamentalsGenerator.cs" />
+    <Compile Include="Generators\DesignPatternsGenerator.cs" />
+    <Compile Include="Generators\PlaceholderGenerators.cs" />
+    <Compile Include="Generators\ExpandedExerciseGenerator.cs" />
+    <Compile Include="AdvancedPromptGenerator.cs" />
+    <Compile Include="ExerciseGeneratorDemo.cs" />
+    <Compile Include="ExpandedExerciseDemo.cs" />
+    <Compile Include="test-compile.cs" />
+    
+    <!-- Sistema Configurable - Nuevos archivos -->
+    <Compile Include="TestConfigurableSystem.cs" />
+    <Compile Include="NewExerciseSchema.cs" />
+    <Compile Include="ExerciseJsonSchema.cs" />
+    <Compile Include="IExerciseRepository.cs" />
+    <Compile Include="JsonExerciseRepository.cs" />
+    
+    <!-- Configuraciones -->
+    <Compile Include="Configuration\ConfigurationManager.cs" />
+    <Compile Include="Configuration\TopicConfiguration.cs" />
+    <Compile Include="Configuration\ExerciseTypeConfiguration.cs" />
+    <Compile Include="Configuration\SkillLevelConfiguration.cs" />
+    <Compile Include="Configuration\DependencyConfiguration.cs" />
+    <Compile Include="Configuration\ConfigurationValidator.cs" />
+    <Compile Include="Configuration\ExerciseFileResolver.cs" />
+    <Compile Include="Configuration\PromptTemplateManager.cs" />
+    
+    <!-- Testing Files -->
+    <Compile Include="MenuFlowTest.cs" />
+    <Compile Include="TestMenuFlows.cs" />
+    <Compile Include="TestPromptTemplates.cs" />
+    <Compile Include="InteractiveAIGenerator.cs" />
+    <Compile Include="NavigationMap.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" />
+    <None Include="README-SISTEMA-EXPANDIDO.md" />
+  </ItemGroup>
+
+</Project>

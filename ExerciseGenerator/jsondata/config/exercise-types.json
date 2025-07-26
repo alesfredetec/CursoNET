@@ -1,0 +1,177 @@
+{
+  "exerciseTypes": [
+    {
+      "id": "Implementation",
+      "displayName": "Implementation",
+      "description": "Build new functionality from scratch following specifications",
+      "pathName": "implementation",
+      "difficulty": 3,
+      "timeMultiplier": 1.2,
+      "skillLevels": ["Beginner", "Intermediate", "Advanced"],
+      "characteristics": [
+        "Create new code from requirements",
+        "Apply programming concepts in practice",
+        "Focus on correct implementation",
+        "Emphasis on functionality over optimization"
+      ],
+      "learningObjectives": [
+        "Practice implementing algorithms and logic",
+        "Apply learned concepts to solve problems",
+        "Develop problem-solving skills",
+        "Build confidence in writing code from scratch"
+      ]
+    },
+    {
+      "id": "Refactoring",
+      "displayName": "Refactoring",
+      "description": "Improve existing code quality while maintaining functionality",
+      "pathName": "refactoring",
+      "difficulty": 2,
+      "timeMultiplier": 0.8,
+      "skillLevels": ["Beginner", "Intermediate", "Advanced"],
+      "characteristics": [
+        "Improve code readability and maintainability",
+        "Apply best practices and coding standards",
+        "Maintain existing functionality",
+        "Focus on code quality over new features"
+      ],
+      "learningObjectives": [
+        "Learn to identify code smells and issues",
+        "Practice applying coding best practices",
+        "Understand the importance of clean code",
+        "Develop skills for code review and improvement"
+      ]
+    },
+    {
+      "id": "DebugFix",
+      "displayName": "Debug & Fix",
+      "description": "Identify and fix bugs in existing code",
+      "pathName": "debug-fix",
+      "difficulty": 2,
+      "timeMultiplier": 0.7,
+      "skillLevels": ["Beginner", "Intermediate", "Advanced"],
+      "characteristics": [
+        "Analyze code to find bugs",
+        "Use debugging techniques and tools",
+        "Fix issues while preserving functionality",
+        "Test fixes to ensure they work correctly"
+      ],
+      "learningObjectives": [
+        "Develop debugging and troubleshooting skills",
+        "Learn to read and understand existing code",
+        "Practice systematic problem-solving",
+        "Understand common error patterns"
+      ]
+    },
+    {
+      "id": "Design",
+      "displayName": "Design",
+      "description": "Design software architecture and system components",
+      "pathName": "design",
+      "difficulty": 4,
+      "timeMultiplier": 1.5,
+      "skillLevels": ["Intermediate", "Advanced"],
+      "characteristics": [
+        "Create system architecture and design",
+        "Plan component interactions and relationships",
+        "Consider scalability and maintainability",
+        "Document design decisions and rationale"
+      ],
+      "learningObjectives": [
+        "Practice software design principles",
+        "Learn to think about system architecture",
+        "Develop planning and design skills",
+        "Understand design patterns and their applications"
+      ]
+    },
+    {
+      "id": "Testing",
+      "displayName": "Testing",
+      "description": "Write comprehensive tests for code functionality",
+      "pathName": "testing",
+      "difficulty": 3,
+      "timeMultiplier": 1.0,
+      "skillLevels": ["Intermediate", "Advanced"],
+      "characteristics": [
+        "Write unit tests and integration tests",
+        "Design test cases for various scenarios",
+        "Use testing frameworks and tools",
+        "Focus on test coverage and quality"
+      ],
+      "learningObjectives": [
+        "Learn test-driven development practices",
+        "Practice writing effective tests",
+        "Understand testing strategies and patterns",
+        "Develop quality assurance mindset"
+      ]
+    },
+    {
+      "id": "Performance",
+      "displayName": "Performance Optimization",
+      "description": "Optimize code for better performance and efficiency",
+      "pathName": "performance",
+      "difficulty": 4,
+      "timeMultiplier": 1.3,
+      "skillLevels": ["Intermediate", "Advanced"],
+      "characteristics": [
+        "Analyze and improve code performance",
+        "Use profiling tools and techniques",
+        "Optimize algorithms and data structures",
+        "Balance performance with code readability"
+      ],
+      "learningObjectives": [
+        "Learn performance analysis techniques",
+        "Practice optimization strategies",
+        "Understand performance trade-offs",
+        "Develop skills in benchmarking and profiling"
+      ]
+    },
+    {
+      "id": "Extension",
+      "displayName": "Extension",
+      "description": "Extend existing functionality with new features",
+      "pathName": "extension",
+      "difficulty": 3,
+      "timeMultiplier": 1.1,
+      "skillLevels": ["Beginner", "Intermediate", "Advanced"],
+      "characteristics": [
+        "Add new features to existing code",
+        "Maintain compatibility with existing functionality",
+        "Follow established patterns and conventions",
+        "Integrate new code seamlessly"
+      ],
+      "learningObjectives": [
+        "Practice working with existing codebases",
+        "Learn to extend functionality safely",
+        "Understand code integration patterns",
+        "Develop skills for working in teams"
+      ]
+    },
+    {
+      "id": "Integration",
+      "displayName": "Integration",
+      "description": "Integrate multiple components or systems together",
+      "pathName": "integration",
+      "difficulty": 4,
+      "timeMultiplier": 1.4,
+      "skillLevels": ["Intermediate", "Advanced"],
+      "characteristics": [
+        "Connect different systems or components",
+        "Handle data transformation and mapping",
+        "Manage communication between systems",
+        "Deal with integration challenges and edge cases"
+      ],
+      "learningObjectives": [
+        "Learn system integration patterns",
+        "Practice working with APIs and interfaces",
+        "Understand data flow and transformation",
+        "Develop skills for complex system interactions"
+      ]
+    }
+  ],
+  "metadata": {
+    "version": "1.0",
+    "lastUpdated": "2025-01-25T15:00:00Z",
+    "description": "Configuration file defining all available exercise types for exercise generation"
+  }
+}
