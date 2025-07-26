@@ -1,1 +1,3 @@
 *.rar
+/ExerciseGenerator/.vs/ExerciseGenerator
+/ExerciseGenerator/obj/Debug/net8.0
