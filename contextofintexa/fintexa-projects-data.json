@@ -1,0 +1,1507 @@
+﻿{
+    "Boton Simple (Legacy)":  {
+                                  "Projects":  {
+                                                   "BotonSimple.Boveda.Identity":  {
+                                                                                       "Domain":  "",
+                                                                                       "Description":  "",
+                                                                                       "Type":  "",
+                                                                                       "Architecture":  "",
+                                                                                       "Endpoints":  {
+
+                                                                                                     },
+                                                                                       "Name":  "BotonSimple.Boveda.Identity",
+                                                                                       "Raw":  "",
+                                                                                       "Scope":  "",
+                                                                                       "Dependencies":  ""
+                                                                                   },
+                                                   "AKS-Manifests (Boton Simple)":  {
+                                                                                        "Domain":  "",
+                                                                                        "Description":  "",
+                                                                                        "Type":  "",
+                                                                                        "Architecture":  "",
+                                                                                        "Endpoints":  {
+
+                                                                                                      },
+                                                                                        "Name":  "AKS-Manifests (Boton Simple)",
+                                                                                        "Raw":  "",
+                                                                                        "Scope":  "",
+                                                                                        "Dependencies":  ""
+                                                                                    },
+                                                   "BotonSimple.Payment":  {
+                                                                               "Domain":  "",
+                                                                               "Description":  "",
+                                                                               "Type":  "",
+                                                                               "Architecture":  "",
+                                                                               "Endpoints":  {
+
+                                                                                             },
+                                                                               "Name":  "BotonSimple.Payment",
+                                                                               "Raw":  "",
+                                                                               "Scope":  "",
+                                                                               "Dependencies":  ""
+                                                                           },
+                                                   "BotonSimple.Boveda.Backoffice":  {
+                                                                                         "Domain":  "",
+                                                                                         "Description":  "",
+                                                                                         "Type":  "",
+                                                                                         "Architecture":  "",
+                                                                                         "Endpoints":  {
+
+                                                                                                       },
+                                                                                         "Name":  "BotonSimple.Boveda.Backoffice",
+                                                                                         "Raw":  "",
+                                                                                         "Scope":  "",
+                                                                                         "Dependencies":  ""
+                                                                                     },
+                                                   "Shared.Cybersource":  {
+                                                                              "Domain":  "",
+                                                                              "Description":  "",
+                                                                              "Type":  "",
+                                                                              "Architecture":  "",
+                                                                              "Endpoints":  {
+
+                                                                                            },
+                                                                              "Name":  "Shared.Cybersource",
+                                                                              "Raw":  "",
+                                                                              "Scope":  "",
+                                                                              "Dependencies":  ""
+                                                                          },
+                                                   "BotonSimple.Notificacion":  {
+                                                                                    "Domain":  "",
+                                                                                    "Description":  "",
+                                                                                    "Type":  "",
+                                                                                    "Architecture":  "",
+                                                                                    "Endpoints":  {
+
+                                                                                                  },
+                                                                                    "Name":  "BotonSimple.Notificacion",
+                                                                                    "Raw":  "",
+                                                                                    "Scope":  "",
+                                                                                    "Dependencies":  ""
+                                                                                },
+                                                   "BotonSimple.Identity":  {
+                                                                                "Domain":  "",
+                                                                                "Description":  "",
+                                                                                "Type":  "",
+                                                                                "Architecture":  "",
+                                                                                "Endpoints":  {
+
+                                                                                              },
+                                                                                "Name":  "BotonSimple.Identity",
+                                                                                "Raw":  "",
+                                                                                "Scope":  "",
+                                                                                "Dependencies":  ""
+                                                                            },
+                                                   "BotonSimple.VaultManager":  {
+                                                                                    "Domain":  "",
+                                                                                    "Description":  "",
+                                                                                    "Type":  "",
+                                                                                    "Architecture":  "",
+                                                                                    "Endpoints":  {
+
+                                                                                                  },
+                                                                                    "Name":  "BotonSimple.VaultManager",
+                                                                                    "Raw":  "",
+                                                                                    "Scope":  "",
+                                                                                    "Dependencies":  ""
+                                                                                },
+                                                   "Shared.Decidir":  {
+                                                                          "Domain":  "",
+                                                                          "Description":  "",
+                                                                          "Type":  "",
+                                                                          "Architecture":  "",
+                                                                          "Endpoints":  {
+
+                                                                                        },
+                                                                          "Name":  "Shared.Decidir",
+                                                                          "Raw":  "",
+                                                                          "Scope":  "",
+                                                                          "Dependencies":  ""
+                                                                      },
+                                                   "Infra (boton Simple)":  {
+                                                                                "Domain":  "",
+                                                                                "Description":  "",
+                                                                                "Type":  "",
+                                                                                "Architecture":  "",
+                                                                                "Endpoints":  {
+
+                                                                                              },
+                                                                                "Name":  "Infra (boton Simple)",
+                                                                                "Raw":  "",
+                                                                                "Scope":  "",
+                                                                                "Dependencies":  ""
+                                                                            },
+                                                   "BotonSimple.Boveda.Iframe":  {
+                                                                                     "Domain":  "",
+                                                                                     "Description":  "",
+                                                                                     "Type":  "",
+                                                                                     "Architecture":  "",
+                                                                                     "Endpoints":  {
+
+                                                                                                   },
+                                                                                     "Name":  "BotonSimple.Boveda.Iframe",
+                                                                                     "Raw":  "",
+                                                                                     "Scope":  "",
+                                                                                     "Dependencies":  ""
+                                                                                 }
+                                               },
+                                  "Description":  "Esta es una solución legacy para pagos simples, integración rápida y mínima con el ecosistema Fintexa. Incluye más de 15 proyectos, como servicios core legacy, servicios de bóveda, servicios de formularios y procesadores legacy [2io**: API de la bóveda de datos sensibles.\n*   **Descripción Funcional**: Almacenamiento seguro, cifrado de datos, gestión de claves, control de acceso y pista de auditoría para datos sensibles. Servicio para el almacenamiento seguro, cifrado y gestión de datos sensibles en Boton Simple.\n*   **Alcance del Servicio/Proyecto**: Gestiona datos sensibles para el sistema de pago legacy.",
+                                  "Name":  "Boton Simple (Legacy)"
+                              },
+    "ArchivosRI (Regulatory Information)":  {
+                                                "Projects":  {
+                                                                 "Shared.RegulatoryInformation":  {
+                                                                                                      "Domain":  "",
+                                                                                                      "Description":  "",
+                                                                                                      "Type":  "",
+                                                                                                      "Architecture":  "",
+                                                                                                      "Endpoints":  {
+
+                                                                                                                    },
+                                                                                                      "Name":  "Shared.RegulatoryInformation",
+                                                                                                      "Raw":  "",
+                                                                                                      "Scope":  "",
+                                                                                                      "Dependencies":  ""
+                                                                                                  },
+                                                                 "ArchivosRI (proyecto específico/lógica)":  {
+                                                                                                                 "Domain":  "",
+                                                                                                                 "Description":  "",
+                                                                                                                 "Type":  "",
+                                                                                                                 "Architecture":  "",
+                                                                                                                 "Endpoints":  {
+
+                                                                                                                               },
+                                                                                                                 "Name":  "ArchivosRI (proyecto específico/lógica)",
+                                                                                                                 "Raw":  "",
+                                                                                                                 "Scope":  "",
+                                                                                                                 "Dependencies":  ""
+                                                                                                             },
+                                                                 "Infra (ArchivosRI)":  {
+                                                                                            "Domain":  "",
+                                                                                            "Description":  "",
+                                                                                            "Type":  "",
+                                                                                            "Architecture":  "",
+                                                                                            "Endpoints":  {
+
+                                                                                                          },
+                                                                                            "Name":  "Infra (ArchivosRI)",
+                                                                                            "Raw":  "",
+                                                                                            "Scope":  "",
+                                                                                            "Dependencies":  ""
+                                                                                        }
+                                                             },
+                                                "Description":  "Este ecosistema es responsable de la gestión y el procesamiento de la información regulatoria, los informes y el cumplimiento normativo. Específicamente, genera archivos de cumplimiento normativo para las autoridades financieras argentinas (ej. AFIP). Incluye más de 3 proyectos.",
+                                                "Name":  "ArchivosRI (Regulatory Information)"
+                                            },
+    "Bind Aceptador (Payment Acceptor)":  {
+                                              "Projects":  {
+                                                               "Fake.Coelsa":  {
+                                                                                   "Domain":  "",
+                                                                                   "Description":  "",
+                                                                                   "Type":  "",
+                                                                                   "Architecture":  "",
+                                                                                   "Endpoints":  {
+
+                                                                                                 },
+                                                                                   "Name":  "Fake.Coelsa",
+                                                                                   "Raw":  "",
+                                                                                   "Scope":  "",
+                                                                                   "Dependencies":  ""
+                                                                               },
+                                                               "PaymentAcceptor.CardBusinessRules":  {
+                                                                                                         "Domain":  "",
+                                                                                                         "Description":  "",
+                                                                                                         "Type":  "",
+                                                                                                         "Architecture":  "",
+                                                                                                         "Endpoints":  {
+
+                                                                                                                       },
+                                                                                                         "Name":  "PaymentAcceptor.CardBusinessRules",
+                                                                                                         "Raw":  "",
+                                                                                                         "Scope":  "",
+                                                                                                         "Dependencies":  ""
+                                                                                                     },
+                                                               "Shared.Cvu":  {
+                                                                                  "Domain":  "",
+                                                                                  "Description":  "",
+                                                                                  "Type":  "",
+                                                                                  "Architecture":  "",
+                                                                                  "Endpoints":  {
+
+                                                                                                },
+                                                                                  "Name":  "Shared.Cvu",
+                                                                                  "Raw":  "",
+                                                                                  "Scope":  "",
+                                                                                  "Dependencies":  ""
+                                                                              },
+                                                               "Shared.FileManager":  {
+                                                                                          "Domain":  "",
+                                                                                          "Description":  "",
+                                                                                          "Type":  "",
+                                                                                          "Architecture":  "",
+                                                                                          "Endpoints":  {
+
+                                                                                                        },
+                                                                                          "Name":  "Shared.FileManager",
+                                                                                          "Raw":  "",
+                                                                                          "Scope":  "",
+                                                                                          "Dependencies":  ""
+                                                                                      },
+                                                               "PaymentAcceptor.Deuda":  {
+                                                                                             "Domain":  "",
+                                                                                             "Description":  "",
+                                                                                             "Type":  "",
+                                                                                             "Architecture":  "",
+                                                                                             "Endpoints":  {
+
+                                                                                                           },
+                                                                                             "Name":  "PaymentAcceptor.Deuda",
+                                                                                             "Raw":  "",
+                                                                                             "Scope":  "",
+                                                                                             "Dependencies":  ""
+                                                                                         },
+                                                               "Shared.Debin":  {
+                                                                                    "Domain":  "",
+                                                                                    "Description":  "",
+                                                                                    "Type":  "",
+                                                                                    "Architecture":  "",
+                                                                                    "Endpoints":  {
+
+                                                                                                  },
+                                                                                    "Name":  "Shared.Debin",
+                                                                                    "Raw":  "",
+                                                                                    "Scope":  "",
+                                                                                    "Dependencies":  ""
+                                                                                },
+                                                               "Shared.Retencion":  {
+                                                                                        "Domain":  "",
+                                                                                        "Description":  "",
+                                                                                        "Type":  "",
+                                                                                        "Architecture":  "",
+                                                                                        "Endpoints":  {
+
+                                                                                                      },
+                                                                                        "Name":  "Shared.Retencion",
+                                                                                        "Raw":  "",
+                                                                                        "Scope":  "",
+                                                                                        "Dependencies":  ""
+                                                                                    },
+                                                               "Shared.InternalAudit":  {
+                                                                                            "Domain":  "",
+                                                                                            "Description":  "",
+                                                                                            "Type":  "",
+                                                                                            "Architecture":  "",
+                                                                                            "Endpoints":  {
+
+                                                                                                          },
+                                                                                            "Name":  "Shared.InternalAudit",
+                                                                                            "Raw":  "",
+                                                                                            "Scope":  "",
+                                                                                            "Dependencies":  ""
+                                                                                        },
+                                                               "Shared.AuthExternalService":  {
+                                                                                                  "Domain":  "",
+                                                                                                  "Description":  "",
+                                                                                                  "Type":  "",
+                                                                                                  "Architecture":  "",
+                                                                                                  "Endpoints":  {
+
+                                                                                                                },
+                                                                                                  "Name":  "Shared.AuthExternalService",
+                                                                                                  "Raw":  "",
+                                                                                                  "Scope":  "",
+                                                                                                  "Dependencies":  ""
+                                                                                              },
+                                                               "Shared.ComplianceCheck":  {
+                                                                                              "Domain":  "",
+                                                                                              "Description":  "",
+                                                                                              "Type":  "",
+                                                                                              "Architecture":  "",
+                                                                                              "Endpoints":  {
+
+                                                                                                            },
+                                                                                              "Name":  "Shared.ComplianceCheck",
+                                                                                              "Raw":  "",
+                                                                                              "Scope":  "",
+                                                                                              "Dependencies":  ""
+                                                                                          },
+                                                               "Shared.CloudServiceInfrastructure.Consumers":  {
+                                                                                                                   "Domain":  "",
+                                                                                                                   "Description":  "",
+                                                                                                                   "Type":  "",
+                                                                                                                   "Architecture":  "",
+                                                                                                                   "Endpoints":  {
+
+                                                                                                                                 },
+                                                                                                                   "Name":  "Shared.CloudServiceInfrastructure.Consumers",
+                                                                                                                   "Raw":  "",
+                                                                                                                   "Scope":  "",
+                                                                                                                   "Dependencies":  ""
+                                                                                                               },
+                                                               "Shared.CardVault":  {
+                                                                                        "Domain":  "",
+                                                                                        "Description":  "",
+                                                                                        "Type":  "",
+                                                                                        "Architecture":  "",
+                                                                                        "Endpoints":  {
+
+                                                                                                      },
+                                                                                        "Name":  "Shared.CardVault",
+                                                                                        "Raw":  "",
+                                                                                        "Scope":  "",
+                                                                                        "Dependencies":  ""
+                                                                                    },
+                                                               "PaymentAcceptor.Liquidacion":  {
+                                                                                                   "Domain":  "",
+                                                                                                   "Description":  "",
+                                                                                                   "Type":  "",
+                                                                                                   "Architecture":  "",
+                                                                                                   "Endpoints":  {
+
+                                                                                                                 },
+                                                                                                   "Name":  "PaymentAcceptor.Liquidacion",
+                                                                                                   "Raw":  "",
+                                                                                                   "Scope":  "",
+                                                                                                   "Dependencies":  ""
+                                                                                               },
+                                                               "Shared.PagoExterno":  {
+                                                                                          "Domain":  "",
+                                                                                          "Description":  "",
+                                                                                          "Type":  "",
+                                                                                          "Architecture":  "",
+                                                                                          "Endpoints":  {
+
+                                                                                                        },
+                                                                                          "Name":  "Shared.PagoExterno",
+                                                                                          "Raw":  "",
+                                                                                          "Scope":  "",
+                                                                                          "Dependencies":  ""
+                                                                                      },
+                                                               "PaymentAcceptor.CardWorkflow":  {
+                                                                                                    "Domain":  "",
+                                                                                                    "Description":  "",
+                                                                                                    "Type":  "",
+                                                                                                    "Architecture":  "",
+                                                                                                    "Endpoints":  {
+
+                                                                                                                  },
+                                                                                                    "Name":  "PaymentAcceptor.CardWorkflow",
+                                                                                                    "Raw":  "",
+                                                                                                    "Scope":  "",
+                                                                                                    "Dependencies":  ""
+                                                                                                },
+                                                               "Shared.Posicionamiento":  {
+                                                                                              "Domain":  "",
+                                                                                              "Description":  "",
+                                                                                              "Type":  "",
+                                                                                              "Architecture":  "",
+                                                                                              "Endpoints":  {
+
+                                                                                                            },
+                                                                                              "Name":  "Shared.Posicionamiento",
+                                                                                              "Raw":  "",
+                                                                                              "Scope":  "",
+                                                                                              "Dependencies":  ""
+                                                                                          },
+                                                               "Shared.ComercioQuery":  {
+                                                                                            "Domain":  "",
+                                                                                            "Description":  "",
+                                                                                            "Type":  "",
+                                                                                            "Architecture":  "",
+                                                                                            "Endpoints":  {
+
+                                                                                                          },
+                                                                                            "Name":  "Shared.ComercioQuery",
+                                                                                            "Raw":  "",
+                                                                                            "Scope":  "",
+                                                                                            "Dependencies":  ""
+                                                                                        },
+                                                               "PaymentAcceptor.Transacciones":  {
+                                                                                                     "Domain":  "",
+                                                                                                     "Description":  "",
+                                                                                                     "Type":  "",
+                                                                                                     "Architecture":  "",
+                                                                                                     "Endpoints":  {
+
+                                                                                                                   },
+                                                                                                     "Name":  "PaymentAcceptor.Transacciones",
+                                                                                                     "Raw":  "",
+                                                                                                     "Scope":  "",
+                                                                                                     "Dependencies":  ""
+                                                                                                 },
+                                                               "Web.BackofficeComercio":  {
+                                                                                              "Domain":  "",
+                                                                                              "Description":  "",
+                                                                                              "Type":  "",
+                                                                                              "Architecture":  "",
+                                                                                              "Endpoints":  {
+
+                                                                                                            },
+                                                                                              "Name":  "Web.BackofficeComercio",
+                                                                                              "Raw":  "",
+                                                                                              "Scope":  "",
+                                                                                              "Dependencies":  ""
+                                                                                          },
+                                                               "PaymentAcceptor.Iep":  {
+                                                                                           "Domain":  "",
+                                                                                           "Description":  "",
+                                                                                           "Type":  "",
+                                                                                           "Architecture":  "",
+                                                                                           "Endpoints":  {
+
+                                                                                                         },
+                                                                                           "Name":  "PaymentAcceptor.Iep",
+                                                                                           "Raw":  "",
+                                                                                           "Scope":  "",
+                                                                                           "Dependencies":  ""
+                                                                                       },
+                                                               "Shared.EmailService":  {
+                                                                                           "Domain":  "",
+                                                                                           "Description":  "",
+                                                                                           "Type":  "",
+                                                                                           "Architecture":  "",
+                                                                                           "Endpoints":  {
+
+                                                                                                         },
+                                                                                           "Name":  "Shared.EmailService",
+                                                                                           "Raw":  "",
+                                                                                           "Scope":  "",
+                                                                                           "Dependencies":  ""
+                                                                                       },
+                                                               "AKS-Manifests (Bind Aceptador)":  {
+                                                                                                      "Domain":  "",
+                                                                                                      "Description":  "",
+                                                                                                      "Type":  "",
+                                                                                                      "Architecture":  "",
+                                                                                                      "Endpoints":  {
+
+                                                                                                                    },
+                                                                                                      "Name":  "AKS-Manifests (Bind Aceptador)",
+                                                                                                      "Raw":  "",
+                                                                                                      "Scope":  "",
+                                                                                                      "Dependencies":  ""
+                                                                                                  },
+                                                               "BFF.MobileNotPresent":  {
+                                                                                            "Domain":  "",
+                                                                                            "Description":  "",
+                                                                                            "Type":  "",
+                                                                                            "Architecture":  "",
+                                                                                            "Endpoints":  {
+
+                                                                                                          },
+                                                                                            "Name":  "BFF.MobileNotPresent",
+                                                                                            "Raw":  "",
+                                                                                            "Scope":  "",
+                                                                                            "Dependencies":  ""
+                                                                                        },
+                                                               "Shared.BulkUploadProcess":  {
+                                                                                                "Domain":  "",
+                                                                                                "Description":  "",
+                                                                                                "Type":  "",
+                                                                                                "Architecture":  "",
+                                                                                                "Endpoints":  {
+
+                                                                                                              },
+                                                                                                "Name":  "Shared.BulkUploadProcess",
+                                                                                                "Raw":  "",
+                                                                                                "Scope":  "",
+                                                                                                "Dependencies":  ""
+                                                                                            },
+                                                               "PaymentAcceptor.Conciliacion":  {
+                                                                                                    "Domain":  "",
+                                                                                                    "Description":  "",
+                                                                                                    "Type":  "",
+                                                                                                    "Architecture":  "",
+                                                                                                    "Endpoints":  {
+
+                                                                                                                  },
+                                                                                                    "Name":  "PaymentAcceptor.Conciliacion",
+                                                                                                    "Raw":  "",
+                                                                                                    "Scope":  "",
+                                                                                                    "Dependencies":  ""
+                                                                                                },
+                                                               "Shared.Vault.Admin":  {
+                                                                                          "Domain":  "",
+                                                                                          "Description":  "",
+                                                                                          "Type":  "",
+                                                                                          "Architecture":  "",
+                                                                                          "Endpoints":  {
+
+                                                                                                        },
+                                                                                          "Name":  "Shared.Vault.Admin",
+                                                                                          "Raw":  "",
+                                                                                          "Scope":  "",
+                                                                                          "Dependencies":  ""
+                                                                                      },
+                                                               "Bff.CardNotPresent":  {
+                                                                                          "Domain":  "",
+                                                                                          "Description":  "",
+                                                                                          "Type":  "",
+                                                                                          "Architecture":  "",
+                                                                                          "Endpoints":  {
+
+                                                                                                        },
+                                                                                          "Name":  "Bff.CardNotPresent",
+                                                                                          "Raw":  "",
+                                                                                          "Scope":  "",
+                                                                                          "Dependencies":  ""
+                                                                                      },
+                                                               "Shared.Comisiones":  {
+                                                                                         "Domain":  "",
+                                                                                         "Description":  "",
+                                                                                         "Type":  "",
+                                                                                         "Architecture":  "",
+                                                                                         "Endpoints":  {
+
+                                                                                                       },
+                                                                                         "Name":  "Shared.Comisiones",
+                                                                                         "Raw":  "",
+                                                                                         "Scope":  "",
+                                                                                         "Dependencies":  ""
+                                                                                     },
+                                                               "PaymentAcceptor.Qr":  {
+                                                                                          "Domain":  "",
+                                                                                          "Description":  "",
+                                                                                          "Type":  "",
+                                                                                          "Architecture":  "",
+                                                                                          "Endpoints":  {
+
+                                                                                                        },
+                                                                                          "Name":  "PaymentAcceptor.Qr",
+                                                                                          "Raw":  "",
+                                                                                          "Scope":  "",
+                                                                                          "Dependencies":  ""
+                                                                                      },
+                                                               "Web.CardNotPresent":  {
+                                                                                          "Domain":  "",
+                                                                                          "Description":  "",
+                                                                                          "Type":  "",
+                                                                                          "Architecture":  "",
+                                                                                          "Endpoints":  {
+
+                                                                                                        },
+                                                                                          "Name":  "Web.CardNotPresent",
+                                                                                          "Raw":  "",
+                                                                                          "Scope":  "",
+                                                                                          "Dependencies":  ""
+                                                                                      },
+                                                               "Shared.AccessManagement":  {
+                                                                                               "Domain":  "",
+                                                                                               "Description":  "",
+                                                                                               "Type":  "",
+                                                                                               "Architecture":  "",
+                                                                                               "Endpoints":  {
+
+                                                                                                             },
+                                                                                               "Name":  "Shared.AccessManagement",
+                                                                                               "Raw":  "",
+                                                                                               "Scope":  "",
+                                                                                               "Dependencies":  ""
+                                                                                           },
+                                                               "Shared.Pdf":  {
+                                                                                  "Domain":  "",
+                                                                                  "Description":  "",
+                                                                                  "Type":  "",
+                                                                                  "Architecture":  "",
+                                                                                  "Endpoints":  {
+
+                                                                                                },
+                                                                                  "Name":  "Shared.Pdf",
+                                                                                  "Raw":  "",
+                                                                                  "Scope":  "",
+                                                                                  "Dependencies":  ""
+                                                                              },
+                                                               "Shared.VaultManager":  {
+                                                                                           "Domain":  "",
+                                                                                           "Description":  "",
+                                                                                           "Type":  "",
+                                                                                           "Architecture":  "",
+                                                                                           "Endpoints":  {
+
+                                                                                                         },
+                                                                                           "Name":  "Shared.VaultManager",
+                                                                                           "Raw":  "",
+                                                                                           "Scope":  "",
+                                                                                           "Dependencies":  ""
+                                                                                       },
+                                                               "PaymentAcceptor.Rendicion":  {
+                                                                                                 "Domain":  "",
+                                                                                                 "Description":  "",
+                                                                                                 "Type":  "",
+                                                                                                 "Architecture":  "",
+                                                                                                 "Endpoints":  {
+
+                                                                                                               },
+                                                                                                 "Name":  "PaymentAcceptor.Rendicion",
+                                                                                                 "Raw":  "",
+                                                                                                 "Scope":  "",
+                                                                                                 "Dependencies":  ""
+                                                                                             },
+                                                               "Shared.Comercio":  {
+                                                                                       "Domain":  "",
+                                                                                       "Description":  "",
+                                                                                       "Type":  "",
+                                                                                       "Architecture":  "",
+                                                                                       "Endpoints":  {
+
+                                                                                                     },
+                                                                                       "Name":  "Shared.Comercio",
+                                                                                       "Raw":  "",
+                                                                                       "Scope":  "",
+                                                                                       "Dependencies":  ""
+                                                                                   },
+                                                               "Jobs.Bind":  {
+                                                                                 "Domain":  "",
+                                                                                 "Description":  "",
+                                                                                 "Type":  "",
+                                                                                 "Architecture":  "",
+                                                                                 "Endpoints":  {
+
+                                                                                               },
+                                                                                 "Name":  "Jobs.Bind",
+                                                                                 "Raw":  "",
+                                                                                 "Scope":  "",
+                                                                                 "Dependencies":  ""
+                                                                             },
+                                                               "Shared.IssuerIdentification":  {
+                                                                                                   "Domain":  "",
+                                                                                                   "Description":  "",
+                                                                                                   "Type":  "",
+                                                                                                   "Architecture":  "",
+                                                                                                   "Endpoints":  {
+
+                                                                                                                 },
+                                                                                                   "Name":  "Shared.IssuerIdentification",
+                                                                                                   "Raw":  "",
+                                                                                                   "Scope":  "",
+                                                                                                   "Dependencies":  ""
+                                                                                               },
+                                                               "Shared.ReportManager":  {
+                                                                                            "Domain":  "",
+                                                                                            "Description":  "",
+                                                                                            "Type":  "",
+                                                                                            "Architecture":  "",
+                                                                                            "Endpoints":  {
+
+                                                                                                          },
+                                                                                            "Name":  "Shared.ReportManager",
+                                                                                            "Raw":  "",
+                                                                                            "Scope":  "",
+                                                                                            "Dependencies":  ""
+                                                                                        },
+                                                               "ArquetipoBase (Bind Aceptador)":  {
+                                                                                                      "Domain":  "",
+                                                                                                      "Description":  "",
+                                                                                                      "Type":  "",
+                                                                                                      "Architecture":  "",
+                                                                                                      "Endpoints":  {
+
+                                                                                                                    },
+                                                                                                      "Name":  "ArquetipoBase (Bind Aceptador)",
+                                                                                                      "Raw":  "",
+                                                                                                      "Scope":  "",
+                                                                                                      "Dependencies":  ""
+                                                                                                  },
+                                                               "Shared.Vault.Card":  {
+                                                                                         "Domain":  "",
+                                                                                         "Description":  "",
+                                                                                         "Type":  "",
+                                                                                         "Architecture":  "",
+                                                                                         "Endpoints":  {
+
+                                                                                                       },
+                                                                                         "Name":  "Shared.Vault.Card",
+                                                                                         "Raw":  "",
+                                                                                         "Scope":  "",
+                                                                                         "Dependencies":  ""
+                                                                                     },
+                                                               "Bff.CardPresent":  {
+                                                                                       "Domain":  "",
+                                                                                       "Description":  "",
+                                                                                       "Type":  "",
+                                                                                       "Architecture":  "",
+                                                                                       "Endpoints":  {
+
+                                                                                                     },
+                                                                                       "Name":  "Bff.CardPresent",
+                                                                                       "Raw":  "",
+                                                                                       "Scope":  "",
+                                                                                       "Dependencies":  ""
+                                                                                   },
+                                                               "Infra (Bind Aceptador)":  {
+                                                                                              "Domain":  "",
+                                                                                              "Description":  "",
+                                                                                              "Type":  "",
+                                                                                              "Architecture":  "",
+                                                                                              "Endpoints":  {
+
+                                                                                                            },
+                                                                                              "Name":  "Infra (Bind Aceptador)",
+                                                                                              "Raw":  "",
+                                                                                              "Scope":  "",
+                                                                                              "Dependencies":  ""
+                                                                                          },
+                                                               "Shared.GlobalProcesing":  {
+                                                                                              "Domain":  "",
+                                                                                              "Description":  "",
+                                                                                              "Type":  "",
+                                                                                              "Architecture":  "",
+                                                                                              "Endpoints":  {
+
+                                                                                                            },
+                                                                                              "Name":  "Shared.GlobalProcesing",
+                                                                                              "Raw":  "",
+                                                                                              "Scope":  "",
+                                                                                              "Dependencies":  ""
+                                                                                          },
+                                                               "Web.SimpleButton":  {
+                                                                                        "Domain":  "",
+                                                                                        "Description":  "",
+                                                                                        "Type":  "",
+                                                                                        "Architecture":  "",
+                                                                                        "Endpoints":  {
+
+                                                                                                      },
+                                                                                        "Name":  "Web.SimpleButton",
+                                                                                        "Raw":  "",
+                                                                                        "Scope":  "",
+                                                                                        "Dependencies":  ""
+                                                                                    },
+                                                               "PaymentAcceptor.WorkFlowPagos":  {
+                                                                                                     "Domain":  "",
+                                                                                                     "Description":  "",
+                                                                                                     "Type":  "",
+                                                                                                     "Architecture":  "",
+                                                                                                     "Endpoints":  {
+
+                                                                                                                   },
+                                                                                                     "Name":  "PaymentAcceptor.WorkFlowPagos",
+                                                                                                     "Raw":  "",
+                                                                                                     "Scope":  "",
+                                                                                                     "Dependencies":  ""
+                                                                                                 },
+                                                               "Prueba.Repo (Bind Aceptador)":  {
+                                                                                                    "Domain":  "",
+                                                                                                    "Description":  "",
+                                                                                                    "Type":  "",
+                                                                                                    "Architecture":  "",
+                                                                                                    "Endpoints":  {
+
+                                                                                                                  },
+                                                                                                    "Name":  "Prueba.Repo (Bind Aceptador)",
+                                                                                                    "Raw":  "",
+                                                                                                    "Scope":  "",
+                                                                                                    "Dependencies":  ""
+                                                                                                },
+                                                               "Shared.ApiBank.Api":  {
+                                                                                          "Domain":  "",
+                                                                                          "Description":  "",
+                                                                                          "Type":  "",
+                                                                                          "Architecture":  "",
+                                                                                          "Endpoints":  {
+
+                                                                                                        },
+                                                                                          "Name":  "Shared.ApiBank.Api",
+                                                                                          "Raw":  "",
+                                                                                          "Scope":  "",
+                                                                                          "Dependencies":  ""
+                                                                                      },
+                                                               "Bff.SimpleButton":  {
+                                                                                        "Domain":  "",
+                                                                                        "Description":  "",
+                                                                                        "Type":  "",
+                                                                                        "Architecture":  "",
+                                                                                        "Endpoints":  {
+
+                                                                                                      },
+                                                                                        "Name":  "Bff.SimpleButton",
+                                                                                        "Raw":  "",
+                                                                                        "Scope":  "",
+                                                                                        "Dependencies":  ""
+                                                                                    },
+                                                               "PaymentAcceptor.Notificacion":  {
+                                                                                                    "Domain":  "",
+                                                                                                    "Description":  "",
+                                                                                                    "Type":  "",
+                                                                                                    "Architecture":  "",
+                                                                                                    "Endpoints":  {
+
+                                                                                                                  },
+                                                                                                    "Name":  "PaymentAcceptor.Notificacion",
+                                                                                                    "Raw":  "",
+                                                                                                    "Scope":  "",
+                                                                                                    "Dependencies":  ""
+                                                                                                },
+                                                               "Bff.BackofficeComercio":  {
+                                                                                              "Domain":  "",
+                                                                                              "Description":  "",
+                                                                                              "Type":  "",
+                                                                                              "Architecture":  "",
+                                                                                              "Endpoints":  {
+
+                                                                                                            },
+                                                                                              "Name":  "Bff.BackofficeComercio",
+                                                                                              "Raw":  "",
+                                                                                              "Scope":  "",
+                                                                                              "Dependencies":  ""
+                                                                                          },
+                                                               "Shared.PaymentsObservability":  {
+                                                                                                    "Domain":  "",
+                                                                                                    "Description":  "",
+                                                                                                    "Type":  "",
+                                                                                                    "Architecture":  "",
+                                                                                                    "Endpoints":  {
+
+                                                                                                                  },
+                                                                                                    "Name":  "Shared.PaymentsObservability",
+                                                                                                    "Raw":  "",
+                                                                                                    "Scope":  "",
+                                                                                                    "Dependencies":  ""
+                                                                                                },
+                                                               "Shared.CustomTemplates":  {
+                                                                                              "Domain":  "",
+                                                                                              "Description":  "",
+                                                                                              "Type":  "",
+                                                                                              "Architecture":  "",
+                                                                                              "Endpoints":  {
+
+                                                                                                            },
+                                                                                              "Name":  "Shared.CustomTemplates",
+                                                                                              "Raw":  "",
+                                                                                              "Scope":  "",
+                                                                                              "Dependencies":  ""
+                                                                                          },
+                                                               "PaymentAcceptor.CardOrchestrator":  {
+                                                                                                        "Domain":  "",
+                                                                                                        "Description":  "",
+                                                                                                        "Type":  "",
+                                                                                                        "Architecture":  "",
+                                                                                                        "Endpoints":  {
+
+                                                                                                                      },
+                                                                                                        "Name":  "PaymentAcceptor.CardOrchestrator",
+                                                                                                        "Raw":  "",
+                                                                                                        "Scope":  "",
+                                                                                                        "Dependencies":  ""
+                                                                                                    },
+                                                               "PaymentAcceptor.TransactionQuery":  {
+                                                                                                        "Domain":  "",
+                                                                                                        "Description":  "",
+                                                                                                        "Type":  "",
+                                                                                                        "Architecture":  "",
+                                                                                                        "Endpoints":  {
+
+                                                                                                                      },
+                                                                                                        "Name":  "PaymentAcceptor.TransactionQuery",
+                                                                                                        "Raw":  "",
+                                                                                                        "Scope":  "",
+                                                                                                        "Dependencies":  ""
+                                                                                                    },
+                                                               "Shared.Coelsa.Alias":  {
+                                                                                           "Domain":  "",
+                                                                                           "Description":  "",
+                                                                                           "Type":  "",
+                                                                                           "Architecture":  "",
+                                                                                           "Endpoints":  {
+
+                                                                                                         },
+                                                                                           "Name":  "Shared.Coelsa.Alias",
+                                                                                           "Raw":  "",
+                                                                                           "Scope":  "",
+                                                                                           "Dependencies":  ""
+                                                                                       },
+                                                               "Shared.CloudServiceInfrastructure":  {
+                                                                                                         "Domain":  "",
+                                                                                                         "Description":  "",
+                                                                                                         "Type":  "",
+                                                                                                         "Architecture":  "",
+                                                                                                         "Endpoints":  {
+
+                                                                                                                       },
+                                                                                                         "Name":  "Shared.CloudServiceInfrastructure",
+                                                                                                         "Raw":  "",
+                                                                                                         "Scope":  "",
+                                                                                                         "Dependencies":  ""
+                                                                                                     },
+                                                               "SimpleButton.Payment":  {
+                                                                                            "Domain":  "",
+                                                                                            "Description":  "",
+                                                                                            "Type":  "",
+                                                                                            "Architecture":  "",
+                                                                                            "Endpoints":  {
+
+                                                                                                          },
+                                                                                            "Name":  "SimpleButton.Payment",
+                                                                                            "Raw":  "",
+                                                                                            "Scope":  "",
+                                                                                            "Dependencies":  ""
+                                                                                        },
+                                                               "Shared.Cvu.Generator":  {
+                                                                                            "Domain":  "",
+                                                                                            "Description":  "",
+                                                                                            "Type":  "",
+                                                                                            "Architecture":  "",
+                                                                                            "Endpoints":  {
+
+                                                                                                          },
+                                                                                            "Name":  "Shared.Cvu.Generator",
+                                                                                            "Raw":  "",
+                                                                                            "Scope":  "",
+                                                                                            "Dependencies":  ""
+                                                                                        },
+                                                               "Shared.WebhookSender":  {
+                                                                                            "Domain":  "",
+                                                                                            "Description":  "",
+                                                                                            "Type":  "",
+                                                                                            "Architecture":  "",
+                                                                                            "Endpoints":  {
+
+                                                                                                          },
+                                                                                            "Name":  "Shared.WebhookSender",
+                                                                                            "Raw":  "",
+                                                                                            "Scope":  "",
+                                                                                            "Dependencies":  ""
+                                                                                        },
+                                                               "PaymentAcceptor.Promotions":  {
+                                                                                                  "Domain":  "",
+                                                                                                  "Description":  "",
+                                                                                                  "Type":  "",
+                                                                                                  "Architecture":  "",
+                                                                                                  "Endpoints":  {
+
+                                                                                                                },
+                                                                                                  "Name":  "PaymentAcceptor.Promotions",
+                                                                                                  "Raw":  "",
+                                                                                                  "Scope":  "",
+                                                                                                  "Dependencies":  ""
+                                                                                              }
+                                                           },
+                                              "Description":  "Este es el ecosistema más grande y complejo, responsable de todos los aspectos de la aceptación de pagos, desde la incorporación de comercios hasta el procesamiento de transacciones y la liquidación. Incluye más de 60 proyectos.",
+                                              "Name":  "Bind Aceptador (Payment Acceptor)"
+                                          },
+    "Wallet Service":  {
+                           "Projects":  {
+                                            "Wallet.AzureFunction":  {
+                                                                         "Domain":  "",
+                                                                         "Description":  "",
+                                                                         "Type":  "",
+                                                                         "Architecture":  "",
+                                                                         "Endpoints":  {
+
+                                                                                       },
+                                                                         "Name":  "Wallet.AzureFunction",
+                                                                         "Raw":  "",
+                                                                         "Scope":  "",
+                                                                         "Dependencies":  ""
+                                                                     },
+                                            "Fintexa.Nugets":  {
+                                                                   "Domain":  "",
+                                                                   "Description":  "",
+                                                                   "Type":  "",
+                                                                   "Architecture":  "",
+                                                                   "Endpoints":  {
+
+                                                                                 },
+                                                                   "Name":  "Fintexa.Nugets",
+                                                                   "Raw":  "",
+                                                                   "Scope":  "",
+                                                                   "Dependencies":  ""
+                                                               },
+                                            "Shared.Crypto.Lirium":  {
+                                                                         "Domain":  "",
+                                                                         "Description":  "",
+                                                                         "Type":  "",
+                                                                         "Architecture":  "",
+                                                                         "Endpoints":  {
+
+                                                                                       },
+                                                                         "Name":  "Shared.Crypto.Lirium",
+                                                                         "Raw":  "",
+                                                                         "Scope":  "",
+                                                                         "Dependencies":  ""
+                                                                     },
+                                            "Shared.DispatcherCoelsaBind":  {
+                                                                                "Domain":  "",
+                                                                                "Description":  "",
+                                                                                "Type":  "",
+                                                                                "Architecture":  "",
+                                                                                "Endpoints":  {
+
+                                                                                              },
+                                                                                "Name":  "Shared.DispatcherCoelsaBind",
+                                                                                "Raw":  "",
+                                                                                "Scope":  "",
+                                                                                "Dependencies":  ""
+                                                                            },
+                                            "Wallet.AppSDK":  {
+                                                                  "Domain":  "",
+                                                                  "Description":  "",
+                                                                  "Type":  "",
+                                                                  "Architecture":  "",
+                                                                  "Endpoints":  {
+
+                                                                                },
+                                                                  "Name":  "Wallet.AppSDK",
+                                                                  "Raw":  "",
+                                                                  "Scope":  "",
+                                                                  "Dependencies":  ""
+                                                              },
+                                            "Wallet.CargaMasiva":  {
+                                                                       "Domain":  "",
+                                                                       "Description":  "",
+                                                                       "Type":  "",
+                                                                       "Architecture":  "",
+                                                                       "Endpoints":  {
+
+                                                                                     },
+                                                                       "Name":  "Wallet.CargaMasiva",
+                                                                       "Raw":  "",
+                                                                       "Scope":  "",
+                                                                       "Dependencies":  ""
+                                                                   },
+                                            "Prueba.Repo (Wallet Service)":  {
+                                                                                 "Domain":  "",
+                                                                                 "Description":  "",
+                                                                                 "Type":  "",
+                                                                                 "Architecture":  "",
+                                                                                 "Endpoints":  {
+
+                                                                                               },
+                                                                                 "Name":  "Prueba.Repo (Wallet Service)",
+                                                                                 "Raw":  "",
+                                                                                 "Scope":  "",
+                                                                                 "Dependencies":  ""
+                                                                             },
+                                            "Wallet.Comprobante":  {
+                                                                       "Domain":  "",
+                                                                       "Description":  "",
+                                                                       "Type":  "",
+                                                                       "Architecture":  "",
+                                                                       "Endpoints":  {
+
+                                                                                     },
+                                                                       "Name":  "Wallet.Comprobante",
+                                                                       "Raw":  "",
+                                                                       "Scope":  "",
+                                                                       "Dependencies":  ""
+                                                                   },
+                                            "Shared.PixRoaming":  {
+                                                                      "Domain":  "",
+                                                                      "Description":  "",
+                                                                      "Type":  "",
+                                                                      "Architecture":  "",
+                                                                      "Endpoints":  {
+
+                                                                                    },
+                                                                      "Name":  "Shared.PixRoaming",
+                                                                      "Raw":  "",
+                                                                      "Scope":  "",
+                                                                      "Dependencies":  ""
+                                                                  },
+                                            "AKS-Manifests (Wallet Service)":  {
+                                                                                   "Domain":  "",
+                                                                                   "Description":  "",
+                                                                                   "Type":  "",
+                                                                                   "Architecture":  "",
+                                                                                   "Endpoints":  {
+
+                                                                                                 },
+                                                                                   "Name":  "AKS-Manifests (Wallet Service)",
+                                                                                   "Raw":  "",
+                                                                                   "Scope":  "",
+                                                                                   "Dependencies":  ""
+                                                                               },
+                                            "Infra (Wallet Service)":  {
+                                                                           "Domain":  "",
+                                                                           "Description":  "",
+                                                                           "Type":  "",
+                                                                           "Architecture":  "",
+                                                                           "Endpoints":  {
+
+                                                                                         },
+                                                                           "Name":  "Infra (Wallet Service)",
+                                                                           "Raw":  "",
+                                                                           "Scope":  "",
+                                                                           "Dependencies":  ""
+                                                                       },
+                                            "Shared.SwaggerDocGenerator":  {
+                                                                               "Domain":  "",
+                                                                               "Description":  "",
+                                                                               "Type":  "",
+                                                                               "Architecture":  "",
+                                                                               "Endpoints":  {
+
+                                                                                             },
+                                                                               "Name":  "Shared.SwaggerDocGenerator",
+                                                                               "Raw":  "",
+                                                                               "Scope":  "",
+                                                                               "Dependencies":  ""
+                                                                           },
+                                            "Wallet.Consentimiento":  {
+                                                                          "Domain":  "",
+                                                                          "Description":  "",
+                                                                          "Type":  "",
+                                                                          "Architecture":  "",
+                                                                          "Endpoints":  {
+
+                                                                                        },
+                                                                          "Name":  "Wallet.Consentimiento",
+                                                                          "Raw":  "",
+                                                                          "Scope":  "",
+                                                                          "Dependencies":  ""
+                                                                      },
+                                            "Shared.Debin (Wallet Service)":  {
+                                                                                  "Domain":  "",
+                                                                                  "Description":  "",
+                                                                                  "Type":  "",
+                                                                                  "Architecture":  "",
+                                                                                  "Endpoints":  {
+
+                                                                                                },
+                                                                                  "Name":  "Shared.Debin (Wallet Service)",
+                                                                                  "Raw":  "",
+                                                                                  "Scope":  "",
+                                                                                  "Dependencies":  ""
+                                                                              },
+                                            "Jobs.Internal":  {
+                                                                  "Domain":  "",
+                                                                  "Description":  "",
+                                                                  "Type":  "",
+                                                                  "Architecture":  "",
+                                                                  "Endpoints":  {
+
+                                                                                },
+                                                                  "Name":  "Jobs.Internal",
+                                                                  "Raw":  "",
+                                                                  "Scope":  "",
+                                                                  "Dependencies":  ""
+                                                              },
+                                            "Wallet.Operaciones.Queries":  {
+                                                                               "Domain":  "",
+                                                                               "Description":  "",
+                                                                               "Type":  "",
+                                                                               "Architecture":  "",
+                                                                               "Endpoints":  {
+
+                                                                                             },
+                                                                               "Name":  "Wallet.Operaciones.Queries",
+                                                                               "Raw":  "",
+                                                                               "Scope":  "",
+                                                                               "Dependencies":  ""
+                                                                           },
+                                            "Wallet.APP":  {
+                                                               "Domain":  "",
+                                                               "Description":  "",
+                                                               "Type":  "",
+                                                               "Architecture":  "",
+                                                               "Endpoints":  {
+
+                                                                             },
+                                                               "Name":  "Wallet.APP",
+                                                               "Raw":  "",
+                                                               "Scope":  "",
+                                                               "Dependencies":  ""
+                                                           },
+                                            "Wallet.Cuenta":  {
+                                                                  "Domain":  "",
+                                                                  "Description":  "",
+                                                                  "Type":  "",
+                                                                  "Architecture":  "",
+                                                                  "Endpoints":  {
+
+                                                                                },
+                                                                  "Name":  "Wallet.Cuenta",
+                                                                  "Raw":  "",
+                                                                  "Scope":  "",
+                                                                  "Dependencies":  ""
+                                                              },
+                                            "Wallet.Reportes":  {
+                                                                    "Domain":  "",
+                                                                    "Description":  "",
+                                                                    "Type":  "",
+                                                                    "Architecture":  "",
+                                                                    "Endpoints":  {
+
+                                                                                  },
+                                                                    "Name":  "Wallet.Reportes",
+                                                                    "Raw":  "",
+                                                                    "Scope":  "",
+                                                                    "Dependencies":  ""
+                                                                },
+                                            "Wallet.Bind":  {
+                                                                "Domain":  "",
+                                                                "Description":  "",
+                                                                "Type":  "",
+                                                                "Architecture":  "",
+                                                                "Endpoints":  {
+
+                                                                              },
+                                                                "Name":  "Wallet.Bind",
+                                                                "Raw":  "",
+                                                                "Scope":  "",
+                                                                "Dependencies":  ""
+                                                            },
+                                            "Shared.QueueSentinel":  {
+                                                                         "Domain":  "",
+                                                                         "Description":  "",
+                                                                         "Type":  "",
+                                                                         "Architecture":  "",
+                                                                         "Endpoints":  {
+
+                                                                                       },
+                                                                         "Name":  "Shared.QueueSentinel",
+                                                                         "Raw":  "",
+                                                                         "Scope":  "",
+                                                                         "Dependencies":  ""
+                                                                     },
+                                            "Jobs.Bind (Wallet Service)":  {
+                                                                               "Domain":  "",
+                                                                               "Description":  "",
+                                                                               "Type":  "",
+                                                                               "Architecture":  "",
+                                                                               "Endpoints":  {
+
+                                                                                             },
+                                                                               "Name":  "Jobs.Bind (Wallet Service)",
+                                                                               "Raw":  "",
+                                                                               "Scope":  "",
+                                                                               "Dependencies":  ""
+                                                                           },
+                                            "Wallet.Cuenta.Queries":  {
+                                                                          "Domain":  "",
+                                                                          "Description":  "",
+                                                                          "Type":  "",
+                                                                          "Architecture":  "",
+                                                                          "Endpoints":  {
+
+                                                                                        },
+                                                                          "Name":  "Wallet.Cuenta.Queries",
+                                                                          "Raw":  "",
+                                                                          "Scope":  "",
+                                                                          "Dependencies":  ""
+                                                                      },
+                                            "Wallet.CalculadorCostos":  {
+                                                                            "Domain":  "",
+                                                                            "Description":  "",
+                                                                            "Type":  "",
+                                                                            "Architecture":  "",
+                                                                            "Endpoints":  {
+
+                                                                                          },
+                                                                            "Name":  "Wallet.CalculadorCostos",
+                                                                            "Raw":  "",
+                                                                            "Scope":  "",
+                                                                            "Dependencies":  ""
+                                                                        },
+                                            "Wallet.Notificaciones":  {
+                                                                          "Domain":  "",
+                                                                          "Description":  "",
+                                                                          "Type":  "",
+                                                                          "Architecture":  "",
+                                                                          "Endpoints":  {
+
+                                                                                        },
+                                                                          "Name":  "Wallet.Notificaciones",
+                                                                          "Raw":  "",
+                                                                          "Scope":  "",
+                                                                          "Dependencies":  ""
+                                                                      },
+                                            "Shared.InvestmentService":  {
+                                                                             "Domain":  "",
+                                                                             "Description":  "",
+                                                                             "Type":  "",
+                                                                             "Architecture":  "",
+                                                                             "Endpoints":  {
+
+                                                                                           },
+                                                                             "Name":  "Shared.InvestmentService",
+                                                                             "Raw":  "",
+                                                                             "Scope":  "",
+                                                                             "Dependencies":  ""
+                                                                         },
+                                            "Wallet.Comprobante.Queries":  {
+                                                                               "Domain":  "",
+                                                                               "Description":  "",
+                                                                               "Type":  "",
+                                                                               "Architecture":  "",
+                                                                               "Endpoints":  {
+
+                                                                                             },
+                                                                               "Name":  "Wallet.Comprobante.Queries",
+                                                                               "Raw":  "",
+                                                                               "Scope":  "",
+                                                                               "Dependencies":  ""
+                                                                           },
+                                            "Wallet.BFF":  {
+                                                               "Domain":  "",
+                                                               "Description":  "",
+                                                               "Type":  "",
+                                                               "Architecture":  "",
+                                                               "Endpoints":  {
+
+                                                                             },
+                                                               "Name":  "Wallet.BFF",
+                                                               "Raw":  "",
+                                                               "Scope":  "",
+                                                               "Dependencies":  ""
+                                                           }
+                                        },
+                           "Description":  "El proyecto Wallet Service es un sistema integral que abarca diversas funcionalidades relacionadas con la gestión de billeteras electrónicas, operaciones financieras, cálculo de costos y la integración con sistemas externos. Es una plataforma financiera completa y moderna, que maneja transacciones de billetera, QR, POS e integraciones con Visa/Coelsa. Incluye más de 45 proyectos.",
+                           "Name":  "Wallet Service"
+                       },
+    "Bind Configuration":  {
+                               "Projects":  {
+                                                "AKS-Manifests (Bind Configuration)":  {
+                                                                                           "Domain":  "",
+                                                                                           "Description":  "",
+                                                                                           "Type":  "",
+                                                                                           "Architecture":  "",
+                                                                                           "Endpoints":  {
+
+                                                                                                         },
+                                                                                           "Name":  "AKS-Manifests (Bind Configuration)",
+                                                                                           "Raw":  "",
+                                                                                           "Scope":  "",
+                                                                                           "Dependencies":  ""
+                                                                                       },
+                                                "Prueba.Repo (Bind Configuration)":  {
+                                                                                         "Domain":  "",
+                                                                                         "Description":  "",
+                                                                                         "Type":  "",
+                                                                                         "Architecture":  "",
+                                                                                         "Endpoints":  {
+
+                                                                                                       },
+                                                                                         "Name":  "Prueba.Repo (Bind Configuration)",
+                                                                                         "Raw":  "",
+                                                                                         "Scope":  "",
+                                                                                         "Dependencies":  ""
+                                                                                     },
+                                                "BFF.Admin (Frontend)":  {
+                                                                             "Domain":  "",
+                                                                             "Description":  "",
+                                                                             "Type":  "",
+                                                                             "Architecture":  "",
+                                                                             "Endpoints":  {
+
+                                                                                           },
+                                                                             "Name":  "BFF.Admin (Frontend)",
+                                                                             "Raw":  "",
+                                                                             "Scope":  "",
+                                                                             "Dependencies":  ""
+                                                                         }
+                                            },
+                               "Description":  "Este ecosistema proporciona una gestión centralizada de configuraciones, conexiones, endpoints y parámetros de servicio. Incluye más de 5 proyectos, un Frontend React + Vite y un BFF especializado.\n*   **Tipo de Servicio**: Backend for Frontend (BFF). BFF centralizado para las configuraciones del sistema y los datos maestros.\n*   **Descripción Funcional**: Gestiona acuerdos, datos anexos, sucursales, rubros, cajas registradoras, usuarios centralizadores, acuerdos comerciales, comisiones, dispositivos, entidades, grupos de entidades, acuerdos de grupo, días festivos, operaciones, métodos de pago, posicionamientos, procesadores, QRs, informes, grupos de reglas, reglas, especificaciones, impuestos, transacciones y billeteras. También maneja la autenticación de usuarios, la recuperación de contraseñas y la validación de políticas de contraseñas.\n*   **Endpoints Clave**:\n*   `AuthenticationController`: Login, logout, recuperación de contraseña, cambio de contraseña, validación de políticas de contraseña.\n*   `AgreementsController`: Gestión de convenios (CRUD, filtrar, por código).\n*   `AnnexController`: Proporciona datos maestros y catálogos (categorías de IVA, rubros, tipos de cuenta, condiciones de IIBB, Sicore, tipos de persona, canales, formas de pago, tipos de transacción, agentes de retención).\n*   `BranchesController`: Gestión de sucursales (obtener, crear, modificar, eliminar, exportar CSV).\n*   `CaptionsController`: Obtiene rubros (generales, por comercio).\n*   `CashesController`: Gestión de cajas (obtener, crear, modificar, eliminar, exportar CSV, descargar QR en PDF).\n*   `CentralizerUserController`: Gestión de usuarios administradores centralizadores (CRUD, restablecer contraseña).\n*   `ChannelsController`: Gestión de canales de pago y configuraciones (habilitar QR/MPOS/Botón Simple, obtener canales/procesadores, crear/actualizar configuraciones de canales).\n*   `CommercesAgreementsController`: Gestión de relaciones comercio-convenio (crear, eliminar, editar).\n*   `CommercesController`: Gestión de comercios (obtener, eliminar, actualizar datos/comisiones/rubros/impuestos/especificaciones, crear, exportar, gestionar usuarios administradores, restablecer contraseña, obtener/descargar rendiciones, habilitar/deshabilitar recaudación por transferencia (RXT)).\n*   `CommissionsController`: Obtiene listas de comisiones.\n*   `DevicesController`: Obtiene dispositivos disponibles para asociar.\n*   `EntitiesController`: Gestión de entidades (CRUD, exportar CSV, especificaciones, plantillas de correo electrónico, usuarios de entidad, verificación, agregar canales).\n*   `EntitiesGroupsController`: Gestión de relaciones entidad-grupo (obtener, crear, eliminar, actualizar).\n*   `FilesController`: Gestión de archivos de cobro (obtener, descargar), archivos de cobro de billetera (obtener, descargar) e imágenes.\n*   `GroupsAgreementsController`: Gestión de relaciones grupo-convenio (crear, editar, eliminar, obtener).\n*   `GroupsController`: Gestión de grupos (CRUD, filtrar, por código).\n*   `HolidaysController`: Gestión de feriados (obtener por año, crear, actualizar, eliminar).\n*   `OperationsController`: Obtiene movimientos de cuenta, exporta movimientos a CSV, obtiene detalles/saldo de cuenta, obtiene tipos de comprobantes.\n*   `PaymentMethodsController`: Obtiene una lista de métodos de pago.\n*   `PositioningsController`: Obtiene información geográfica (países, provincias, localidades).\n*   `ProcessorsController`: Obtiene una lista de procesadores.\n*   `QrsController`: Genera códigos QR para un comercio.\n*   `ReportsController`: Gestión de informes (obtener tipos/estados, obtener todos, crear, descargar archivos).\n*   `RuleGroupsController`: Gestión de grupos de reglas (CRUD, obtener por comercio/entidad, asignar/desasignar a comercio/entidad, agregar/eliminar reglas).\n*   `RulesController`: Gestión de reglas individuales (CRUD, filtrar, por ID).\n*   `SpecificationsController`: Obtiene listas de especificaciones (generales, por entidad, por código de entidad).\n*   `TaxesController`: Obtiene listas de impuestos.\n*   `TransactionsController`: Obtiene transacciones (paginadas o por ID), exporta a CSV, obtiene el estado de la transacción y procesa reembolsos.\n*   `VoucherController`: Creación de comprobantes.\n*   `WalletsController`: Gestión de billeteras (obtener billeteras Coelsa, billeteras activas, eliminar, crear) y gestión de segmentos de billeteras (listar, actualizar).\n*   **Dominio Primario**: **Gestión de Configuraciones**, **Datos Maestros**, **Autenticación y Autorización**, **Estructura Comercial** (Acuerdos, Sucursales, Cajas, Comercios, Canales), **Reglas**, **Entidades**, **Informes**, **Operaciones Financieras**, **Datos Geográficos**, **Billeteras**. Incluye subdominios para Autenticación, Acuerdos, Anexos, Sucursales, Canales, Comercios, Entidades, Grupos de Entidades, Archivos, Reglas, Especificaciones y Billeteras.\n*   **Alcance del Servicio/Proyecto**: Proporciona un BFF centralizado y completo para las configuraciones del sistema y los datos maestros. Permite una configuración flexible y detallada de todo el ecosistema Bind.\n*   **Dependencias**: Utiliza MediatR (implícito por arquitectura estándar). Forma parte del `namespace` de Kubernetes `bind-config-prod` (implícito).",
+                               "Name":  "Bind Configuration"
+                           },
+    "CVU Collect":  {
+                        "Projects":  {
+                                         "Middleware.Aggregator":  {
+                                                                       "Domain":  "",
+                                                                       "Description":  "",
+                                                                       "Type":  "",
+                                                                       "Architecture":  "",
+                                                                       "Endpoints":  {
+
+                                                                                     },
+                                                                       "Name":  "Middleware.Aggregator",
+                                                                       "Raw":  "",
+                                                                       "Scope":  "",
+                                                                       "Dependencies":  ""
+                                                                   },
+                                         "StateMonitor":  {
+                                                              "Domain":  "",
+                                                              "Description":  "",
+                                                              "Type":  "",
+                                                              "Architecture":  "",
+                                                              "Endpoints":  {
+
+                                                                            },
+                                                              "Name":  "StateMonitor",
+                                                              "Raw":  "",
+                                                              "Scope":  "",
+                                                              "Dependencies":  ""
+                                                          },
+                                         "Middleware.Financial":  {
+                                                                      "Domain":  "",
+                                                                      "Description":  "",
+                                                                      "Type":  "",
+                                                                      "Architecture":  "",
+                                                                      "Endpoints":  {
+
+                                                                                    },
+                                                                      "Name":  "Middleware.Financial",
+                                                                      "Raw":  "",
+                                                                      "Scope":  "",
+                                                                      "Dependencies":  ""
+                                                                  },
+                                         "Middleware.BulkUploadProcess":  {
+                                                                              "Domain":  "",
+                                                                              "Description":  "",
+                                                                              "Type":  "",
+                                                                              "Architecture":  "",
+                                                                              "Endpoints":  {
+
+                                                                                            },
+                                                                              "Name":  "Middleware.BulkUploadProcess",
+                                                                              "Raw":  "",
+                                                                              "Scope":  "",
+                                                                              "Dependencies":  ""
+                                                                          },
+                                         "Shared.ApiBank (CVU Collect)":  {
+                                                                              "Domain":  "",
+                                                                              "Description":  "",
+                                                                              "Type":  "",
+                                                                              "Architecture":  "",
+                                                                              "Endpoints":  {
+
+                                                                                            },
+                                                                              "Name":  "Shared.ApiBank (CVU Collect)",
+                                                                              "Raw":  "",
+                                                                              "Scope":  "",
+                                                                              "Dependencies":  ""
+                                                                          },
+                                         "AKS-Manifests (CVU Collect)":  {
+                                                                             "Domain":  "",
+                                                                             "Description":  "",
+                                                                             "Type":  "",
+                                                                             "Architecture":  "",
+                                                                             "Endpoints":  {
+
+                                                                                           },
+                                                                             "Name":  "AKS-Manifests (CVU Collect)",
+                                                                             "Raw":  "",
+                                                                             "Scope":  "",
+                                                                             "Dependencies":  ""
+                                                                         },
+                                         "Infra (CVU Collect)":  {
+                                                                     "Domain":  "",
+                                                                     "Description":  "",
+                                                                     "Type":  "",
+                                                                     "Architecture":  "",
+                                                                     "Endpoints":  {
+
+                                                                                   },
+                                                                     "Name":  "Infra (CVU Collect)",
+                                                                     "Raw":  "",
+                                                                     "Scope":  "",
+                                                                     "Dependencies":  ""
+                                                                 },
+                                         "Prueba.Repo (CVU Collect)":  {
+                                                                           "Domain":  "",
+                                                                           "Description":  "",
+                                                                           "Type":  "",
+                                                                           "Architecture":  "",
+                                                                           "Endpoints":  {
+
+                                                                                         },
+                                                                           "Name":  "Prueba.Repo (CVU Collect)",
+                                                                           "Raw":  "",
+                                                                           "Scope":  "",
+                                                                           "Dependencies":  ""
+                                                                       }
+                                     },
+                        "Description":  "Este ecosistema gestiona operaciones masivas de CVU, integración bancaria y automatización de transferencias. Es complejo y cubre una amplia gama de entidades financieras, actuando como un intermediario clave en el ecosistema de pagos para integraciones bancarias y gestión de webhooks. Incluye más de 8 proyectos.",
+                        "Name":  "CVU Collect"
+                    }
+}

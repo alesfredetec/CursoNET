@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>Fintexa.QRPayments</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>Fintexa.QRPayments.IntegratorExercise</AssemblyName>
+    <Product>Fintexa QR Payment System - Integrator Exercise</Product>
+    <Description>Ejercicio integrador para desarrolladores Jr - Sistema de Pagos QR con expansión comercial</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" />
+    <None Include="EJERCICIO-INTEGRADOR-1-Sistema-Pagos-QR.md" />
+  </ItemGroup>
+
+</Project>
