@@ -74,7 +74,7 @@ Durante la junta directiva de marzo, el CEO había sido claro: "O resolvemos est
                     ┌─────────────────┐
                     │ Commission      │
                     │ Calculator      │
-                    │ (Manual Excel)  │
+                    │    (Library)    │
                     └─────────────────┘
 ```
 
@@ -99,20 +99,41 @@ public enum MerchantTier
 public class Transaction
 {
     public Guid Id { get; set; }
-    public decimal Amount { get; set; }
+    public decimal amount { get; set; }
     public TransactionType Type { get; set; }
     public Guid MerchantId { get; set; }
     public DateTime ProcessedAt { get; set; }
 }
+/* ejemplos de Transaction 
+new Transaction
+{
+    Id = Guid.NewGuid(),
+    amount = 1000,
+    Type = TransactionType.CreditCard,          
+    MerchantId = _merchant.Id,     
+    ProcessedAt = DateTime.UtcNow
+}  
+ */
 
 public class Merchant
 {
     public Guid Id { get; set; }
-    public string Name { get; set; }
+    public string name { get; set; }
     public MerchantTier Tier { get; set; }
     public decimal MonthlyVolume { get; set; }
 }
+/* ejemplos de Merchant
+new Merchant
+{
+    Id = Guid.NewGuid(),
+    name = "Comercio A",
+    Tier = MerchantTier.Standard,
+    MonthlyVolume = 5000
+}
+ */
 ```
+
+
 
 ### El Problema Técnico
 
@@ -124,8 +145,7 @@ public class CommissionCalculator
     public decimal CalculateCommission(Transaction transaction, Merchant merchant)
     {
         decimal baseCommission = 0;
-        
-        // Lógica hardcodeada con múltiples if-else
+              
         if (transaction.Type == TransactionType.CreditCard)
         {
             baseCommission = transaction.Amount * 0.028m + 0.30m;
@@ -134,9 +154,9 @@ public class CommissionCalculator
         {
             baseCommission = transaction.Amount * 0.019m + 0.25m;
         }
-        // ... más if-else statements
+        // ... más if-else 
         
-        // Aplicar descuentos también con if-else
+        // Aplicar descuentos 
         if (merchant.Tier == MerchantTier.Premium)
         {
             baseCommission *= 0.8m; // 20% descuento
@@ -191,9 +211,9 @@ public class CommissionCalculator
 
 **Carlos**: Exacto. Primero el descuento por tier, después por volumen.
 
-**María**: Diego, necesito que uses el patrón Strategy. Cada tipo de comisión será una estrategia diferente.
+**María**: Diego, necesito que uses un patrón . Cada tipo de comisión será una estrategia diferente.
 
-**Diego**: ¿Strategy Pattern? ¿No sería más simple un switch-case?
+**Diego**: ¿Strategy? ¿o más simple un switch-case?
 
 **María**: No. El switch-case es exactamente lo que tenemos ahora y no escala. Con Strategy, cada regla es una clase independiente, testeable y extensible.
 
@@ -222,17 +242,17 @@ public class CommissionCalculator
 **Objetivo**: Analizar el problema actual y diseñar la solución usando Strategy Pattern.
 
 **Actividades**:
-1. **Identificar las variaciones** (5 min):
+1. **Identificar las variaciones**  :
    - ¿Qué cambia entre diferentes tipos de transacciones?
    - ¿Qué permanece constante?
    - ¿Dónde están los puntos de extensión?
 
-2. **Definir las abstracciones** (5 min):
+2. **Definir las abstracciones**  :
    - ¿Cuál será la interfaz común?
    - ¿Qué parámetros necesita cada estrategia?
    - ¿Cómo se aplicarán los descuentos?
 
-3. **Planificar la implementación** (5 min):
+3. **Planificar la implementación**  :
    - ¿Cuántas clases de estrategia necesitamos?
    - ¿Cómo se configurará el contexto?
    - ¿Dónde vivirá la lógica de selección de estrategia?
@@ -240,24 +260,24 @@ public class CommissionCalculator
 **Entregables**:
 - Diagrama de clases básico
 - Lista de estrategias a implementar
-- Identificación de responsabilidades
+- Identificación de requisitos funcionales y no funcionales
 
 ### Fase 2: Diseño (15 minutos)
 
 **Objetivo**: Crear el diseño detallado de interfaces y clases.
 
 **Actividades**:
-1. **Diseñar la interfaz ICommissionStrategy** (5 min):
+1. **Diseñar la interfaz ICommissionStrategy**  :
    - Método para calcular comisión base
    - Parámetros necesarios
    - Tipo de retorno
 
-2. **Diseñar el contexto CommissionCalculator** (5 min):
+2. **Diseñar el contexto CommissionCalculator**  :
    - Cómo maneja las diferentes estrategias
    - Lógica de aplicación de descuentos
    - Configuración de estrategias
 
-3. **Planificar las estrategias concretas** (5 min):
+3. **Planificar las estrategias concretas** :
    - Una estrategia por tipo de transacción
    - Implementación específica de cada una
    - Validaciones necesarias
@@ -267,7 +287,7 @@ public class CommissionCalculator
 - Estructura de clases
 - Flujo de ejecución documentado
 
-### Fase 3: Implementación (25 minutos)
+### Fase 3: Implementación (30 minutos)
 
 **Objetivo**: Implementar la solución completa usando Strategy Pattern.
 
@@ -297,18 +317,19 @@ public class CommissionCalculator
 **Objetivo**: Mejorar el código y prepararlo para producción.
 
 **Actividades**:
-1. **Revisar y optimizar** (5 min):
+1. **Revisar y optimizar** :
    - Eliminar código duplicado
-   - Mejorar nombres de variables/métodos
+   - Mejorar Constantes/Variables/métodos
    - Agregar validaciones
+   - Mantenibilidad y Metricas de calidad
 
-2. **Agregar extensibilidad** (5 min):
+2. **Agregar extensibilidad** (opcional):
    - Factory pattern para crear estrategias
    - Configuración externa de reglas
    - Logging y monitoreo básico
 
-3. **Testing y documentación** (5 min):
-   - Pruebas unitarias completas
+3. **Testing y documentación** (opcional):
+   - Pruebas unitarias 
    - Documentación de uso
    - Ejemplos de extensión
 
@@ -320,20 +341,22 @@ public class CommissionCalculator
 ## Criterios de Evaluación
 
 ### Técnico (70%)
-- **Implementación correcta del Strategy Pattern** (25%)
-- **Código limpio y mantenible** (20%)
-- **Pruebas unitarias completas** (15%)
-- **Manejo correcto de descuentos** (10%)
+- **Implementación correcta del Pattern**  
+- **Código limpio y mantenible**  
+- **Pruebas unitarias completas**  
+- **Manejo correcto de descuentos**  
 
-### Funcional (30%)
-- **Cálculos correctos para todos los tipos** (15%)
-- **Aplicación correcta de descuentos** (10%)
-- **Performance adecuado** (5%)
+### Funcional (20%)
+- **Cálculos correctos para todos los tipos**  
+- **Aplicación correcta de descuentos** 
+- **Performance adecuado**  
 
 ### Bonus (10%)
 - **Uso de Factory Pattern para estrategias**
 - **Configuración externa de reglas**
-- **Logging y monitoreo implementado**
+- **Logging implementado**
+- **Agregar Estrategia Crypto 0.0255% + $0.10 y No aplica descuentos extras para Comercios premium**
+- **LLego un cambio para QR: 0.95% + $0.10 por transacción, pero si monto es menor 2000 solo +$0.05**
 
 ## Solución Completa
 

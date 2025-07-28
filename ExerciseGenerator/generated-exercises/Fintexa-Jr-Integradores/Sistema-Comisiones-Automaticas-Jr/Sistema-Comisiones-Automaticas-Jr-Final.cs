@@ -128,7 +128,7 @@ namespace Fintexa.CommissionSystem
                 { TransactionType.BankTransfer, new BankTransferCommissionStrategy() },
                 { TransactionType.QRPayment, new QRPaymentCommissionStrategy() }
             };
-        }
+        } 
 
         public CommissionResult CalculateCommission(Transaction transaction, Merchant merchant)
         {

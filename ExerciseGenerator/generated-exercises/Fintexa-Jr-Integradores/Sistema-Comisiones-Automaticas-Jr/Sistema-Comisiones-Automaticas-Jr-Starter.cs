@@ -11,7 +11,7 @@ namespace Fintexa.CommissionSystem
         DebitCard,
         BankTransfer,
         QRPayment
-    }
+    } 
 
     public enum MerchantTier  
     {
@@ -189,7 +189,7 @@ namespace Fintexa.CommissionSystem
 
         // TODO: Implementar TestExtensibility
         // - Demostrar cómo agregar nueva estrategia (Crypto)
-        // - Crear CryptoCommissionStrategy (3.5% + $0.50)
+        // - Crear CryptoCommissionStrategy (0.0255% + $0.10  )  
         // - Registrar en el calculador
         // - Probar funcionalidad
     }
@@ -199,11 +199,11 @@ namespace Fintexa.CommissionSystem
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine("🏦 Fintexa - Sistema de Comisiones Automáticas");
+            Console.WriteLine("Fintexa - Sistema de Comisiones Automáticas");
             Console.WriteLine("Implementación con Strategy Pattern");
             Console.WriteLine("===============================================\n");
             
-            // TODO: Ejecutar pruebas principales
+            // TODO: Ejecutar pruebas de escritorios
             
             // TODO: Demostrar extensibilidad
             
@@ -258,7 +258,7 @@ MÉTRICAS DE ÉXITO:
 TIPS PARA LA IMPLEMENTACIÓN:
 - Usar decimal para precisión monetaria
 - Implementar validaciones robustas
-- Usar Dictionary para mapeo eficiente O(1)
+- Usar Dictionary para mapeo eficiente 
 - Aplicar descuentos en orden correcto
 - Redondear resultados a 2 decimales
 - Generar mensajes informativos para usuarios
