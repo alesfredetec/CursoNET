@@ -335,6 +335,87 @@
     main { padding: 24px; }
     .grid { grid-template-columns: 1fr; }
   }
+
+  /* ─── Iframe embed mode (Moodle, etc) ─── */
+  .iframe-toolbar {
+    display: none;
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    z-index: 100;
+    background: rgba(10, 14, 20, 0.85);
+    border: 1px solid var(--amber);
+    color: var(--amber);
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    backdrop-filter: blur(8px);
+    transition: background 0.2s, color 0.2s;
+  }
+  .iframe-toolbar:hover { background: var(--amber); color: var(--concrete); }
+  html.in-iframe .header {
+    position: static;
+    padding: 18px 28px;
+    backdrop-filter: none;
+  }
+  html.in-iframe .header h1 { font-size: 1.5em; }
+  html.in-iframe .header .subtitle { font-size: 11px; letter-spacing: 1.5px; }
+  html.in-iframe .header .stats { gap: 18px; }
+  html.in-iframe .header .stat .num { font-size: 1.2em; }
+  html.in-iframe main { padding: 24px 28px; }
+  html.in-iframe .footer { padding: 16px 28px; font-size: 11px; }
+  html.in-iframe .iframe-toolbar { display: inline-flex; }
+
+  /* ─── Optional collapsed section (Generales) ─── */
+  .optional-section {
+    margin-top: 40px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: rgba(18, 24, 31, 0.35);
+    overflow: hidden;
+  }
+  .optional-section summary {
+    cursor: pointer;
+    padding: 20px 28px;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    user-select: none;
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--text-dim);
+    font-size: 1.5em;
+    transition: background 0.2s, color 0.2s;
+  }
+  .optional-section summary::-webkit-details-marker,
+  .optional-section summary::marker { display: none; content: ''; }
+  .optional-section summary::before {
+    content: '▸';
+    color: var(--amber);
+    font-size: 0.65em;
+    transition: transform 0.2s;
+    display: inline-block;
+    width: 14px;
+  }
+  .optional-section[open] summary::before { transform: rotate(90deg); }
+  .optional-section summary:hover { background: rgba(232, 184, 106, 0.05); color: var(--amber); }
+  .optional-section .badge-opt {
+    margin-left: auto;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    border-radius: 3px;
+  }
+  .optional-body { padding: 0 28px 28px 28px; }
 </style>
 </head>
 <body>
@@ -350,60 +431,12 @@
       <div class="stat"><span class="num">15</span><span class="label">Roles</span></div>
       <div class="stat"><span class="num">75</span><span class="label">Preguntas Quiz</span></div>
       <div class="stat"><span class="num">~140</span><span class="label">Min Total</span></div>
-      <div class="stat"><span class="num">SCORM 1.2</span><span class="label">Tracking</span></div>
+      <div class="stat"><span class="num">2</span><span class="label">Tracking</span></div>
     </div>
   </div>
 </header>
 
 <main>
-
-  <!-- ────────────── GENERALES ────────────── -->
-  <section>
-    <h2 class="section-title">Modulos generales</h2>
-    <p class="section-desc">Onboarding aplicable a cualquier rol. No requieren SCORM tracking — formato HTML standalone Reveal.js. Para subir como <strong>Recurso Archivo</strong> en Moodle (ver <a href="README-IMPORT-MOODLE.md">README import</a>).</p>
-
-    <div class="search-row">
-      <input type="text" class="search-input" id="search-generales" placeholder="Buscar en generales..." oninput="filterCards('search-generales', 'grid-generales')">
-    </div>
-
-    <div class="grid" id="grid-generales">
-      <article class="card cat-general" data-search="quickstart 8 pasos statusline gates obligatorios">
-        <div class="meta-row">
-          <span class="slide-id">Q01-Q04 · 4 slides</span>
-          <span class="duration">~11 min</span>
-        </div>
-        <div class="role">Modulo 1 · Quickstart</div>
-        <div class="archetype">Primera sesion cliente</div>
-        <div class="desc">10 minutos al primer comando productivo. Cualquier rol. Cubre umbral, 8 pasos, statusline diagnostico, y los 2 gates obligatorios <code>/fscan + /fdoc</code> + <code>/freview --full</code>.</div>
-        <div class="tags">
-          <span class="tag">Reveal.js</span>
-          <span class="tag tag-tts">TTS</span>
-          <span class="tag">Notas</span>
-        </div>
-        <div class="actions">
-          <a class="btn btn-primary" href="modulo-01-quickstart.html" target="_blank">Abrir</a>
-        </div>
-      </article>
-
-      <article class="card cat-general" data-search="onboarding generico reglas universales 5 dias kpis war room">
-        <div class="meta-row">
-          <span class="slide-id">O01+O02+O03+O19+O20 · 5 slides</span>
-          <span class="duration">~14 min</span>
-        </div>
-        <div class="role">Modulo 2 · Onboarding generico</div>
-        <div class="archetype">Aplicable a los 15 roles</div>
-        <div class="desc">Bloque A apertura (3 slides) + Bloque C anexos (2 slides). Reglas universales, camino comun 5 dias, plan 2 semanas con KPIs, y patron War Room vs Debate IA + cierre CTA.</div>
-        <div class="tags">
-          <span class="tag">Reveal.js</span>
-          <span class="tag tag-tts">TTS</span>
-          <span class="tag">Notas</span>
-        </div>
-        <div class="actions">
-          <a class="btn btn-primary" href="modulo-02-onboarding.html" target="_blank">Abrir</a>
-        </div>
-      </article>
-    </div>
-  </section>
 
   <!-- ────────────── POR ROL ────────────── -->
   <section>
@@ -605,6 +638,58 @@
 
   </section>
 
+  <!-- ────────────── GENERALES (OPCIONAL, COLAPSADO) ────────────── -->
+  <details class="optional-section">
+    <summary>
+      Modulos generales
+      <span class="badge-opt">Opcional</span>
+    </summary>
+    <div class="optional-body">
+      <p class="section-desc">Onboarding aplicable a cualquier rol. No requieren SCORM tracking — formato HTML standalone Reveal.js. Para subir como <strong>Recurso Archivo</strong> en Moodle (ver <a href="README-IMPORT-MOODLE.md">README import</a>).</p>
+
+      <div class="search-row">
+        <input type="text" class="search-input" id="search-generales" placeholder="Buscar en generales..." oninput="filterCards('search-generales', 'grid-generales')">
+      </div>
+
+      <div class="grid" id="grid-generales">
+        <article class="card cat-general" data-search="quickstart 8 pasos statusline gates obligatorios">
+          <div class="meta-row">
+            <span class="slide-id">Q01-Q04 · 4 slides</span>
+            <span class="duration">~11 min</span>
+          </div>
+          <div class="role">Modulo 1 · Quickstart</div>
+          <div class="archetype">Primera sesion cliente</div>
+          <div class="desc">10 minutos al primer comando productivo. Cualquier rol. Cubre umbral, 8 pasos, statusline diagnostico, y los 2 gates obligatorios <code>/fscan + /fdoc</code> + <code>/freview --full</code>.</div>
+          <div class="tags">
+            <span class="tag">Reveal.js</span>
+            <span class="tag tag-tts">TTS</span>
+            <span class="tag">Notas</span>
+          </div>
+          <div class="actions">
+            <a class="btn btn-primary" href="modulo-01-quickstart.html" target="_blank">Abrir</a>
+          </div>
+        </article>
+
+        <article class="card cat-general" data-search="onboarding generico reglas universales 5 dias kpis war room">
+          <div class="meta-row">
+            <span class="slide-id">O01+O02+O03+O19+O20 · 5 slides</span>
+            <span class="duration">~14 min</span>
+          </div>
+          <div class="role">Modulo 2 · Onboarding generico</div>
+          <div class="archetype">Aplicable a los 15 roles</div>
+          <div class="desc">Bloque A apertura (3 slides) + Bloque C anexos (2 slides). Reglas universales, camino comun 5 dias, plan 2 semanas con KPIs, y patron War Room vs Debate IA + cierre CTA.</div>
+          <div class="tags">
+            <span class="tag">Reveal.js</span>
+            <span class="tag tag-tts">TTS</span>
+            <span class="tag">Notas</span>
+          </div>
+          <div class="actions">
+            <a class="btn btn-primary" href="modulo-02-onboarding.html" target="_blank">Abrir</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </details>
 
 </main>
 
@@ -614,6 +699,37 @@
 </footer>
 
 <script>
+// ─── Iframe context detection (Moodle embed) ───
+(function detectIframe() {
+  var embedded = false;
+  try { embedded = window.self !== window.top; } catch (e) { embedded = true; }
+  var forceEmbed = /[?&]embed=1\b/.test(window.location.search);
+  if (!embedded && !forceEmbed) return;
+
+  document.documentElement.classList.add('in-iframe');
+
+  // Open-in-new-tab pill (escapa el iframe de Moodle)
+  var openUrl = window.location.href.replace(/([?&])embed=1(&|$)/, '$1').replace(/[?&]$/, '');
+  var pill = document.createElement('a');
+  pill.className = 'iframe-toolbar';
+  pill.href = openUrl;
+  pill.target = '_blank';
+  pill.rel = 'noopener noreferrer';
+  pill.textContent = 'Abrir ↗';
+  pill.title = 'Abrir el catalogo en pestana nueva';
+  document.body.appendChild(pill);
+
+  // Links internos del catalogo: forzar _top para que abran en la pestana de Moodle
+  // (evita anidar iframes dentro de iframes cuando el alumno clickea un curso)
+  document.querySelectorAll('a[href]').forEach(function (a) {
+    var href = a.getAttribute('href') || '';
+    if (!href || href.charAt(0) === '#' || a.target) return;
+    var isExternal = /^https?:\/\//i.test(href);
+    a.target = isExternal ? '_blank' : '_top';
+    if (isExternal) a.rel = (a.rel ? a.rel + ' ' : '') + 'noopener noreferrer';
+  });
+})();
+
 function filterCards(inputId, gridId) {
   const query = document.getElementById(inputId).value.toLowerCase().trim();
   const grid = document.getElementById(gridId);
