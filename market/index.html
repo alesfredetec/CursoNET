@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fintexa Marketplace V2 — Catalogo Cursos Moodle</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --concrete: #0A0E14;
+    --concrete-2: #12181F;
+    --concrete-3: #1A2028;
+    --amber: #E8B86A;
+    --amber-deep: #c4943a;
+    --cyan: #5FB8D4;
+    --green: #7DB87D;
+    --red: #D44A4A;
+    --gold: #d4a843;
+    --text: #E8E8E8;
+    --text-dim: #8A9098;
+    --border: rgba(232, 184, 106, 0.2);
+
+    /* Categoria colors */
+    --cat-leadership: #d4a843;       /* gold */
+    --cat-producto: #5FB8D4;          /* cyan */
+    --cat-tecnico: #E8B86A;           /* amber */
+    --cat-calidad: #7DB87D;           /* green */
+    --cat-soporte: #b88dd4;           /* purple */
+    --cat-compliance: #D44A4A;        /* red */
+    --cat-general: #c0c0d0;           /* silver */
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    min-height: 100%;
+    background: var(--concrete);
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    line-height: 1.6;
+  }
+  body {
+    background:
+      radial-gradient(ellipse at top, rgba(232, 184, 106, 0.06) 0%, transparent 60%),
+      radial-gradient(ellipse at bottom right, rgba(95, 184, 212, 0.05) 0%, transparent 50%),
+      radial-gradient(ellipse at bottom left, rgba(212, 168, 67, 0.04) 0%, transparent 55%),
+      var(--concrete);
+    min-height: 100vh;
+  }
+  a { color: var(--cyan); text-decoration: none; }
+
+  /* Header */
+  .header {
+    border-bottom: 1px solid var(--border);
+    padding: 32px 48px;
+    background: rgba(10, 14, 20, 0.6);
+    backdrop-filter: blur(8px);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .header-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--amber);
+    font-size: 2em;
+    line-height: 1.1;
+    text-shadow: 0 0 30px rgba(232, 184, 106, 0.25);
+    margin: 0;
+  }
+  .header .subtitle {
+    color: var(--text-dim);
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-weight: 300;
+  }
+  .header .stats {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+  .header .stat {
+    border: 1px solid var(--border);
+    padding: 8px 14px;
+    border-radius: 4px;
+    background: var(--concrete-2);
+  }
+  .header .stat .num {
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--amber);
+    font-size: 1.6em;
+    font-weight: 600;
+    display: block;
+    line-height: 1;
+  }
+  .header .stat .label {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-dim);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-top: 4px;
+    display: block;
+  }
+
+  /* Main */
+  main {
+    padding: 48px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  section {
+    margin-bottom: 56px;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--cyan);
+    font-size: 1.7em;
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+  .section-desc {
+    color: var(--text-dim);
+    font-size: 14px;
+    margin-bottom: 24px;
+    letter-spacing: 0.5px;
+  }
+  .category-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin: 32px 0 14px 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .category-label::before {
+    content: '';
+    flex-shrink: 0;
+    width: 16px;
+    height: 1px;
+    background: var(--text-dim);
+  }
+  .category-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .category-label.cat-leadership { color: var(--cat-leadership); }
+  .category-label.cat-producto { color: var(--cat-producto); }
+  .category-label.cat-tecnico { color: var(--cat-tecnico); }
+  .category-label.cat-calidad { color: var(--cat-calidad); }
+  .category-label.cat-soporte { color: var(--cat-soporte); }
+  .category-label.cat-compliance { color: var(--cat-compliance); }
+  .category-label.cat-general { color: var(--cat-general); }
+
+  /* Cards grid */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 18px;
+  }
+  .card {
+    background: var(--concrete-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px 22px;
+    transition: all 200ms;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 220px;
+  }
+  .card:hover {
+    border-color: var(--amber);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4), 0 0 30px rgba(232, 184, 106, 0.08);
+  }
+  .card .meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .card .slide-id {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-dim);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+  }
+  .card .duration {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--cyan);
+    font-size: 11px;
+    background: rgba(95, 184, 212, 0.08);
+    padding: 2px 8px;
+    border-radius: 3px;
+  }
+  .card .role {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4em;
+    color: var(--amber);
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+  .card .archetype {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--text-dim);
+    font-size: 1em;
+    margin-bottom: 12px;
+  }
+  .card .desc {
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 16px;
+    flex: 1;
+  }
+  .card .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+  .card .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+    padding: 2px 8px;
+    border-radius: 3px;
+    letter-spacing: 0.5px;
+  }
+  .card .tag.tag-scorm { color: var(--green); border-color: rgba(125, 184, 125, 0.3); }
+  .card .tag.tag-tts { color: var(--cyan); border-color: rgba(95, 184, 212, 0.3); }
+  .card .tag.tag-quiz { color: var(--amber); border-color: rgba(232, 184, 106, 0.3); }
+  .card .actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    background: var(--concrete-3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 7px 14px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 150ms;
+    letter-spacing: 0.3px;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn:hover {
+    border-color: var(--amber);
+    color: var(--amber);
+    background: var(--concrete);
+  }
+  .btn-primary {
+    background: var(--amber);
+    color: var(--concrete);
+    border-color: var(--amber);
+    font-weight: 600;
+  }
+  .btn-primary:hover {
+    background: var(--gold);
+    color: var(--concrete);
+  }
+
+  /* Side accent bar (categoria color) */
+  .card.cat-leadership { border-left: 3px solid var(--cat-leadership); }
+  .card.cat-producto { border-left: 3px solid var(--cat-producto); }
+  .card.cat-tecnico { border-left: 3px solid var(--cat-tecnico); }
+  .card.cat-calidad { border-left: 3px solid var(--cat-calidad); }
+  .card.cat-soporte { border-left: 3px solid var(--cat-soporte); }
+  .card.cat-compliance { border-left: 3px solid var(--cat-compliance); }
+  .card.cat-general { border-left: 3px solid var(--cat-general); }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 32px 48px;
+    color: var(--text-dim);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    margin-top: 48px;
+  }
+  .footer .meta {
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .footer a { color: var(--amber); border-bottom: 1px dotted var(--amber); }
+
+  /* Search */
+  .search-row {
+    margin: 16px 0 32px 0;
+  }
+  .search-input {
+    width: 100%;
+    max-width: 480px;
+    background: var(--concrete-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    padding: 10px 16px;
+    border-radius: 4px;
+    transition: border-color 150ms;
+  }
+  .search-input:focus {
+    outline: none;
+    border-color: var(--amber);
+  }
+  .card.hidden { display: none; }
+
+  @media (max-width: 768px) {
+    .header { padding: 24px; }
+    .header h1 { font-size: 1.5em; }
+    main { padding: 24px; }
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-row">
+    <div>
+      <div class="subtitle">Fintexa.tech · Marketplace v2026.504.2-beta</div>
+      <h1>Catalogo Cursos Moodle</h1>
+    </div>
+    <div class="stats">
+      <div class="stat"><span class="num">17</span><span class="label">Cursos</span></div>
+      <div class="stat"><span class="num">15</span><span class="label">Roles</span></div>
+      <div class="stat"><span class="num">75</span><span class="label">Preguntas Quiz</span></div>
+      <div class="stat"><span class="num">~140</span><span class="label">Min Total</span></div>
+      <div class="stat"><span class="num">SCORM 1.2</span><span class="label">Tracking</span></div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ────────────── GENERALES ────────────── -->
+  <section>
+    <h2 class="section-title">Modulos generales</h2>
+    <p class="section-desc">Onboarding aplicable a cualquier rol. No requieren SCORM tracking — formato HTML standalone Reveal.js. Para subir como <strong>Recurso Archivo</strong> en Moodle (ver <a href="README-IMPORT-MOODLE.md">README import</a>).</p>
+
+    <div class="search-row">
+      <input type="text" class="search-input" id="search-generales" placeholder="Buscar en generales..." oninput="filterCards('search-generales', 'grid-generales')">
+    </div>
+
+    <div class="grid" id="grid-generales">
+      <article class="card cat-general" data-search="quickstart 8 pasos statusline gates obligatorios">
+        <div class="meta-row">
+          <span class="slide-id">Q01-Q04 · 4 slides</span>
+          <span class="duration">~11 min</span>
+        </div>
+        <div class="role">Modulo 1 · Quickstart</div>
+        <div class="archetype">Primera sesion cliente</div>
+        <div class="desc">10 minutos al primer comando productivo. Cualquier rol. Cubre umbral, 8 pasos, statusline diagnostico, y los 2 gates obligatorios <code>/fscan + /fdoc</code> + <code>/freview --full</code>.</div>
+        <div class="tags">
+          <span class="tag">Reveal.js</span>
+          <span class="tag tag-tts">TTS</span>
+          <span class="tag">Notas</span>
+        </div>
+        <div class="actions">
+          <a class="btn btn-primary" href="modulo-01-quickstart.html" target="_blank">Abrir</a>
+        </div>
+      </article>
+
+      <article class="card cat-general" data-search="onboarding generico reglas universales 5 dias kpis war room">
+        <div class="meta-row">
+          <span class="slide-id">O01+O02+O03+O19+O20 · 5 slides</span>
+          <span class="duration">~14 min</span>
+        </div>
+        <div class="role">Modulo 2 · Onboarding generico</div>
+        <div class="archetype">Aplicable a los 15 roles</div>
+        <div class="desc">Bloque A apertura (3 slides) + Bloque C anexos (2 slides). Reglas universales, camino comun 5 dias, plan 2 semanas con KPIs, y patron War Room vs Debate IA + cierre CTA.</div>
+        <div class="tags">
+          <span class="tag">Reveal.js</span>
+          <span class="tag tag-tts">TTS</span>
+          <span class="tag">Notas</span>
+        </div>
+        <div class="actions">
+          <a class="btn btn-primary" href="modulo-02-onboarding.html" target="_blank">Abrir</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ────────────── POR ROL ────────────── -->
+  <section>
+    <h2 class="section-title">Modulos por rol</h2>
+    <p class="section-desc">15 modulos rol-especificos con SCORM 1.2 tracking + quiz 5 preguntas multi-choice. Aprobacion 70% (3 de 5). Para subir como <strong>Actividad SCORM Package</strong> en Moodle (ver <a href="modulo-roles/README-SCORM-IMPORT.md">README SCORM</a>).</p>
+
+    <div class="search-row">
+      <input type="text" class="search-input" id="search-roles" placeholder="Buscar por rol o arquetipo..." oninput="filterAllRoles('search-roles')">
+    </div>
+
+    <!-- Liderazgo -->
+    <div class="category-label cat-leadership">▣ Liderazgo y Estrategia</div>
+    <div class="grid roles-grid">
+      <article class="card cat-leadership" data-search="ceo cto c-level hiper lider portfolio board">
+        <div class="meta-row"><span class="slide-id">O04 · Slide rol</span><span class="duration">~5-7 min</span></div>
+        <div class="role">CEO / CTO / C-Level</div>
+        <div class="archetype">El Hiper-Lider</div>
+        <div class="desc">Decisiones estrategicas + governance + visibilidad portfolio 135+ servicios. War room board ready + audit trail firmado para BCRA.</div>
+        <div class="tags"><span class="tag tag-scorm">SCORM 1.2</span><span class="tag tag-quiz">Quiz 5</span><span class="tag tag-tts">TTS</span></div>
+        <div class="actions">
+          <a class="btn btn-primary" href="modulo-roles/01-ceo-cto/index.html" target="_blank">Abrir</a>
+        </div>
+      </article>
+
+      <article class="card cat-leadership" data-search="cfo estratega recursos cost quality kpis adopcion roi">
+        <div class="meta-row"><span class="slide-id">O05 · Slide rol</span><span class="duration">~5-7 min</span></div>
+        <div class="role">CFO</div>
+        <div class="archetype">El Estratega de Recursos</div>
+        <div class="desc">Cost of Quality + ROI marketplace + KPIs cuantitativos. Coach desempeno con metricas drift, coverage, retrabajo evitado.</div>
+        <div class="tags"><span class="tag tag-scorm">SCORM 1.2</span><span class="tag tag-quiz">Quiz 5</span><span class="tag tag-tts">TTS</span></div>
+        <div class="actions">
+          <a class="btn btn-primary" href="modulo-roles/02-cfo/index.html" target="_blank">Abrir</a>
+        </div>
+      </article>
+
+      <article class="card cat-leadership" data-search="tech lead arquitecto estratega sombras adr decisiones cross team">
+        <div class="meta-row"><span class="slide-id">O10 · Slide rol</span><span class="duration">~5-7 min</span></div>
+        <div class="role">Tech Lead / Arquitecto</div>
+        <div class="archetype">El Estratega de Sombras</div>
+        <div class="desc">PR review + decisiones arq cross-team con audit trail firmado 10 anios. Patron War Room + Debate IA + Sign weight 900.</div>
+        <div class="tags"><span class="tag tag-scorm">SCORM 1.2</span><span class="tag tag-quiz">Quiz 5</span><span class="tag tag-tts">TTS</span></div>
+        <div class="actions">
+          <a class="btn btn-primary" href="modulo-roles/07-tech-lead/index.html" target="_blank">Abrir</a>
+        </div>
+      </article>
+    </div>
+
+    <!-- Producto -->
+    <div class="category-label cat-producto">▣ Producto y Analisis</div>
+    <div class="grid roles-grid">
+      <article class="card cat-producto" data-search="pm delivery manager sintetizador sprint planning dor drift">
+        <div class="meta-row"><span class="slide-id">O07 · Slide rol</span><span class="duration">~5-7 min</span></div>
+        <div class="role">PM / Delivery Manager</div>
+        <div class="archetype">El Sintetizador</div>
+        <div class="desc">Sprint planning + DoR gates (5 nivel 1 + 10 nivel 2) + drift check obligatorio. /fdrift entre /fforensic y /freview es no negociable.</div>
+        <div class="tags"><span class="tag tag-scorm">SCORM 1.2</span><span class="tag tag-quiz">Quiz 5</span><span class="tag tag-tts">TTS</span></div>
+        <div class="actions">
+          <a class="btn btn-primary" href="modulo-roles/04-pm/index.html" target="_blank">Abrir</a>
+        </div>
+      </article>
+
+      <article class="card cat-producto" data-search="product owner po diplomatico vacio grooming changelog persona detection">
+        <div class="meta-row"><span class="slide-id">O08 · Slide rol</span><span class="duration">~5-7 min</span></div>
+        <div class="role">Product Owner</div>
+        <div class="archetype">El Diplomatico del Vacio</div>
+        <div class="desc">Grooming + criterios aceptacion + changelog multi-audiencia. Persona-detection automatico (Board/Tech/Customer). /fchangelog --format all en una invocacion.</div>
+        <div class="tags"><span class="tag tag-scorm">SCORM 1.2</span><span class="tag tag-quiz">Quiz 5</span><span class="tag tag-tts">TTS</span></div>
+        <div class="actions">
+          <a class="btn btn-primary" href="modulo-roles/05-po/index.html" target="_blank">Abrir</a>
+        </div>
+      </article>
+
+      <article class="card cat-producto" data-search="analista funcional intelecto relampago specs sdd reverse engineering handoff">
+        <div class="meta-row"><span class="slide-id">O17 · Slide rol</span><span class="duration">~5-7 min</span></div>
+        <div class="role">Analista Funcional</div>
+        <div class="archetype">El Intelecto Relampago</div>
+        <div class="desc">Specs forense + SDD 14 secciones + spec iterativa. HANDOFF-CARD versionado contrato. Validacion adversarial con /fdebate-ia pre-implementacion.</div>
+        <div class="tags"><span class="tag tag-scorm">SCORM 1.2</span><span class="tag tag-quiz">Quiz 5</span><span class="tag tag-tts">TTS</span></div>
+        <div class="actions">
+          <a class="btn btn-primary" href="modulo-roles/14-analista/index.html" target="_blank">Abrir</a>
+        </div>
+      </article>
+    </div>
+
+    <!-- Tecnico -->
+    <div class="category-label cat-tecnico">▣ Tecnico (Dev / Frontend)</div>
+    <div class="grid roles-grid">
+      <article class="card cat-tecnico" data-search="dev senior constructor implacable feature e2e 15 steps drift forensic">
+        <div class="meta-row"><span class="slide-id">O11 · Slide rol</span><span class="duration">~5-7 min</span></div>
+        <div class="role">Dev Senior</div>
+        <div class="archetype">El Constructor Implacable</div>
+        <div class="desc">Features end-to-end 15 steps + bug fix prod + brownfield + mentor junior. 4 reglas: path absoluto HANDOFF, /fforensic 0 hallazgos, cierre formal, /fdev --fix DRIFT-IDs.</div>
+        <div class="tags"><span class="tag tag-scorm">SCORM 1.2</span><span class="tag tag-quiz">Quiz 5</span><span class="tag tag-tts">TTS</span></div>
+        <div class="actions">
+          <a class="btn btn-primary" href="modulo-roles/08-dev-senior/index.html" target="_blank">Abrir</a>
+        </div>
+      </article>
+
+      <article class="card cat-tecnico" data-search="dev junior onboarding motor eterno fenix reverse engineering primer ticket">
+        <div class="meta-row"><span class="slide-id">O12 · Slide rol</span><span class="duration">~5-7 min</span></div>
+        <div class="role">Dev Junior / Onboarding</div>
+        <div class="archetype">El Motor Eterno</div>
+        <div class="desc">Reverse-engineering servicio + primer ticket pairing + primer feature. 3 reglas criticas: nunca greenfield, /fhelp primero, /fcompact antes de cambiar rama.</div>
+        <div class="tags"><span class="tag tag-scorm">SCORM 1.2 (POC)</span><span class="tag tag-quiz">Quiz 5</span><span class="tag tag-tts">TTS</span></div>
+        <div class="actions">
+          <a class="btn btn-primary" href="modulo-roles/12-dev-junior/index.html" target="_blank">Abrir</a>
+        </div>
+      </article>
+
+      <article class="card cat-tecnico" data-search="frontend architect arquitecto realidades portales next.js react mui pen-test">
+        <div class="meta-row"><span class="slide-id">O13 · Slide rol</span><span class="duration">~5-7 min</span></div>
+        <div class="role">Frontend Architect</div>
+        <div class="archetype">El Arquitecto de Realidades</div>
+        <div class="desc">Portales fintech Next.js 16 + React 19 + MUI 7. BFF Authorize peso 1000 inviolable. Pen-test continuo, freview --full siempre para PCI scope.</div>
+        <div class="tags"><span class="tag tag-scorm">SCORM 1.2</span><span class="tag tag-quiz">Quiz 5</span><span class="tag tag-tts">TTS</span></div>
+        <div class="actions">
+          <a class="btn btn-primary" href="modulo-roles/09-frontend-arq/index.html" target="_blank">Abrir</a>
+        </div>
+      </article>
+    </div>
+
+    <!-- Calidad -->
+    <div class="category-label cat-calidad">▣ Calidad y Operaciones</div>
+    <div class="grid roles-grid">
+      <article class="card cat-calidad" data-search="qa engineer lead inquisidor tecnico dor casos coverage golden rule">
+        <div class="meta-row"><span class="slide-id">O14 · Slide rol</span><span class="duration">~5-7 min</span></div>
+        <div class="role">QA Engineer / Lead</div>
+        <div class="archetype">El Inquisidor Tecnico</div>
+        <div class="desc">DoR gates + casos 7 bloques (FAPI/FSQL/FFLOW/Integ/Sec/Reg/E2E) + dictamen PROD. Ratio 1:3 codigo/tests. Coverage >=85% para merge.</div>
+        <div class="tags"><span class="tag tag-scorm">SCORM 1.2</span><span class="tag tag-quiz">Quiz 5</span><span class="tag tag-tts">TTS</span></div>
+        <div class="actions">
+          <a class="btn btn-primary" href="modulo-roles/10-qa/index.html" target="_blank">Abrir</a>
+        </div>
+      </article>
+
+      <article class="card cat-calidad" data-search="sre devops oncall inteligencia fria aks incident bcra argocd">
+        <div class="meta-row"><span class="slide-id">O15 · Slide rol</span><span class="duration">~5-7 min</span></div>
+        <div class="role">SRE / DevOps / Oncall</div>
+        <div class="archetype">La Inteligencia Fria</div>
+        <div class="desc">Incident response + AKS deploy + GitOps ArgoCD. P0 pagos down >2min: BCRA notification <30min. Postmortem PCI Req 12.10.1-6.</div>
+        <div class="tags"><span class="tag tag-scorm">SCORM 1.2</span><span class="tag tag-quiz">Quiz 5</span><span class="tag tag-tts">TTS</span></div>
+        <div class="actions">
+          <a class="btn btn-primary" href="modulo-roles/11-sre/index.html" target="_blank">Abrir</a>
+        </div>
+      </article>
+    </div>
+
+    <!-- Soporte y RH -->
+    <div class="category-label cat-soporte">▣ Soporte y Capital Humano</div>
+    <div class="grid roles-grid">
+      <article class="card cat-soporte" data-search="soporte n1 n2 nodo informacion triage escalamiento warroom msg">
+        <div class="meta-row"><span class="slide-id">O16 · Slide rol</span><span class="duration">~5-7 min</span></div>
+        <div class="role">Soporte N1 / N2</div>
+        <div class="archetype">El Nodo de Informacion</div>
+        <div class="desc">Triage inbound + escalamiento N1/N2 + alerta canal Teams + handoff dev oncall trazable. /fsqa-readonly con flags combinables (cache 24h).</div>
+        <div class="tags"><span class="tag tag-scorm">SCORM 1.2</span><span class="tag tag-quiz">Quiz 5</span><span class="tag tag-tts">TTS</span></div>
+        <div class="actions">
+          <a class="btn btn-primary" href="modulo-roles/13-soporte/index.html" target="_blank">Abrir</a>
+        </div>
+      </article>
+
+      <article class="card cat-soporte" data-search="capital humano arquitecto social onboarding retro xnewskill kpis">
+        <div class="meta-row"><span class="slide-id">O09 · Slide rol</span><span class="duration">~5-7 min</span></div>
+        <div class="role">Capital Humano</div>
+        <div class="archetype">El Arquitecto Social</div>
+        <div class="desc">Onboarding nuevos + retro mensual + adopcion. Vivir el onboarding como newjoiner. /fxnewskill cuando patron se repite 3+ veces — marketplace evoluciona con el equipo.</div>
+        <div class="tags"><span class="tag tag-scorm">SCORM 1.2</span><span class="tag tag-quiz">Quiz 5</span><span class="tag tag-tts">TTS</span></div>
+        <div class="actions">
+          <a class="btn btn-primary" href="modulo-roles/06-capital-humano/index.html" target="_blank">Abrir</a>
+        </div>
+      </article>
+    </div>
+
+    <!-- Compliance -->
+    <div class="category-label cat-compliance">▣ Compliance y Seguridad</div>
+    <div class="grid roles-grid">
+      <article class="card cat-compliance" data-search="ciso secops juez hierro pci dss attestation incident response">
+        <div class="meta-row"><span class="slide-id">O06 · Slide rol</span><span class="duration">~5-7 min</span></div>
+        <div class="role">CISO / SecOps</div>
+        <div class="archetype">El Juez de Hierro</div>
+        <div class="desc">PCI DSS v4 attestation + OWASP Top 10 + threat modeling + incident response. PCI peso 9999 inviolable. P0 BCRA <30min. Postmortem PCI Req 12.10.</div>
+        <div class="tags"><span class="tag tag-scorm">SCORM 1.2</span><span class="tag tag-quiz">Quiz 5</span><span class="tag tag-tts">TTS</span></div>
+        <div class="actions">
+          <a class="btn btn-primary" href="modulo-roles/03-ciso/index.html" target="_blank">Abrir</a>
+        </div>
+      </article>
+
+      <article class="card cat-compliance" data-search="compliance auditor qsa juez externo pci attestation evidence sha256">
+        <div class="meta-row"><span class="slide-id">O18 · Slide rol</span><span class="duration">~5-7 min</span></div>
+        <div class="role">Compliance / Auditor QSA</div>
+        <div class="archetype">El Juez Externo</div>
+        <div class="desc">Auditoria externa PCI v4 + QSA + evidence + attestation periodica. Retencion 10 anios via git history + /fsign audit trail + FXQ-META-04 provenance.</div>
+        <div class="tags"><span class="tag tag-scorm">SCORM 1.2</span><span class="tag tag-quiz">Quiz 5</span><span class="tag tag-tts">TTS</span></div>
+        <div class="actions">
+          <a class="btn btn-primary" href="modulo-roles/15-compliance-qsa/index.html" target="_blank">Abrir</a>
+        </div>
+      </article>
+    </div>
+
+  </section>
+
+
+</main>
+
+<footer class="footer">
+  <div class="meta">Marketplace v2026.504.2-beta · Fintexa.tech Ia-Team · 2026-05-04</div>
+  <div>POC validado · Internal training · Repo dev <code>Fintexa.Market2Dev</code> (no marketplace publishing)</div>
+</footer>
+
+<script>
+function filterCards(inputId, gridId) {
+  const query = document.getElementById(inputId).value.toLowerCase().trim();
+  const grid = document.getElementById(gridId);
+  if (!grid) return;
+  grid.querySelectorAll('.card').forEach(card => {
+    const search = (card.dataset.search || '').toLowerCase();
+    const visible = !query || search.includes(query);
+    card.classList.toggle('hidden', !visible);
+  });
+}
+
+function filterAllRoles(inputId) {
+  const query = document.getElementById(inputId).value.toLowerCase().trim();
+  document.querySelectorAll('.roles-grid .card').forEach(card => {
+    const search = (card.dataset.search || '').toLowerCase();
+    const visible = !query || search.includes(query);
+    card.classList.toggle('hidden', !visible);
+  });
+}
+</script>
+
+</body>
+</html>

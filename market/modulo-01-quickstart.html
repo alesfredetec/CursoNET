@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Fintexa Marketplace V2 — Modulo 1 · Quickstart Primera Sesion</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css" id="theme">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --concrete: #0A0E14;
+    --concrete-2: #12181F;
+    --concrete-3: #1A2028;
+    --amber: #E8B86A;
+    --amber-deep: #c4943a;
+    --cyan: #5FB8D4;
+    --green: #7DB87D;
+    --red: #D44A4A;
+    --gold: #d4a843;
+    --text: #E8E8E8;
+    --text-dim: #8A9098;
+    --border: rgba(232, 184, 106, 0.2);
+  }
+  .reveal { font-family: 'Inter', system-ui, sans-serif; color: var(--text); }
+  .reveal-viewport, .reveal { background: var(--concrete) !important; }
+  .reveal .slides { text-align: left; }
+
+  /* Dark veil over background images for readability */
+  .reveal .slide-background-content::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg,
+      rgba(10, 14, 20, 0.78) 0%,
+      rgba(18, 24, 31, 0.85) 50%,
+      rgba(10, 14, 20, 0.92) 100%);
+    pointer-events: none;
+  }
+
+  /* Reinforce text shadows over image backgrounds */
+  .reveal section[data-background-image] h1,
+  .reveal section[data-background-image] h2,
+  .reveal section[data-background-image] h3 {
+    text-shadow: 0 2px 12px rgba(0,0,0,0.85), 0 0 30px rgba(232, 184, 106, 0.3);
+  }
+  .reveal section[data-background-image] pre {
+    background: rgba(18, 24, 31, 0.92);
+    backdrop-filter: blur(4px);
+  }
+  .reveal section[data-background-image] blockquote {
+    background: rgba(18, 24, 31, 0.92);
+    backdrop-filter: blur(4px);
+  }
+  .reveal h1, .reveal h2, .reveal h3 {
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--amber);
+    text-transform: none;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    text-shadow: 0 0 30px rgba(232, 184, 106, 0.25);
+  }
+  .reveal h1 { font-size: 2.4em; line-height: 1.1; margin-bottom: 0.3em; }
+  .reveal h2 { font-size: 1.6em; color: var(--cyan); margin-top: 0.5em; }
+  .reveal h3 { font-size: 1.2em; color: var(--amber); }
+  .reveal .subtitle {
+    color: var(--text-dim);
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 0.9em;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 1em;
+  }
+  .reveal pre {
+    background: var(--concrete-2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4), 0 0 40px rgba(232,184,106,0.05);
+    width: 100%;
+    margin: 0.4em 0;
+    max-height: 75vh;
+    overflow-y: auto;
+    overflow-x: auto;
+  }
+  .reveal pre code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68em;
+    line-height: 1.45;
+    color: var(--text);
+    padding: 0.9em 1em;
+    max-height: none;
+    background: transparent;
+    white-space: pre;
+    word-wrap: normal;
+  }
+  /* Scrollbar styled cinematic */
+  .reveal pre::-webkit-scrollbar { width: 8px; height: 8px; }
+  .reveal pre::-webkit-scrollbar-track { background: var(--concrete); }
+  .reveal pre::-webkit-scrollbar-thumb { background: var(--amber-deep); border-radius: 4px; }
+  .reveal pre::-webkit-scrollbar-thumb:hover { background: var(--amber); }
+  /* Scroll indicator cue (subtle gradient bottom edge when overflow) */
+  .reveal pre {
+    background-image: linear-gradient(to bottom, transparent calc(100% - 12px), rgba(232,184,106,0.05) 100%);
+  }
+  .reveal code { font-family: 'JetBrains Mono', monospace; color: var(--amber); background: var(--concrete-3); padding: 1px 6px; border-radius: 2px; }
+  .reveal blockquote {
+    background: var(--concrete-2);
+    border-left: 3px solid var(--amber);
+    padding: 1em 1.2em;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.05em;
+    color: var(--text);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+  .reveal ul, .reveal ol { font-size: 0.85em; }
+  .reveal ul li, .reveal ol li { margin: 0.3em 0; }
+  .reveal a { color: var(--cyan); text-decoration: none; border-bottom: 1px dotted var(--cyan); }
+  .reveal .progress { color: var(--amber); height: 4px; }
+  .reveal .controls { color: var(--amber); }
+  .reveal .slide-number { color: var(--amber); font-family: 'JetBrains Mono', monospace; }
+
+  /* Header bar (custom on each slide) */
+  .slide-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+    font-family: 'Inter', sans-serif;
+  }
+  .slide-header .deck-title {
+    color: var(--amber);
+    font-size: 0.5em;
+    letter-spacing: 1.5px;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+  .slide-header .slide-id {
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.45em;
+    letter-spacing: 1px;
+  }
+
+  /* Cover slide */
+  .cover {
+    text-align: center;
+    padding: 60px 20px;
+  }
+  .cover h1 {
+    font-size: 2.8em;
+    background: linear-gradient(135deg, var(--amber) 0%, var(--gold) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: none;
+  }
+  .cover .badge {
+    display: inline-block;
+    border: 1px solid var(--amber);
+    color: var(--amber);
+    padding: 6px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.5em;
+    letter-spacing: 2px;
+    margin-top: 1em;
+    text-transform: uppercase;
+  }
+  .cover .meta {
+    color: var(--text-dim);
+    font-size: 0.55em;
+    font-family: 'Inter', sans-serif;
+    margin-top: 2em;
+    line-height: 1.8;
+  }
+  .cover .meta strong { color: var(--cyan); }
+
+  /* Warning callout */
+  .callout-warn {
+    background: rgba(212, 74, 74, 0.08);
+    border-left: 3px solid var(--red);
+    padding: 0.8em 1em;
+    margin: 0.8em 0;
+    font-size: 0.7em;
+  }
+  .callout-warn::before {
+    content: "⚠ ";
+    color: var(--red);
+    font-weight: 700;
+  }
+
+  /* Footer slide */
+  .slide-footer {
+    position: absolute;
+    bottom: 12px;
+    left: 32px;
+    right: 32px;
+    display: flex;
+    justify-content: space-between;
+    color: var(--text-dim);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.45em;
+    letter-spacing: 1px;
+    border-top: 1px solid var(--border);
+    padding-top: 6px;
+  }
+
+  /* Narration controls (TTS + visible notes panel) */
+  #narration-toolbar {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    z-index: 100;
+    display: flex;
+    gap: 8px;
+  }
+  #narration-toolbar button {
+    background: var(--concrete-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 150ms;
+    letter-spacing: 0.5px;
+  }
+  #narration-toolbar button:hover {
+    background: var(--concrete-3);
+    border-color: var(--amber);
+    color: var(--amber);
+  }
+  #narration-toolbar button.active {
+    background: var(--amber);
+    color: var(--concrete);
+    border-color: var(--amber);
+    font-weight: 600;
+  }
+  #narration-toolbar button.speaking {
+    background: var(--cyan);
+    color: var(--concrete);
+    border-color: var(--cyan);
+    font-weight: 600;
+    animation: pulse-cyan 1.5s ease-in-out infinite;
+  }
+  @keyframes pulse-cyan {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(95, 184, 212, 0.4); }
+    50% { box-shadow: 0 0 0 8px rgba(95, 184, 212, 0); }
+  }
+
+  /* Narration panel — fondo claro + texto oscuro para lectura comoda */
+  #narration-panel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #FAF7F0;                            /* cream off-white, no jarring */
+    border-top: 3px solid var(--amber);
+    color: #1A1A1A;
+    padding: 18px 36px 18px 36px;
+    font-family: 'Inter', system-ui, sans-serif;     /* sans legible, no italic */
+    font-size: 19px;
+    line-height: 1.65;
+    max-height: 38vh;
+    overflow-y: auto;
+    transform: translateY(100%);
+    transition: transform 250ms ease-out;
+    z-index: 99;
+    box-shadow: 0 -8px 30px rgba(0,0,0,0.5), 0 -2px 20px rgba(232,184,106,0.15);
+  }
+  #narration-panel.open { transform: translateY(0); }
+  #narration-panel .label {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: var(--amber-deep);                        /* titulo amber sobre cream */
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 12px;
+    font-weight: 700;
+    border-bottom: 1px solid rgba(232, 184, 106, 0.4);
+    padding-bottom: 8px;
+  }
+  #narration-panel .content {
+    color: #1A1A1A;
+    font-weight: 400;
+  }
+  #narration-panel .content p {
+    margin: 0.6em 0;
+    color: #1A1A1A;
+  }
+  #narration-panel .content p:first-child { margin-top: 0; }
+  #narration-panel .content p:last-child { margin-bottom: 0; }
+  #narration-panel::-webkit-scrollbar { width: 10px; }
+  #narration-panel::-webkit-scrollbar-track { background: #EDE8DA; }
+  #narration-panel::-webkit-scrollbar-thumb { background: var(--amber-deep); border-radius: 5px; }
+  #narration-panel::-webkit-scrollbar-thumb:hover { background: var(--amber); }
+</style>
+</head>
+<body>
+
+<!-- Narration controls (TTS + visible notes) -->
+<div id="narration-toolbar">
+  <button id="btn-notes" title="Mostrar/ocultar narracion escrita">📝 Notas</button>
+  <button id="btn-tts" title="Reproducir narracion por audio (TTS)">🔊 Audio</button>
+</div>
+<div id="narration-panel">
+  <span class="label">Narracion · slide actual</span>
+  <div class="content" id="narration-content"></div>
+</div>
+
+<div class="reveal">
+<div class="slides">
+
+<!-- COVER -->
+<section class="cover"
+         data-background-image="imgdeck/init1/Diapositiva1.PNG"
+         data-background-size="cover"
+         data-background-position="center">
+  <div class="subtitle">Fintexa Marketplace V2 · Curso de Onboarding</div>
+  <h1>Modulo 1<br>Quickstart Primera Sesion</h1>
+  <div class="badge">10 minutos al primer comando</div>
+  <div class="meta">
+    <strong>4 slides</strong> · ~11 min · cualquier rol · cualquier ticket<br>
+    Q01 Umbral · Q02 8 pasos · Q03 Statusline · Q04 Comandos obligatorios
+  </div>
+  <aside class="tts">
+Modulo uno del curso Fintexa Marketplace. Cuatro slides, once minutos. Cualquier rol, desde cero al primer comando productivo. La promesa: diez minutos al primer comando.
+  </aside>
+  <aside class="notes">
+Bienvenidos al modulo uno del curso Fintexa Marketplace V2. En once minutos vamos a recorrer los cuatro pasos que llevan a cualquier persona, sin importar rol, desde cero hasta su primer comando productivo. La promesa es concreta: diez minutos al primer comando.
+
+Recomendacion: usar el modo presentacion (presione la letra S) para ver estas notas mientras presenta. Use flechas o espacio para avanzar.
+  </aside>
+</section>
+
+<!-- Q01 -->
+<section>
+  <div class="slide-header">
+    <span class="deck-title">FINTEXA MARKETPLACE V2 · QUICKSTART</span>
+    <span class="slide-id">Q01 · 2.5 min</span>
+  </div>
+  <h2>Umbral · 10 minutos al primer comando</h2>
+  <pre><code>PRIMERA SESION · 10 MINUTOS AL PRIMER COMANDO
+
+  Cualquier rol · cualquier ticket · cualquier repo
+
+PRE-REQUISITOS (sin esto los comandos fallan)
+
+  1.  Claude Code logueado       claude --version + /login si hace falta
+  2.  Carpeta git activa          git init (sandbox) o git clone {url}
+
+  Sin carpeta git -> comandos fallan o escriben en ~/.claude global
+  En duda -> sandbox: c:\fintexa\{tunombre}
+
+REEMPLAZAR EN TU CASO
+
+  {tunombre}   tu user                    {ROL}        tu rol
+  {COMANDO}    el slash command           {TID}        ticket Jira (DAD-XXXX)</code></pre>
+  <div class="callout-warn">Sin <code>git init</code> los comandos fallan o escriben en home global — y eso no se puede auditar despues. 30 segundos hoy ahorran 3 horas de drift mañana.</div>
+  <aside class="tts">
+Antes de cualquier rol, un mismo umbral. Diez minutos al primer comando productivo. Dos requisitos no negociables: Claude Code logueado y carpeta git activa. Sin git, los comandos fallan. Si dudan, sandbox local con git init.
+  </aside>
+  <aside class="notes">
+Antes de cualquier rol, un mismo umbral para los quince. Diez minutos al primer comando productivo.
+
+Dos requisitos no negociables: Claude Code logueado y carpeta git activa.
+
+Sin git, los comandos fallan o escriben en home global — y eso despues no hay como auditarlo.
+
+Si dudan, sandbox: c:\fintexa\{tunombre} con git init y listo.
+
+Treinta segundos invertidos hoy ahorran tres horas de drift mañana.
+  </aside>
+  <div class="slide-footer"><span>Modulo 1 · Quickstart</span><span>Q01 / 4</span></div>
+</section>
+
+<!-- Q02 -->
+<section>
+  <div class="slide-header">
+    <span class="deck-title">FINTEXA MARKETPLACE V2 · QUICKSTART</span>
+    <span class="slide-id">Q02 · 3 min</span>
+  </div>
+  <h2>Los 8 pasos · La ascension productiva</h2>
+  <pre><code>8 PASOS · DEL UMBRAL AL PRIMER COMANDO PRODUCTIVO
+
+  1.  cd c:\fintexa\{tunombre}              parado en carpeta git
+  2.  claude                                  abrir sesion
+  3.  /mcp                                    Atlassian -> reiniciar Claude
+  4.  "leer de jira ticket {TID}"             validar MCP
+  5.  /fguide Soy {ROL}                       coach del rol
+  6.  /fhelp como se usa {COMANDO}            lookup comando
+  7.  /fguide Soy {ROL} flujos {COMANDO}      flujos completos
+  8.  /{COMANDO} {TID}                        primer comando productivo
+
+MAPPING ROL -> COMANDO PASO 8
+
+  QA Lead        /fsqa DoR {TID}          PM             /fticket {TID} --mode completo
+  Dev Senior     /fdoc {TID}              Product Owner  /freq {TID}
+  Tech Lead      /freview --full {TID}    SRE / Oncall   /fd-incident p0
+  Analista       /freq {TID}              Soporte N1/N2  /fticket {TID} --mode forensic
+  CISO           /fd-secscan              Frontend Arq   /fscaffold-frontend
+  Dev Junior     /fscan src/{Servicio}    Capital Humano /fretro --full
+  CEO/CFO/QSA    /fwarroom --preset=board</code></pre>
+  <div class="callout-warn">Si paso 8 falla con "no estoy en repo git" -> volver a paso 1 (causa #1 de friccion).</div>
+  <aside class="tts">
+Ocho pasos. Mismo orden para los quince roles. La diferencia es solo el paso ocho: el comando que dispara el primer artefacto. Causa numero uno de friccion: olvidarse del paso uno y arrancar fuera de carpeta git. Si falla el paso ocho con no estoy en repo git, vuelvan al paso uno. Treinta segundos.
+  </aside>
+  <aside class="notes">
+Ocho pasos. El mismo orden para los quince roles.
+
+La diferencia es solo el paso ocho — el comando que dispara el primer artefacto.
+
+QA arranca con /fsqa DoR. Dev senior con /fdoc. Tech Lead con /freview --full. Para los CEO o CFO el destino es /fwarroom --preset=board.
+
+Causa numero uno de friccion: olvidarse del paso uno y arrancar fuera de carpeta git.
+
+Si el paso ocho falla con "no estoy en repo git", vuelvan al paso uno. Treinta segundos.
+
+Pregunta dirigida para la audiencia: que rol estan operando ustedes? Definamos el comando del paso 8 ahora.
+  </aside>
+  <div class="slide-footer"><span>Modulo 1 · Quickstart</span><span>Q02 / 4</span></div>
+</section>
+
+<!-- Q03 -->
+<section>
+  <div class="slide-header">
+    <span class="deck-title">FINTEXA MARKETPLACE V2 · QUICKSTART</span>
+    <span class="slide-id">Q03 · 2.5 min</span>
+  </div>
+  <h2>Statusline + diagnostico · El pulso de Fintexa</h2>
+  <pre><code>STATUSLINE · EL PULSO DEL SANCTUM
+
+  [FintexaMarketDev] > v2026.504.2-beta · 45 skills · ctx 23%
+
+  [branch]      git activa            [main] -> cambiar antes de editar
+  vXXXX-beta    version marketplace   ? o vieja -> /fhelp actualizar marketplace
+  45 skills     skills cargados       <40 -> reinstalar
+  ctx XX%       contexto usado        >80% -> /fcompact YA
+
+MANTENIMIENTO BASICO (3 comandos universales)
+
+  /fhelp version                  abrir sesion · validar version + skills count
+  /fhelp actualizar marketplace   update autonomo (lenguaje natural)
+  /fcompact                       comprimir contexto + pendientes + recovery
+
+SI ALGO FALLA · cascada de remedios
+
+  Unknown skill                  -> /fhelp y listar comandos validos
+  Comando no escribe artefacto   -> falta git init o git clone (paso 1)
+  MCP Jira no responde           -> /mcp + cerrar/abrir Claude
+  Version ? en /fhelp            -> /fhelp actualizar marketplace
+  Comando lento o cuelga         -> /fcompact (ctx >70% o turnos >15)
+  Statusline ausente             -> bash setup.sh + reiniciar
+  Comandos nuevos no aparecen    -> cerrar + claude de nuevo
+  Sesion: not logged in          -> claude /logout && claude /login</code></pre>
+  <aside class="tts">
+El statusline es el pulso de Fintexa. Cuatro signos vitales: rama, version, skills, y contexto. Regla unica: si el contexto pasa el ochenta por ciento, compactar ya. Tres comandos universales para mantenimiento: version, actualizar, compactar. Si la primera sesion termina aca, el cliente esta autonomo.
+  </aside>
+  <aside class="notes">
+El statusline es el pulso. Cuatro signos vitales constantes: rama, version, skills, contexto.
+
+La regla operativa unica: si el contexto pasa el ochenta por ciento, /fcompact ya. No mañana, no al cerrar — ya.
+
+Tres comandos universales para mantenimiento: version, actualizar, compactar.
+
+Y para todo lo demas, una cascada de ocho sintomas con su remedio exacto.
+
+Si la primera sesion termina aca, el cliente esta autonomo. Bienvenidos a Fintexa.
+  </aside>
+  <div class="slide-footer"><span>Modulo 1 · Quickstart</span><span>Q03 / 4</span></div>
+</section>
+
+<!-- Q04 -->
+<section>
+  <div class="slide-header">
+    <span class="deck-title">FINTEXA MARKETPLACE V2 · QUICKSTART</span>
+    <span class="slide-id">Q04 · 3 min</span>
+  </div>
+  <h2>Comandos minimos obligatorios · El umbral del merge</h2>
+  <pre><code>COMANDOS MINIMOS OBLIGATORIOS · A PARTIR DE AHORA
+
+  Todo repo microservicio + toda PR deben cumplir el gate minimo.
+  Sin estos dos commands -> rechazo automatico de pasaje a develop / staging / main.
+
+GATE 1 · ENTRADA AL REPO
+
+  /fscan src/{Servicio}    reverse engineering inicial del codigo
+  /fdoc                    SDD 14 secciones — doc de referencia del servicio
+
+  Sin /fdoc el repo NO se considera "documentado"
+  Minimo: ejecutar /fscan + /fdoc al iniciar el repo en marketplace
+
+GATE 2 · SALIDA AL MERGE
+
+  /freview --full {TID}    review 101 items + dictamen APPROVE | REJECT
+
+  Sin /freview --full APPROVE la PR NO mergea
+  Aplica a develop, staging, main por igual — sin excepciones
+
+RECOMENDADO
+
+  /freq {TID}              entrevista + criterios de aceptacion
+  /fspec {TID}             HANDOFF-CARD (contrato spec -> dev versionado)
+  /fforensic               auditoria pre-implementacion + pre-review</code></pre>
+  <aside class="tts">
+Dos comandos no negociables. Gate uno: cada repo entra con scan mas doc. Gate dos: cada pull request pasa por review modo full con dictamen approve. Sin esto, la PR se rechaza automatico. Aplica a develop, staging y main por igual. En el medio, camino recomendado: req, spec, forensic. Los dos gates son la entrada y la salida del marketplace.
+  </aside>
+  <aside class="notes">
+A partir de ahora, dos comandos no negociables.
+
+Gate uno: cada repo de microservicio entra al ecosistema con /fscan mas /fdoc — el doc generado por ingenieria reversa es el baseline del servicio. Sin eso, el repo no esta documentado.
+
+Gate dos: cada pull request a develop, staging o main pasa por /freview --full con dictamen APPROVE — sin esto, la PR se rechaza automaticamente. Aplica a los tres ambientes por igual.
+
+En el medio, hay un camino recomendado — /freq, /fspec, /fforensic — que eleva la calidad y evita retrabajo. Recomendado, no obligatorio.
+
+Pero los dos gates si — son la entrada y la salida del marketplace.
+
+Pregunta dirigida: el repo de tu equipo ya tiene /fdoc ejecutado? Si no, ese es el primer trabajo del lunes.
+  </aside>
+  <div class="slide-footer"><span>Modulo 1 · Quickstart</span><span>Q04 / 4</span></div>
+</section>
+
+<!-- CIERRE -->
+<section class="cover"
+         data-background-image="imgdeck/init1/Diapositiva6.PNG"
+         data-background-size="cover"
+         data-background-position="center">
+  <div class="subtitle">Fin del modulo 1</div>
+  <h1>Fin Modulo 1</h1>
+  <div class="badge">Quickstart completado</div>
+  <div class="meta">
+    <strong>Siguiente:</strong> Modulo 2 · Onboarding generico (5 slides · 14 min)<br>
+    Reglas universales · Camino comun 5 dias · KPIs sanos · Cierre CTA<br><br>
+    Marketplace v2026.504.2-beta · Fintexa.tech Ia-Team
+  </div>
+  <aside class="tts">
+Cierre del modulo uno. Cubrimos los cuatro pilares del quickstart: umbral, ocho pasos, statusline diagnostico, y los dos gates obligatorios de calidad. Continuamos con el modulo dos: onboarding generico.
+  </aside>
+  <aside class="notes">
+Cierre del modulo uno. En once minutos cubrimos los cuatro pilares del quickstart: umbral, ocho pasos, statusline diagnostico, y los dos gates obligatorios de calidad.
+
+Antes de pasar al modulo dos, dejen que la audiencia haga preguntas si las hay. Si quieren ver demo en vivo, abran terminal y corran los ocho pasos del Q02 — convierte el deck en taller de cinco minutos.
+
+Continuamos con modulo dos: onboarding generico, las tres reglas universales y el plan comun de dos semanas.
+  </aside>
+</section>
+
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/markdown/markdown.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: 'c/t',
+    transition: 'fade',
+    transitionSpeed: 'default',
+    backgroundTransition: 'fade',
+    controls: true,
+    progress: true,
+    center: false,
+    width: 1280,
+    height: 720,
+    margin: 0.04,
+    minScale: 0.2,
+    maxScale: 2.0,
+    plugins: [ RevealNotes, RevealMarkdown ]
+  });
+
+  // ── Narration TTS + visible notes panel ────────────────────────────
+  const btnTts = document.getElementById('btn-tts');
+  const btnNotes = document.getElementById('btn-notes');
+  const panel = document.getElementById('narration-panel');
+  const contentEl = document.getElementById('narration-content');
+  let currentUtterance = null;
+  let panelOpen = false;
+  let speaking = false;
+
+  function getCurrentNotesText() {
+    // Notes panel (visible) = full presenter version
+    const slide = Reveal.getCurrentSlide();
+    if (!slide) return '';
+    const notes = slide.querySelector('aside.notes');
+    if (!notes) return '';
+    return notes.textContent.trim();
+  }
+
+  function getCurrentTtsText() {
+    // TTS audio = short sanitized version (preferred), fallback to notes
+    const slide = Reveal.getCurrentSlide();
+    if (!slide) return '';
+    const ttsEl = slide.querySelector('aside.tts');
+    const raw = ttsEl ? ttsEl.textContent.trim() : (slide.querySelector('aside.notes')?.textContent.trim() || '');
+    return sanitizeForTTS(raw);
+  }
+
+  function sanitizeForTTS(text) {
+    if (!text) return '';
+    return text
+      // Slash commands: /fhelp → "comando fhelp"
+      .replace(/\/([a-zA-Z][\w-]*)/g, 'comando $1')
+      // Double-dash flags: --full → "modo full"
+      .replace(/\s--([a-zA-Z][\w-]*)/g, ' modo $1')
+      // Placeholders: {TID} → "TID"
+      .replace(/\{([^}]+)\}/g, '$1')
+      // Comparison ops mid-text
+      .replace(/>=/g, ' mayor o igual a ')
+      .replace(/<=/g, ' menor o igual a ')
+      .replace(/(\s)>(\s|\d)/g, '$1mayor que $2')
+      .replace(/(\s)<(\s|\d)/g, '$1menor que $2')
+      // Path slashes / backslashes
+      .replace(/[\\\/]/g, ' ')
+      // Brackets and symbols that confuse TTS
+      .replace(/[(){}\[\]]/g, ' ')
+      .replace(/[#@$%^&*+|~`=_]/g, ' ')
+      // Emojis common in our content
+      .replace(/[🔴⚠🔒✓✗⏸▶📝🔊⚪🟢🟡🟠🆕]/g, '')
+      // Arrows
+      .replace(/-?->/g, ' a ')
+      .replace(/<-?-/g, ' desde ')
+      // Multiple whitespace -> single
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function getCurrentNotesHTML() {
+    const text = getCurrentNotesText();
+    if (!text) return '<em style="color:var(--text-dim)">Esta slide no tiene narracion adicional.</em>';
+    return text.split(/\n\s*\n/).map(p => `<p>${p.replace(/\n/g, ' ').trim()}</p>`).join('');
+  }
+
+  function updatePanelContent() {
+    // Update label with current slide title for context
+    const slide = Reveal.getCurrentSlide();
+    const label = document.querySelector('#narration-panel .label');
+    let title = 'Narracion · slide actual';
+    if (slide) {
+      const h2 = slide.querySelector('h2');
+      const h1 = slide.querySelector('h1');
+      const slideId = slide.querySelector('.slide-id');
+      const titleText = h2 ? h2.textContent : (h1 ? h1.textContent : '');
+      const idText = slideId ? slideId.textContent.split('·')[0].trim() : '';
+      title = `Narracion${idText ? ' · ' + idText : ''}${titleText ? ' · ' + titleText : ''}`;
+    }
+    if (label) label.textContent = title;
+    contentEl.innerHTML = getCurrentNotesHTML();
+  }
+
+  function stopTts() {
+    if (window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
+    speaking = false;
+    btnTts.classList.remove('speaking');
+    btnTts.textContent = '🔊 Audio';
+  }
+
+  function speakCurrent() {
+    if (!('speechSynthesis' in window)) {
+      alert('Tu browser no soporta Web Speech API. Usa el boton Notas para leer la narracion.');
+      return;
+    }
+    const text = getCurrentTtsText();
+    if (!text) {
+      alert('Esta slide no tiene narracion para reproducir.');
+      return;
+    }
+    stopTts(); // cancel any previous
+    currentUtterance = new SpeechSynthesisUtterance(text);
+    // Pick Spanish voice if available
+    const voices = window.speechSynthesis.getVoices();
+    const esVoice = voices.find(v => /es[_-]?(AR|ES|MX|US|CL|419)/i.test(v.lang)) ||
+                    voices.find(v => v.lang.startsWith('es'));
+    if (esVoice) currentUtterance.voice = esVoice;
+    currentUtterance.lang = esVoice ? esVoice.lang : 'es-AR';
+    currentUtterance.rate = 1.25;   // mas agil pero comprensible (1.0 default era lento)
+    currentUtterance.pitch = 1.0;
+    currentUtterance.onend = () => {
+      speaking = false;
+      btnTts.classList.remove('speaking');
+      btnTts.textContent = '🔊 Audio';
+    };
+    currentUtterance.onerror = () => {
+      speaking = false;
+      btnTts.classList.remove('speaking');
+      btnTts.textContent = '🔊 Audio';
+    };
+    window.speechSynthesis.speak(currentUtterance);
+    speaking = true;
+    btnTts.classList.add('speaking');
+    btnTts.textContent = '⏸ Detener';
+  }
+
+  btnTts.addEventListener('click', () => {
+    if (speaking) {
+      stopTts();
+    } else {
+      speakCurrent();
+    }
+  });
+
+  btnNotes.addEventListener('click', () => {
+    panelOpen = !panelOpen;
+    if (panelOpen) {
+      updatePanelContent();
+      panel.classList.add('open');
+      btnNotes.classList.add('active');
+      btnNotes.textContent = '✕ Cerrar';
+    } else {
+      panel.classList.remove('open');
+      btnNotes.classList.remove('active');
+      btnNotes.textContent = '📝 Notas';
+    }
+  });
+
+  Reveal.on('slidechanged', () => {
+    stopTts();
+    if (panelOpen) updatePanelContent();
+  });
+
+  // Force voice list load (some browsers async)
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.onvoiceschanged = () => { /* voices loaded */ };
+    window.speechSynthesis.getVoices();
+  }
+
+  // Stop TTS when leaving page
+  window.addEventListener('beforeunload', stopTts);
+</script>
+</body>
+</html>

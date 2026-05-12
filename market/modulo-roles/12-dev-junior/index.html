@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fintexa Marketplace V2 — Rol Dev Junior · Onboarding</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --concrete: #0A0E14;
+    --concrete-2: #12181F;
+    --concrete-3: #1A2028;
+    --amber: #E8B86A;
+    --amber-deep: #c4943a;
+    --cyan: #5FB8D4;
+    --green: #7DB87D;
+    --red: #D44A4A;
+    --gold: #d4a843;
+    --text: #E8E8E8;
+    --text-dim: #8A9098;
+    --border: rgba(232, 184, 106, 0.2);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    height: 100%;
+    background: var(--concrete);
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    line-height: 1.6;
+  }
+  body {
+    display: flex;
+    flex-direction: column;
+    background:
+      radial-gradient(ellipse at top, rgba(232, 184, 106, 0.05) 0%, transparent 60%),
+      radial-gradient(ellipse at bottom, rgba(95, 184, 212, 0.04) 0%, transparent 60%),
+      var(--concrete);
+  }
+  a { color: var(--cyan); text-decoration: none; border-bottom: 1px dotted var(--cyan); }
+  h1, h2, h3 {
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--amber);
+    font-weight: 600;
+    text-shadow: 0 0 30px rgba(232, 184, 106, 0.2);
+  }
+  h1 { font-size: 2.6em; line-height: 1.15; margin-bottom: 0.4em; }
+  h2 { font-size: 1.7em; color: var(--cyan); margin-top: 0.7em; margin-bottom: 0.4em; }
+  h3 { font-size: 1.2em; color: var(--amber); margin-top: 1.2em; margin-bottom: 0.4em; }
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--amber);
+    background: var(--concrete-3);
+    padding: 1px 6px;
+    border-radius: 2px;
+    font-size: 0.92em;
+  }
+  pre {
+    background: var(--concrete-2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 14px 18px;
+    overflow-x: auto;
+    margin: 1em 0;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+  pre code {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text);
+    background: transparent;
+    padding: 0;
+    font-size: 0.85em;
+    line-height: 1.5;
+    white-space: pre;
+  }
+  pre::-webkit-scrollbar { width: 8px; height: 8px; }
+  pre::-webkit-scrollbar-track { background: var(--concrete); }
+  pre::-webkit-scrollbar-thumb { background: var(--amber-deep); border-radius: 4px; }
+
+  /* Top bar */
+  .topbar {
+    height: 56px;
+    background: var(--concrete-2);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 32px;
+    flex-shrink: 0;
+    gap: 18px;
+  }
+  .topbar .brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    color: var(--amber);
+    letter-spacing: 1px;
+    flex: 1;
+  }
+  .topbar .progress {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  .topbar .progress-bar {
+    width: 180px;
+    height: 4px;
+    background: var(--concrete-3);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .topbar .progress-fill {
+    height: 100%;
+    background: linear-gradient(to right, var(--amber), var(--cyan));
+    transition: width 300ms ease-out;
+  }
+  /* SCORM indicator — oculto por default (debug only)
+     Se muestra solo si hay error o ?debug=1 en URL (futuro) */
+  .topbar .scorm-status {
+    display: none;             /* alumno no necesita ver esto */
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+    padding: 3px 8px;
+    border-radius: 3px;
+  }
+  .topbar .scorm-status.show-debug { display: inline-block; }
+  .topbar .scorm-status.connected { color: var(--green); border-color: var(--green); }
+  .topbar .scorm-status.disconnected { color: var(--text-dim); border-color: var(--text-dim); }
+  .topbar .scorm-status.error { color: var(--red); border-color: var(--red); display: inline-block; }
+
+  /* Main scroll area */
+  .stage {
+    flex: 1;
+    overflow-y: auto;
+    padding: 40px 32px 100px 32px;
+    display: flex;
+    justify-content: center;
+  }
+  .stage::-webkit-scrollbar { width: 10px; }
+  .stage::-webkit-scrollbar-track { background: var(--concrete); }
+  .stage::-webkit-scrollbar-thumb { background: var(--amber-deep); border-radius: 5px; }
+
+  .container {
+    max-width: 980px;
+    width: 100%;
+  }
+  .section { display: none; animation: fadeIn 350ms ease-out; }
+  .section.active { display: block; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Cover styling */
+  .cover {
+    text-align: center;
+    padding: 80px 20px;
+  }
+  .cover h1 {
+    font-size: 3em;
+    background: linear-gradient(135deg, var(--amber) 0%, var(--gold) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: none;
+  }
+  .cover .subtitle {
+    color: var(--text-dim);
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    margin-bottom: 1.5em;
+  }
+  .cover .archetype {
+    display: inline-block;
+    border: 1px solid var(--amber);
+    color: var(--amber);
+    padding: 8px 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 2px;
+    margin-top: 1.5em;
+    text-transform: uppercase;
+  }
+  .cover .meta {
+    color: var(--text-dim);
+    font-size: 14px;
+    line-height: 2;
+    margin-top: 3em;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .cover .meta strong { color: var(--cyan); }
+
+  /* Content slide */
+  .content-slide .header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 10px;
+    margin-bottom: 24px;
+  }
+  .content-slide .deck-tag {
+    color: var(--amber);
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .content-slide .slide-id {
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+  }
+  .callout {
+    border-left: 3px solid var(--amber);
+    background: rgba(232, 184, 106, 0.06);
+    padding: 14px 18px;
+    margin: 1em 0;
+    font-size: 0.95em;
+  }
+  .callout-warn {
+    border-left-color: var(--red);
+    background: rgba(212, 74, 74, 0.07);
+  }
+  .callout-warn::before { content: "⚠  "; color: var(--red); font-weight: 700; }
+
+  /* Quiz */
+  .quiz-intro {
+    background: var(--concrete-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+  }
+  .quiz-intro p { margin: 0; color: var(--text-dim); font-size: 0.95em; }
+  .quiz-intro strong { color: var(--cyan); }
+  .question {
+    background: var(--concrete-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px 24px;
+    margin-bottom: 18px;
+    transition: border-color 200ms;
+  }
+  .question.answered { border-color: var(--amber); }
+  .question.correct { border-color: var(--green); background: rgba(125, 184, 125, 0.05); }
+  .question.incorrect { border-color: var(--red); background: rgba(212, 74, 74, 0.05); }
+  .question .q-num {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--amber);
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+  }
+  .question .q-text {
+    font-size: 1.05em;
+    color: var(--text);
+    margin-bottom: 16px;
+    font-weight: 500;
+  }
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .option {
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 150ms;
+    background: var(--concrete);
+  }
+  .option:hover:not(.disabled) {
+    border-color: var(--cyan);
+    background: var(--concrete-3);
+  }
+  .option.selected {
+    border-color: var(--amber);
+    background: rgba(232, 184, 106, 0.08);
+  }
+  .option.disabled { cursor: not-allowed; opacity: 0.7; }
+  .option.show-correct {
+    border-color: var(--green);
+    background: rgba(125, 184, 125, 0.12);
+  }
+  .option.show-incorrect {
+    border-color: var(--red);
+    background: rgba(212, 74, 74, 0.08);
+  }
+  .option input[type="radio"] {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 1px solid var(--text-dim);
+    border-radius: 50%;
+    margin-right: 12px;
+    position: relative;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .option input[type="radio"]:checked {
+    border-color: var(--amber);
+  }
+  .option input[type="radio"]:checked::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--amber);
+  }
+  .option .opt-text { flex: 1; color: var(--text); }
+  .option .marker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    margin-left: 10px;
+  }
+  .option.show-correct .marker { color: var(--green); }
+  .option.show-incorrect .marker { color: var(--red); }
+  .feedback {
+    margin-top: 12px;
+    padding: 10px 14px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct { background: rgba(125, 184, 125, 0.1); color: var(--green); border: 1px solid var(--green); }
+  .feedback.incorrect { background: rgba(212, 74, 74, 0.08); color: var(--red); border: 1px solid var(--red); }
+
+  /* Done section */
+  .done {
+    text-align: center;
+    padding: 60px 20px;
+  }
+  .score-display {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 5em;
+    font-weight: 700;
+    margin: 30px 0;
+  }
+  .score-display.passed {
+    background: linear-gradient(135deg, var(--green) 0%, var(--cyan) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .score-display.failed { color: var(--red); }
+  .score-detail {
+    color: var(--text-dim);
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+  .verdict {
+    display: inline-block;
+    border: 1px solid;
+    padding: 10px 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 20px 0;
+  }
+  .verdict.passed { border-color: var(--green); color: var(--green); }
+  .verdict.failed { border-color: var(--red); color: var(--red); }
+
+  /* Bottom action bar */
+  .actionbar {
+    height: 72px;
+    background: var(--concrete-2);
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    flex-shrink: 0;
+    gap: 16px;
+  }
+  .actionbar .step-info {
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+  .btn {
+    background: var(--concrete-3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 10px 22px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 150ms;
+    letter-spacing: 0.5px;
+  }
+  .btn:hover:not(:disabled) {
+    border-color: var(--amber);
+    color: var(--amber);
+    background: var(--concrete);
+  }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-primary {
+    background: var(--amber);
+    color: var(--concrete);
+    border-color: var(--amber);
+    font-weight: 600;
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: var(--gold);
+    color: var(--concrete);
+  }
+  .btn-success {
+    background: var(--green);
+    color: var(--concrete);
+    border-color: var(--green);
+    font-weight: 600;
+  }
+  .btn-action-row { display: flex; gap: 10px; }
+
+  /* Narration controls (TTS + visible notes) */
+  #narration-toolbar {
+    position: fixed;
+    top: 64px;
+    right: 12px;
+    z-index: 100;
+    display: flex;
+    gap: 8px;
+  }
+  #narration-toolbar button {
+    background: var(--concrete-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 150ms;
+    letter-spacing: 0.5px;
+  }
+  #narration-toolbar button:hover {
+    background: var(--concrete-3);
+    border-color: var(--amber);
+    color: var(--amber);
+  }
+  #narration-toolbar button.active {
+    background: var(--amber);
+    color: var(--concrete);
+    border-color: var(--amber);
+    font-weight: 600;
+  }
+  #narration-toolbar button.speaking {
+    background: var(--cyan);
+    color: var(--concrete);
+    border-color: var(--cyan);
+    font-weight: 600;
+    animation: pulse-cyan 1.5s ease-in-out infinite;
+  }
+  @keyframes pulse-cyan {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(95, 184, 212, 0.4); }
+    50% { box-shadow: 0 0 0 8px rgba(95, 184, 212, 0); }
+  }
+
+  /* Narration panel — fondo claro + texto oscuro
+     Default OCULTO completo (display:none). Solo visible al click "Notas" */
+  #narration-panel {
+    position: fixed;
+    bottom: 72px;            /* sobre la actionbar cuando abierto */
+    left: 0;
+    right: 0;
+    background: #FAF7F0;
+    border-top: 3px solid var(--amber);
+    border-bottom: 1px solid var(--border);
+    color: #1A1A1A;
+    padding: 18px 36px 18px 36px;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
+    max-height: 38vh;
+    overflow-y: auto;
+    z-index: 99;
+    box-shadow: 0 -8px 30px rgba(0,0,0,0.5), 0 -2px 20px rgba(232,184,106,0.15);
+    display: none;            /* totalmente oculto hasta toggle */
+    animation: slideUpPanel 250ms ease-out;
+  }
+  #narration-panel.open { display: block; }
+  @keyframes slideUpPanel {
+    from { transform: translateY(100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  #narration-panel .label {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: var(--amber-deep);
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 12px;
+    font-weight: 700;
+    border-bottom: 1px solid rgba(232, 184, 106, 0.4);
+    padding-bottom: 8px;
+  }
+  #narration-panel .content { color: #1A1A1A; font-weight: 400; }
+  #narration-panel .content p { margin: 0.6em 0; color: #1A1A1A; }
+  #narration-panel .content p:first-child { margin-top: 0; }
+  #narration-panel .content p:last-child { margin-bottom: 0; }
+  #narration-panel::-webkit-scrollbar { width: 10px; }
+  #narration-panel::-webkit-scrollbar-track { background: #EDE8DA; }
+  #narration-panel::-webkit-scrollbar-thumb { background: var(--amber-deep); border-radius: 5px; }
+
+  /* Hide narration aside elements from main flow */
+  aside.tts, aside.notes { display: none; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">FINTEXA MARKETPLACE V2 · Curso Onboarding</div>
+  <div class="progress">
+    <span id="step-label">Paso 1 / 4</span>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:25%"></div></div>
+  </div>
+  <div class="scorm-status disconnected" id="scorm-status">SCORM: standalone</div>
+</div>
+
+<!-- Narration controls (TTS + visible notes) -->
+<div id="narration-toolbar">
+  <button id="btn-notes" title="Mostrar/ocultar narracion escrita">Notas</button>
+  <button id="btn-tts" title="Reproducir narracion por audio (TTS)">Audio</button>
+</div>
+<div id="narration-panel">
+  <span class="label">Narracion · seccion actual</span>
+  <div class="content" id="narration-content"></div>
+</div>
+
+<div class="stage">
+  <div class="container">
+
+    <!-- COVER -->
+    <section class="section cover active" data-step="cover">
+      <div class="subtitle">Fintexa Marketplace V2 · Onboarding por Rol</div>
+      <h1>Modulo Rol<br>Dev Junior · Onboarding</h1>
+      <div class="archetype">El Motor Eterno</div>
+      <div class="meta">
+        <strong>1 slide rol + quiz 5 preguntas</strong> · ~5-7 min<br>
+        Aprobacion: 70% (3 de 5 correctas)<br>
+        Reverse-engineering · primer ticket pairing · primer feature
+      </div>
+      <aside class="tts">
+Modulo del rol Dev Junior. Cinco a siete minutos. Un slide del rol, quiz de cinco preguntas, aprobacion al setenta porciento.
+      </aside>
+      <aside class="notes">
+Bienvenido al modulo del rol Dev Junior del curso Fintexa Marketplace V2.
+
+En este modulo vas a recorrer la presentacion del rol, validar tu comprension con un quiz corto de 5 preguntas, y al final ver tu nota.
+
+Si estas dentro de Moodle, tu progreso y nota se reportan automaticamente al gradebook. La aprobacion es 70 por ciento o mas — tres de cinco preguntas correctas.
+
+Tiempo estimado: cinco a siete minutos. Podes pausar y retomar; tu sesion se guarda en Moodle.
+      </aside>
+    </section>
+
+    <!-- CONTENT SLIDE -->
+    <section class="section content-slide" data-step="content">
+      <div class="header-bar">
+        <span class="deck-tag">FINTEXA MARKETPLACE V2 · ONBOARDING</span>
+        <span class="slide-id">O12 · Rol Dev Junior · 2 min lectura</span>
+      </div>
+      <h2>Rol Dev Junior · El Motor Eterno (Fenix)</h2>
+
+      <h3>¿Quien soy?</h3>
+      <p>Junior que renace con cada ticket. Reverse engineering de servicios existentes → primer ticket → primer feature, siempre con pairing senior. La regla del fenix: cada ciclo es un nuevo nacimiento profesional.</p>
+
+      <h3>3 comandos para iniciar</h3>
+      <pre><code>1.  /fhelp version                    validar marketplace responde
+2.  /fhelp pipeline                   entender el flujo canonico E2E
+3.  /fguide soy nuevo                 coach contextual del rol</code></pre>
+
+      <h3>Flujo descubrimiento</h3>
+      <pre><code>Tour interactivo       /fhelp version + pipeline + /frecovery
+Reverse-eng servicio   /fscan src/{Servicio} -> /fdoc -> /ftrace
+Primer ticket pairing  /fticket completo -> /freq
+Primer feature         /fspec -> /fdev -> /ftest</code></pre>
+
+      <h3>Reglas criticas</h3>
+      <div class="callout callout-warn">
+        Primer ticket NUNCA greenfield — siempre reverse-engineering de un servicio existente. Eso te da contexto antes de producir codigo (BP-14).
+      </div>
+      <div class="callout callout-warn">
+        <code>/fhelp</code> primero ante cualquier duda sobre slash commands. NO inventar prompts (BP-39 — los typos son la causa #1 de friccion).
+      </div>
+      <div class="callout callout-warn">
+        Antes de cambiar de rama git, ejecutar <code>/fcompact</code> (BP-28). Si no, perdes contexto de sesion y arrancas de cero — 30 minutos rescatables con un comando.
+      </div>
+
+      <h3>Concepto clave</h3>
+      <div class="callout">
+        <em>"Junior, dos cosas que parecen obvias y nadie te avisa. El primer ticket no debe ser una feature greenfield — siempre ingenieria inversa de un servicio que ya existe. Y antes de cambiar de rama, /fcompact. Treinta minutos de sesion rescatables con un comando."</em>
+      </div>
+      <aside class="tts">
+Junior, dos cosas obvias que nadie te avisa. Primer ticket nunca debe ser greenfield. Siempre reverse engineering de un servicio existente. Antes de cambiar de rama, comando fcompact. Treinta minutos de sesion rescatables con un comando.
+      </aside>
+      <aside class="notes">
+El rol Dev Junior se llama "Motor Eterno" o Fenix por una razon: cada ticket es un nuevo nacimiento profesional.
+
+Tres comandos universales para iniciar: /fhelp version, /fhelp pipeline, /fguide soy nuevo. Esos tres son los mismos para los quince roles, pero la interpretacion para Dev Junior es: validar setup, entender el flujo end-to-end, y activar el coach contextual.
+
+Despues, el flujo de descubrimiento se mapea en cuatro pasos: tour interactivo, reverse engineering del servicio, primer ticket con pairing senior, primer feature. Notar que cada paso tiene su comando especifico — no inventes ninguno.
+
+Tres reglas criticas para el Dev Junior:
+Primera: nunca greenfield el primer ticket. Siempre reverse engineering. La razon: te da contexto del codigo existente antes de producir el tuyo.
+Segunda: ante cualquier duda sobre slash commands, /fhelp primero. No inventes prompts ni adivines nombres.
+Tercera: antes de cambiar de rama git, /fcompact. Si no, perdes el contexto de la sesion y arrancas de cero — treinta minutos rescatables con un comando.
+      </aside>
+    </section>
+
+    <!-- QUIZ -->
+    <section class="section quiz" data-step="quiz">
+      <h2>Quiz · Verificacion del rol Dev Junior</h2>
+      <div class="quiz-intro">
+        <p><strong>5 preguntas multi-choice.</strong> Aprobacion >= 70% (3 de 5 correctas). Una respuesta por pregunta. Cuando respondas las 5, click en <strong>"Verificar respuestas"</strong> para ver tu nota.</p>
+      </div>
+      <aside class="tts">
+Cinco preguntas multi choice basadas en el slide del rol. Aprobacion al setenta porciento. Una respuesta por pregunta. Cuando respondas las cinco, click en verificar respuestas para ver tu nota.
+      </aside>
+      <aside class="notes">
+El quiz tiene 5 preguntas multi-choice extraidas directamente del contenido del slide del rol Dev Junior. Cada pregunta tiene 4 opciones, una correcta.
+
+Aprobacion >= 70 por ciento — tres de cinco preguntas correctas.
+
+Cuando clickees "Verificar respuestas", vas a ver inmediatamente cuales acertaste, cuales fallaste, y la respuesta correcta de cada una. Despues podes pasar al resultado y ver tu nota final.
+
+Tip: si no estas seguro de alguna respuesta, podes volver a la seccion anterior con el boton "Anterior" abajo, repasar el contenido del slide, y volver al quiz. Tu progreso queda guardado.
+      </aside>
+
+      <div class="question" data-q="1" data-correct="b">
+        <div class="q-num">PREGUNTA 1 / 5</div>
+        <div class="q-text">Cual es el primer comando que debe ejecutar un Dev Junior al iniciar sesion?</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q1" value="a"><span class="opt-text">/fdev</span><span class="marker"></span></label>
+          <label class="option"><input type="radio" name="q1" value="b"><span class="opt-text">/fhelp version</span><span class="marker"></span></label>
+          <label class="option"><input type="radio" name="q1" value="c"><span class="opt-text">/freview --full</span><span class="marker"></span></label>
+          <label class="option"><input type="radio" name="q1" value="d"><span class="opt-text">/fcompact</span><span class="marker"></span></label>
+        </div>
+        <div class="feedback"></div>
+      </div>
+
+      <div class="question" data-q="2" data-correct="c">
+        <div class="q-num">PREGUNTA 2 / 5</div>
+        <div class="q-text">Que tipo de ticket NO debe ser el primero para un Dev Junior?</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q2" value="a"><span class="opt-text">Reverse engineering de servicio existente</span><span class="marker"></span></label>
+          <label class="option"><input type="radio" name="q2" value="b"><span class="opt-text">Bug fix con pairing senior</span><span class="marker"></span></label>
+          <label class="option"><input type="radio" name="q2" value="c"><span class="opt-text">Feature greenfield desde cero</span><span class="marker"></span></label>
+          <label class="option"><input type="radio" name="q2" value="d"><span class="opt-text">Primer feature usando /fspec</span><span class="marker"></span></label>
+        </div>
+        <div class="feedback"></div>
+      </div>
+
+      <div class="question" data-q="3" data-correct="c">
+        <div class="q-num">PREGUNTA 3 / 5</div>
+        <div class="q-text">Cuando hay duda sobre un slash command, que regla aplica un Dev Junior?</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q3" value="a"><span class="opt-text">Inventar el comando que mejor suene</span><span class="marker"></span></label>
+          <label class="option"><input type="radio" name="q3" value="b"><span class="opt-text">Preguntar a senior por chat antes de probar</span><span class="marker"></span></label>
+          <label class="option"><input type="radio" name="q3" value="c"><span class="opt-text">/fhelp primero — NO inventar (BP-39)</span><span class="marker"></span></label>
+          <label class="option"><input type="radio" name="q3" value="d"><span class="opt-text">Usar el primero que aparezca en autocomplete del IDE</span><span class="marker"></span></label>
+        </div>
+        <div class="feedback"></div>
+      </div>
+
+      <div class="question" data-q="4" data-correct="b">
+        <div class="q-num">PREGUNTA 4 / 5</div>
+        <div class="q-text">Antes de cambiar de rama git, que comando debe ejecutar?</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q4" value="a"><span class="opt-text">/fdev para implementar cambios pendientes</span><span class="marker"></span></label>
+          <label class="option"><input type="radio" name="q4" value="b"><span class="opt-text">/fcompact para preservar contexto de sesion (BP-28)</span><span class="marker"></span></label>
+          <label class="option"><input type="radio" name="q4" value="c"><span class="opt-text">/freview --full para validar cambios</span><span class="marker"></span></label>
+          <label class="option"><input type="radio" name="q4" value="d"><span class="opt-text">git stash y listo, no hace falta marketplace</span><span class="marker"></span></label>
+        </div>
+        <div class="feedback"></div>
+      </div>
+
+      <div class="question" data-q="5" data-correct="b">
+        <div class="q-num">PREGUNTA 5 / 5</div>
+        <div class="q-text">Cual es el flujo correcto de reverse engineering de un servicio?</div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q5" value="a"><span class="opt-text">/fdev a /freview a /ftest</span><span class="marker"></span></label>
+          <label class="option"><input type="radio" name="q5" value="b"><span class="opt-text">/fscan a /fdoc a /ftrace</span><span class="marker"></span></label>
+          <label class="option"><input type="radio" name="q5" value="c"><span class="opt-text">/fhelp a /fguide a /fdebate-ia</span><span class="marker"></span></label>
+          <label class="option"><input type="radio" name="q5" value="d"><span class="opt-text">/freq a /fspec a /fdev directo</span><span class="marker"></span></label>
+        </div>
+        <div class="feedback"></div>
+      </div>
+    </section>
+
+    <!-- DONE -->
+    <section class="section done" data-step="done">
+      <div class="subtitle">Resultado del modulo</div>
+      <h1 id="done-title">Modulo completado</h1>
+      <div class="score-display" id="score-display">--</div>
+      <div class="score-detail" id="score-detail">Procesando...</div>
+      <div class="verdict" id="verdict-badge">--</div>
+      <div class="meta" style="margin-top: 40px; color: var(--text-dim); font-size: 14px;">
+        Tu progreso fue reportado a Moodle (si esta corriendo dentro de un curso SCORM).<br>
+        Podes cerrar esta ventana o repasar el contenido con el boton "Revisar" abajo.
+      </div>
+      <aside class="tts">
+Modulo del rol Dev Junior completado. Tu nota fue calculada y reportada al sistema. Podes cerrar la ventana o revisar el contenido.
+      </aside>
+      <aside class="notes">
+Modulo terminado.
+
+Tu nota fue calculada como porcentaje de respuestas correctas — multiplicado por veinte para llegar a la escala 0-100. Si estas en Moodle, el resultado se reporta al gradebook automaticamente y aparece en la seccion Calificaciones del curso.
+
+La nota minima de aprobacion es 70 por ciento. Si no aprobaste, podes volver a hacer el quiz despues de revisar el contenido — el modulo registra el mejor intento.
+
+Proximo paso recomendado: aplicar lo aprendido en tu primer ticket real con pairing senior. Si todavia no tenes un ticket asignado, hablar con tu Tech Lead o PM.
+      </aside>
+    </section>
+
+  </div>
+</div>
+
+<div class="actionbar">
+  <div class="step-info" id="step-info">Cover · Modulo Rol Dev Junior</div>
+  <div class="btn-action-row">
+    <button class="btn" id="btn-prev" onclick="goPrev()" disabled>← Anterior</button>
+    <button class="btn btn-primary" id="btn-next" onclick="goNext()">Comenzar →</button>
+  </div>
+</div>
+
+<script>
+// ── SCORM 1.2 wrapper ─────────────────────────────────────────────────
+const SCORM = {
+  api: null,
+  initialized: false,
+  startTime: Date.now(),
+
+  findAPI() {
+    let win = window;
+    let depth = 0;
+    while (win && depth < 10) {
+      if (win.API) return win.API;
+      try {
+        if (win.parent !== win) win = win.parent;
+        else break;
+      } catch (e) { break; }
+      depth++;
+    }
+    try { if (window.opener && window.opener.API) return window.opener.API; } catch (e) {}
+    return null;
+  },
+
+  init() {
+    this.api = this.findAPI();
+    if (!this.api) {
+      this.updateStatusUI('standalone', false);
+      return false;
+    }
+    try {
+      const ok = this.api.LMSInitialize('');
+      this.initialized = (ok === 'true' || ok === true);
+      this.updateStatusUI(this.initialized ? 'connected' : 'init-failed', this.initialized);
+      if (this.initialized) {
+        // Set status to incomplete on start
+        this.api.LMSSetValue('cmi.core.lesson_status', 'incomplete');
+        this.commit();
+      }
+      return this.initialized;
+    } catch (e) {
+      console.warn('SCORM init error:', e);
+      this.updateStatusUI('error', false);
+      return false;
+    }
+  },
+
+  setStatus(status) {
+    if (!this.initialized) return;
+    try {
+      this.api.LMSSetValue('cmi.core.lesson_status', status);
+      this.commit();
+    } catch (e) { console.warn('SCORM setStatus error:', e); }
+  },
+
+  setScore(score) {
+    if (!this.initialized) return;
+    try {
+      this.api.LMSSetValue('cmi.core.score.raw', String(Math.round(score)));
+      this.api.LMSSetValue('cmi.core.score.min', '0');
+      this.api.LMSSetValue('cmi.core.score.max', '100');
+      this.commit();
+    } catch (e) { console.warn('SCORM setScore error:', e); }
+  },
+
+  setSessionTime() {
+    if (!this.initialized) return;
+    try {
+      const seconds = Math.floor((Date.now() - this.startTime) / 1000);
+      const h = Math.floor(seconds / 3600);
+      const m = Math.floor((seconds % 3600) / 60);
+      const s = seconds % 60;
+      // SCORM 1.2 format: HHHH:MM:SS
+      const time = `${String(h).padStart(4, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+      this.api.LMSSetValue('cmi.core.session_time', time);
+      this.commit();
+    } catch (e) { console.warn('SCORM setSessionTime error:', e); }
+  },
+
+  commit() {
+    if (this.initialized) {
+      try { this.api.LMSCommit(''); } catch (e) {}
+    }
+  },
+
+  finish() {
+    if (this.initialized) {
+      try {
+        this.setSessionTime();
+        this.commit();
+        this.api.LMSFinish('');
+      } catch (e) { console.warn('SCORM finish error:', e); }
+    }
+  },
+
+  updateStatusUI(state, connected) {
+    const el = document.getElementById('scorm-status');
+    if (!el) return;
+    const labels = {
+      'standalone': 'SCORM: standalone',
+      'connected': 'SCORM: conectado',
+      'init-failed': 'SCORM: init failed',
+      'error': 'SCORM: error',
+    };
+    el.textContent = labels[state] || 'SCORM: ?';
+    el.className = 'scorm-status ' + (connected ? 'connected' : 'disconnected');
+  }
+};
+
+// ── Course navigation ─────────────────────────────────────────────────
+const STEPS = ['cover', 'content', 'quiz', 'done'];
+const STEP_LABELS = {
+  'cover': 'Cover · Modulo Rol Dev Junior',
+  'content': 'Contenido · Slide rol O12',
+  'quiz': 'Quiz · 5 preguntas multi-choice',
+  'done': 'Resultado · Score + reporte SCORM'
+};
+let currentStep = 0;
+let quizSubmitted = false;
+let quizScore = 0;
+
+function goToStep(idx) {
+  if (idx < 0 || idx >= STEPS.length) return;
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelector(`.section[data-step="${STEPS[idx]}"]`).classList.add('active');
+  currentStep = idx;
+  updateNav();
+  document.querySelector('.stage').scrollTop = 0;
+}
+
+function updateNav() {
+  const stepName = STEPS[currentStep];
+  document.getElementById('step-label').textContent = `Paso ${currentStep + 1} / ${STEPS.length}`;
+  document.getElementById('step-info').textContent = STEP_LABELS[stepName] || '';
+  document.getElementById('progress-fill').style.width = (((currentStep + 1) / STEPS.length) * 100) + '%';
+
+  const btnPrev = document.getElementById('btn-prev');
+  const btnNext = document.getElementById('btn-next');
+
+  btnPrev.disabled = (currentStep === 0);
+
+  if (stepName === 'cover') {
+    btnNext.textContent = 'Comenzar →';
+    btnNext.disabled = false;
+    btnNext.className = 'btn btn-primary';
+  } else if (stepName === 'content') {
+    btnNext.textContent = 'Ir al quiz →';
+    btnNext.disabled = false;
+    btnNext.className = 'btn btn-primary';
+  } else if (stepName === 'quiz') {
+    if (quizSubmitted) {
+      btnNext.textContent = 'Ver resultado →';
+      btnNext.disabled = false;
+      btnNext.className = 'btn btn-primary';
+    } else {
+      btnNext.textContent = 'Verificar respuestas';
+      btnNext.disabled = !areAllQuestionsAnswered();
+      btnNext.className = 'btn btn-success';
+    }
+  } else if (stepName === 'done') {
+    btnNext.textContent = 'Revisar contenido';
+    btnNext.disabled = false;
+    btnNext.className = 'btn';
+  }
+}
+
+function goPrev() {
+  if (currentStep > 0) goToStep(currentStep - 1);
+}
+
+function goNext() {
+  const stepName = STEPS[currentStep];
+  if (stepName === 'quiz' && !quizSubmitted) {
+    submitQuiz();
+    return;
+  }
+  if (stepName === 'done') {
+    // Loop back to content for review
+    goToStep(1);
+    return;
+  }
+  if (currentStep < STEPS.length - 1) goToStep(currentStep + 1);
+}
+
+function areAllQuestionsAnswered() {
+  for (let i = 1; i <= 5; i++) {
+    const checked = document.querySelector(`input[name="q${i}"]:checked`);
+    if (!checked) return false;
+  }
+  return true;
+}
+
+// Listen to radio changes to enable submit button
+document.addEventListener('change', (e) => {
+  if (e.target.matches('input[type="radio"]')) {
+    // Mark question as answered visually
+    const q = e.target.closest('.question');
+    if (q) q.classList.add('answered');
+    // Mark selected option
+    q.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+    e.target.closest('.option').classList.add('selected');
+    updateNav();
+  }
+});
+
+function submitQuiz() {
+  let correct = 0;
+  document.querySelectorAll('.question').forEach((q) => {
+    const correctAnswer = q.dataset.correct;
+    const checked = q.querySelector('input[type="radio"]:checked');
+    const userAnswer = checked ? checked.value : null;
+    const isCorrect = (userAnswer === correctAnswer);
+    if (isCorrect) correct++;
+
+    // Show correct/incorrect markers on options
+    q.querySelectorAll('.option').forEach(opt => {
+      const radio = opt.querySelector('input[type="radio"]');
+      const marker = opt.querySelector('.marker');
+      opt.classList.add('disabled');
+      radio.disabled = true;
+      if (radio.value === correctAnswer) {
+        opt.classList.add('show-correct');
+        marker.textContent = '✓ correcta';
+      } else if (radio.value === userAnswer && !isCorrect) {
+        opt.classList.add('show-incorrect');
+        marker.textContent = '✗ tu respuesta';
+      }
+    });
+
+    // Show feedback
+    const fb = q.querySelector('.feedback');
+    if (isCorrect) {
+      q.classList.add('correct');
+      fb.className = 'feedback correct show';
+      fb.textContent = '✓ Correcto.';
+    } else {
+      q.classList.add('incorrect');
+      fb.className = 'feedback incorrect show';
+      fb.textContent = `✗ Tu respuesta no es la correcta. Repasa la seccion del slide.`;
+    }
+  });
+
+  quizScore = Math.round((correct / 5) * 100);
+  quizSubmitted = true;
+
+  // Update done section
+  const passed = quizScore >= 70;
+  const scoreEl = document.getElementById('score-display');
+  scoreEl.textContent = quizScore;
+  scoreEl.className = 'score-display ' + (passed ? 'passed' : 'failed');
+  document.getElementById('score-detail').textContent =
+    `${correct} de 5 respuestas correctas (${quizScore}%) — aprobacion >= 70%`;
+  const verdictEl = document.getElementById('verdict-badge');
+  verdictEl.textContent = passed ? '✓ Aprobado' : '✗ No aprobado · revisar contenido';
+  verdictEl.className = 'verdict ' + (passed ? 'passed' : 'failed');
+  document.getElementById('done-title').textContent = passed ? 'Modulo completado' : 'Modulo no aprobado';
+
+  // Report to SCORM
+  SCORM.setScore(quizScore);
+  SCORM.setStatus(passed ? 'passed' : 'failed');
+  SCORM.setSessionTime();
+  SCORM.commit();
+
+  updateNav();
+}
+
+// ── Narration TTS + visible notes panel ───────────────────────────────
+const NARRATION = {
+  btnTts: null,
+  btnNotes: null,
+  panel: null,
+  contentEl: null,
+  currentUtterance: null,
+  panelOpen: false,
+  speaking: false,
+
+  init() {
+    this.btnTts = document.getElementById('btn-tts');
+    this.btnNotes = document.getElementById('btn-notes');
+    this.panel = document.getElementById('narration-panel');
+    this.contentEl = document.getElementById('narration-content');
+
+    this.btnTts.addEventListener('click', () => {
+      if (this.speaking) this.stopTts();
+      else this.speakCurrent();
+    });
+    this.btnNotes.addEventListener('click', () => this.togglePanel());
+
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.onvoiceschanged = () => {};
+      window.speechSynthesis.getVoices();
+    }
+    window.addEventListener('beforeunload', () => this.stopTts());
+  },
+
+  getCurrentSection() {
+    return document.querySelector('.section.active');
+  },
+
+  getNotesText() {
+    const sect = this.getCurrentSection();
+    if (!sect) return '';
+    const notes = sect.querySelector('aside.notes');
+    return notes ? notes.textContent.trim() : '';
+  },
+
+  getTtsText() {
+    const sect = this.getCurrentSection();
+    if (!sect) return '';
+    const ttsEl = sect.querySelector('aside.tts');
+    const raw = ttsEl ? ttsEl.textContent.trim() : (sect.querySelector('aside.notes')?.textContent.trim() || '');
+    return this.sanitizeForTTS(raw);
+  },
+
+  sanitizeForTTS(text) {
+    if (!text) return '';
+    return text
+      .replace(/\/([a-zA-Z][\w-]*)/g, 'comando $1')
+      .replace(/\s--([a-zA-Z][\w-]*)/g, ' modo $1')
+      .replace(/\{([^}]+)\}/g, '$1')
+      .replace(/>=/g, ' mayor o igual a ')
+      .replace(/<=/g, ' menor o igual a ')
+      .replace(/(\s)>(\s|\d)/g, '$1mayor que $2')
+      .replace(/(\s)<(\s|\d)/g, '$1menor que $2')
+      .replace(/[\\\/]/g, ' ')
+      .replace(/[(){}\[\]]/g, ' ')
+      .replace(/[#@$%^&*+|~`=_]/g, ' ')
+      .replace(/[🔴⚠🔒✓✗⏸▶📝🔊⚪🟢🟡🟠🆕]/g, '')
+      .replace(/-?->/g, ' a ')
+      .replace(/<-?-/g, ' desde ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  },
+
+  getNotesHTML() {
+    const text = this.getNotesText();
+    if (!text) return '<em style="color:#8A9098">Esta seccion no tiene narracion adicional.</em>';
+    return text.split(/\n\s*\n/).map(p => `<p>${p.replace(/\n/g, ' ').trim()}</p>`).join('');
+  },
+
+  updatePanelLabel() {
+    const sect = this.getCurrentSection();
+    const label = this.panel.querySelector('.label');
+    let title = 'Narracion · seccion actual';
+    if (sect) {
+      const stepName = sect.dataset.step || '';
+      const stepLabel = STEP_LABELS[stepName] || stepName;
+      title = `Narracion · ${stepLabel}`;
+    }
+    if (label) label.textContent = title;
+  },
+
+  updatePanelContent() {
+    this.updatePanelLabel();
+    this.contentEl.innerHTML = this.getNotesHTML();
+  },
+
+  togglePanel() {
+    this.panelOpen = !this.panelOpen;
+    if (this.panelOpen) {
+      this.updatePanelContent();
+      this.panel.classList.add('open');
+      this.btnNotes.classList.add('active');
+      this.btnNotes.textContent = 'Cerrar';
+    } else {
+      this.panel.classList.remove('open');
+      this.btnNotes.classList.remove('active');
+      this.btnNotes.textContent = 'Notas';
+    }
+  },
+
+  stopTts() {
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+    this.speaking = false;
+    if (this.btnTts) {
+      this.btnTts.classList.remove('speaking');
+      this.btnTts.textContent = 'Audio';
+    }
+  },
+
+  speakCurrent() {
+    if (!('speechSynthesis' in window)) {
+      alert('Tu browser no soporta Web Speech API. Usa el boton Notas para leer la narracion.');
+      return;
+    }
+    const text = this.getTtsText();
+    if (!text) {
+      alert('Esta seccion no tiene narracion para reproducir.');
+      return;
+    }
+    this.stopTts();
+    this.currentUtterance = new SpeechSynthesisUtterance(text);
+    const voices = window.speechSynthesis.getVoices();
+    const esVoice = voices.find(v => /es[_-]?(AR|ES|MX|US|CL|419)/i.test(v.lang)) ||
+                    voices.find(v => v.lang.startsWith('es'));
+    if (esVoice) this.currentUtterance.voice = esVoice;
+    this.currentUtterance.lang = esVoice ? esVoice.lang : 'es-AR';
+    this.currentUtterance.rate = 1.25;
+    this.currentUtterance.pitch = 1.0;
+    this.currentUtterance.onend = () => {
+      this.speaking = false;
+      this.btnTts.classList.remove('speaking');
+      this.btnTts.textContent = 'Audio';
+    };
+    this.currentUtterance.onerror = () => {
+      this.speaking = false;
+      this.btnTts.classList.remove('speaking');
+      this.btnTts.textContent = 'Audio';
+    };
+    window.speechSynthesis.speak(this.currentUtterance);
+    this.speaking = true;
+    this.btnTts.classList.add('speaking');
+    this.btnTts.textContent = 'Detener';
+  },
+
+  onSectionChanged() {
+    this.stopTts();
+    if (this.panelOpen) this.updatePanelContent();
+  }
+};
+
+// Hook into section change
+const _origGoToStep = goToStep;
+goToStep = function(idx) {
+  _origGoToStep(idx);
+  if (NARRATION) NARRATION.onSectionChanged();
+};
+
+// ── Init ──────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  SCORM.init();
+  NARRATION.init();
+  updateNav();
+});
+
+// Save session time + finish on unload
+window.addEventListener('beforeunload', () => {
+  SCORM.finish();
+});
+
+// Keyboard navigation
+document.addEventListener('keydown', (e) => {
+  if (e.target.matches('input, textarea')) return;
+  if (e.key === 'ArrowRight' && !document.getElementById('btn-next').disabled) goNext();
+  else if (e.key === 'ArrowLeft' && !document.getElementById('btn-prev').disabled) goPrev();
+});
+</script>
+</body>
+</html>

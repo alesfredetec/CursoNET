@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Fintexa Marketplace V2 — Modulo 2 · Onboarding generico</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css" id="theme">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --concrete: #0A0E14;
+    --concrete-2: #12181F;
+    --concrete-3: #1A2028;
+    --amber: #E8B86A;
+    --amber-deep: #c4943a;
+    --cyan: #5FB8D4;
+    --green: #7DB87D;
+    --red: #D44A4A;
+    --gold: #d4a843;
+    --text: #E8E8E8;
+    --text-dim: #8A9098;
+    --border: rgba(232, 184, 106, 0.2);
+  }
+  .reveal { font-family: 'Inter', system-ui, sans-serif; color: var(--text); }
+  .reveal-viewport, .reveal { background: var(--concrete) !important; }
+  .reveal .slides { text-align: left; }
+
+  /* Dark veil over background images for readability */
+  .reveal .slide-background-content::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg,
+      rgba(10, 14, 20, 0.78) 0%,
+      rgba(18, 24, 31, 0.85) 50%,
+      rgba(10, 14, 20, 0.92) 100%);
+    pointer-events: none;
+  }
+
+  .reveal section[data-background-image] h1,
+  .reveal section[data-background-image] h2,
+  .reveal section[data-background-image] h3 {
+    text-shadow: 0 2px 12px rgba(0,0,0,0.85), 0 0 30px rgba(232, 184, 106, 0.3);
+  }
+  .reveal section[data-background-image] pre {
+    background: rgba(18, 24, 31, 0.92);
+    backdrop-filter: blur(4px);
+  }
+  .reveal section[data-background-image] blockquote {
+    background: rgba(18, 24, 31, 0.92);
+    backdrop-filter: blur(4px);
+  }
+
+  .reveal h1, .reveal h2, .reveal h3 {
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--amber);
+    text-transform: none;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    text-shadow: 0 0 30px rgba(232, 184, 106, 0.25);
+  }
+  .reveal h1 { font-size: 2.4em; line-height: 1.1; margin-bottom: 0.3em; }
+  .reveal h2 { font-size: 1.6em; color: var(--cyan); margin-top: 0.5em; }
+  .reveal h3 { font-size: 1.2em; color: var(--amber); }
+  .reveal .subtitle {
+    color: var(--text-dim);
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 0.9em;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 1em;
+  }
+  .reveal pre {
+    background: var(--concrete-2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4), 0 0 40px rgba(232,184,106,0.05);
+    width: 100%;
+    margin: 0.4em 0;
+    max-height: 75vh;
+    overflow-y: auto;
+    overflow-x: auto;
+  }
+  .reveal pre code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68em;
+    line-height: 1.45;
+    color: var(--text);
+    padding: 0.9em 1em;
+    max-height: none;
+    background: transparent;
+    white-space: pre;
+    word-wrap: normal;
+  }
+  .reveal pre::-webkit-scrollbar { width: 8px; height: 8px; }
+  .reveal pre::-webkit-scrollbar-track { background: var(--concrete); }
+  .reveal pre::-webkit-scrollbar-thumb { background: var(--amber-deep); border-radius: 4px; }
+  .reveal pre::-webkit-scrollbar-thumb:hover { background: var(--amber); }
+  .reveal pre {
+    background-image: linear-gradient(to bottom, transparent calc(100% - 12px), rgba(232,184,106,0.05) 100%);
+  }
+
+  .reveal code { font-family: 'JetBrains Mono', monospace; color: var(--amber); background: var(--concrete-3); padding: 1px 6px; border-radius: 2px; }
+  .reveal blockquote {
+    background: var(--concrete-2);
+    border-left: 3px solid var(--amber);
+    padding: 1em 1.2em;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.05em;
+    color: var(--text);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+  .reveal ul, .reveal ol { font-size: 0.85em; }
+  .reveal ul li, .reveal ol li { margin: 0.3em 0; }
+  .reveal a { color: var(--cyan); text-decoration: none; border-bottom: 1px dotted var(--cyan); }
+  .reveal .progress { color: var(--amber); height: 4px; }
+  .reveal .controls { color: var(--amber); }
+  .reveal .slide-number { color: var(--amber); font-family: 'JetBrains Mono', monospace; }
+
+  .slide-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+    font-family: 'Inter', sans-serif;
+  }
+  .slide-header .deck-title {
+    color: var(--amber);
+    font-size: 0.5em;
+    letter-spacing: 1.5px;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+  .slide-header .slide-id {
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.45em;
+    letter-spacing: 1px;
+  }
+
+  .cover {
+    text-align: center;
+    padding: 60px 20px;
+  }
+  .cover h1 {
+    font-size: 2.8em;
+    background: linear-gradient(135deg, var(--amber) 0%, var(--gold) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: none;
+  }
+  .cover .badge {
+    display: inline-block;
+    border: 1px solid var(--amber);
+    color: var(--amber);
+    padding: 6px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.5em;
+    letter-spacing: 2px;
+    margin-top: 1em;
+    text-transform: uppercase;
+  }
+  .cover .meta {
+    color: var(--text-dim);
+    font-size: 0.55em;
+    font-family: 'Inter', sans-serif;
+    margin-top: 2em;
+    line-height: 1.8;
+  }
+  .cover .meta strong { color: var(--cyan); }
+
+  .callout-warn {
+    background: rgba(212, 74, 74, 0.08);
+    border-left: 3px solid var(--red);
+    padding: 0.8em 1em;
+    margin: 0.8em 0;
+    font-size: 0.7em;
+  }
+  .callout-warn::before {
+    content: "! ";
+    color: var(--red);
+    font-weight: 700;
+  }
+
+  .slide-footer {
+    position: absolute;
+    bottom: 12px;
+    left: 32px;
+    right: 32px;
+    display: flex;
+    justify-content: space-between;
+    color: var(--text-dim);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.45em;
+    letter-spacing: 1px;
+    border-top: 1px solid var(--border);
+    padding-top: 6px;
+  }
+
+  /* Narration controls */
+  #narration-toolbar {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    z-index: 100;
+    display: flex;
+    gap: 8px;
+  }
+  #narration-toolbar button {
+    background: var(--concrete-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 150ms;
+    letter-spacing: 0.5px;
+  }
+  #narration-toolbar button:hover {
+    background: var(--concrete-3);
+    border-color: var(--amber);
+    color: var(--amber);
+  }
+  #narration-toolbar button.active {
+    background: var(--amber);
+    color: var(--concrete);
+    border-color: var(--amber);
+    font-weight: 600;
+  }
+  #narration-toolbar button.speaking {
+    background: var(--cyan);
+    color: var(--concrete);
+    border-color: var(--cyan);
+    font-weight: 600;
+    animation: pulse-cyan 1.5s ease-in-out infinite;
+  }
+  @keyframes pulse-cyan {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(95, 184, 212, 0.4); }
+    50% { box-shadow: 0 0 0 8px rgba(95, 184, 212, 0); }
+  }
+
+  /* Narration panel — fondo claro + texto oscuro */
+  #narration-panel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #FAF7F0;
+    border-top: 3px solid var(--amber);
+    color: #1A1A1A;
+    padding: 18px 36px 18px 36px;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 19px;
+    line-height: 1.65;
+    max-height: 38vh;
+    overflow-y: auto;
+    transform: translateY(100%);
+    transition: transform 250ms ease-out;
+    z-index: 99;
+    box-shadow: 0 -8px 30px rgba(0,0,0,0.5), 0 -2px 20px rgba(232,184,106,0.15);
+  }
+  #narration-panel.open { transform: translateY(0); }
+  #narration-panel .label {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: var(--amber-deep);
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 12px;
+    font-weight: 700;
+    border-bottom: 1px solid rgba(232, 184, 106, 0.4);
+    padding-bottom: 8px;
+  }
+  #narration-panel .content {
+    color: #1A1A1A;
+    font-weight: 400;
+  }
+  #narration-panel .content p {
+    margin: 0.6em 0;
+    color: #1A1A1A;
+  }
+  #narration-panel .content p:first-child { margin-top: 0; }
+  #narration-panel .content p:last-child { margin-bottom: 0; }
+  #narration-panel::-webkit-scrollbar { width: 10px; }
+  #narration-panel::-webkit-scrollbar-track { background: #EDE8DA; }
+  #narration-panel::-webkit-scrollbar-thumb { background: var(--amber-deep); border-radius: 5px; }
+  #narration-panel::-webkit-scrollbar-thumb:hover { background: var(--amber); }
+</style>
+</head>
+<body>
+
+<!-- Narration controls -->
+<div id="narration-toolbar">
+  <button id="btn-notes" title="Mostrar/ocultar narracion escrita">Notas</button>
+  <button id="btn-tts" title="Reproducir narracion por audio (TTS)">Audio</button>
+</div>
+<div id="narration-panel">
+  <span class="label">Narracion · slide actual</span>
+  <div class="content" id="narration-content"></div>
+</div>
+
+<div class="reveal">
+<div class="slides">
+
+<!-- COVER -->
+<section class="cover"
+         data-background-image="imgdeck/init1/Diapositiva7.PNG"
+         data-background-size="cover"
+         data-background-position="center">
+  <div class="subtitle">Fintexa Marketplace V2 · Curso de Onboarding</div>
+  <h1>Modulo 2<br>Onboarding generico</h1>
+  <div class="badge">5 dias · 15 roles · 1 marketplace</div>
+  <div class="meta">
+    <strong>5 slides</strong> · ~14 min · aplicable a los 15 roles<br>
+    O01 Portada · O02 Reglas universales · O03 Camino comun 5 dias · O19 Plan 2 semanas + KPIs · O20 War Room vs Debate IA + CTA
+  </div>
+  <aside class="tts">
+Modulo dos del curso Fintexa Marketplace. Cinco slides, catorce minutos. Onboarding generico aplicable a los quince roles.
+  </aside>
+  <aside class="notes">
+Bienvenidos al modulo dos del curso Fintexa Marketplace V2. En catorce minutos vamos a recorrer la apertura comun a los quince roles, las tres reglas universales del marketplace, el camino de cinco dias para estar productivo, el plan completo de dos semanas con KPIs sanos, y el cierre con war room versus debate IA.
+
+Recomendacion: usar el modo presentacion (presione la letra S) para ver estas notas mientras presenta. Use flechas o espacio para avanzar. Si esta en modo curso self-paced, use los botones Notas y Audio arriba a la derecha.
+  </aside>
+</section>
+
+<!-- O01 PORTADA -->
+<section>
+  <div class="slide-header">
+    <span class="deck-title">FINTEXA MARKETPLACE V2 · ONBOARDING</span>
+    <span class="slide-id">O01 · 1.5 min</span>
+  </div>
+  <h2>Portada · El umbral de Fintexa</h2>
+  <pre><code>FINTEXA MARKETPLACE V2
+Onboarding por Rol · 5 dias para ser productivo
+
+  15 roles cubiertos · 3 comandos para iniciar · 1 flujo diario claro
+
+  CEO · CFO · CISO · PM · PO · Capital Humano · Tech Lead
+  Dev Senior · Dev Junior · Frontend Arq · QA · SRE · DBA
+  Soporte N1/N2 · Analista Funcional · Compliance/QSA
+
+3 COMANDOS UNIVERSALES (los mismos para todos)
+
+  /fhelp                    primer recurso ante cualquier duda
+  /fguide soy {rol}         coach contextual con tu flujo
+  /frecovery                retomar contexto de sesion previa
+
+v2026.504.2-beta · Fintexa.tech Ia-Team</code></pre>
+  <aside class="tts">
+Quince roles. Cinco dias para estar productivo. Tres comandos para arrancar son los mismos para todos. La diferencia es lo que cada rol hace al cuarto dia.
+  </aside>
+  <aside class="notes">
+Hoy no vamos a contarles que hace el marketplace. Vamos a mostrarles como cada uno, segun su rol, empieza a usarlo desde el dia uno.
+
+Quince roles. Cinco dias para estar productivo. Tres comandos para arrancar — los mismos para todos.
+
+La diferencia es lo que hacen al cuarto dia.
+
+Por eso este modulo es generico — aplica a los quince. Despues, cada rol tiene su propio slide especifico que abrimos en sesiones siguientes.
+  </aside>
+  <div class="slide-footer"><span>Modulo 2 · Onboarding generico</span><span>O01 / 5</span></div>
+</section>
+
+<!-- O02 REGLAS UNIVERSALES -->
+<section>
+  <div class="slide-header">
+    <span class="deck-title">FINTEXA MARKETPLACE V2 · ONBOARDING</span>
+    <span class="slide-id">O02 · 2 min</span>
+  </div>
+  <h2>Reglas universales · El lenguaje de Fintexa</h2>
+  <pre><code>TRES REGLAS UNIVERSALES (cualquier rol)
+
+  1. /fhelp                primero ante cualquier duda — NO inventar slash commands
+  2. /fguide soy {rol}     activa coach contextual con tu flujo especifico
+  3. PCI/PAN/CVV nunca en queries — INVIOLABLE w=9999 (FXQ-PCI-01)
+
+GLOSARIO RAPIDO
+
+  /f*           comando del marketplace (slash command)
+  [FLX-R-NN]    flujo por Rol (25 catalogados)
+  [FLX-S-NN]    flujo por Situacion (13 catalogados)
+  [FLX-J-NN]    flujo por Jornada/momento (18 catalogados)
+  BP-NN         buena practica con evidencia (53 catalogadas)
+  HANDOFF-CARD  contrato entre /fspec y /fdev (versionado)
+  FXQ-XXX-NN    rule de cumplimiento (71 totales · 1 INVIOLABLE)</code></pre>
+  <div class="callout-warn">Causa numero uno de friccion: inventar slash commands con typos. Si no estas seguro del nombre, <code>/fhelp</code> primero — lista los validos del momento.</div>
+  <aside class="tts">
+Tres reglas universales antes de cada rol. Primero, ante cualquier duda comando fhelp, no inventar slash commands. Segundo, comando fguide soy tu rol activa el coach con tu flujo. Tercero, nunca datos PCI en queries. Esa es regla inviolable absoluta.
+  </aside>
+  <aside class="notes">
+Antes de ir a cada rol, tres reglas que todos comparten.
+
+Primero: ante cualquier duda, /fhelp. No inventen slash commands — los typos son la causa numero uno de friccion.
+
+Segundo: /fguide soy su rol activa el coach con su flujo.
+
+Tercero: nunca pasen datos PCI por queries. Es regla con peso nueve mil novecientos noventa y nueve — la unica inviolable absoluta. Si la query contiene un PAN, CVV, PIN o track de tarjeta, el sistema corta antes de procesar — y eso aplica a CEO igual que a Dev Junior.
+
+Glosario rapido para que entiendan los codigos cuando aparezcan en otras slides: FLX-R rol, FLX-S situacion, FLX-J jornada. BP es buena practica. FXQ es rule de compliance.
+  </aside>
+  <div class="slide-footer"><span>Modulo 2 · Onboarding generico</span><span>O02 / 5</span></div>
+</section>
+
+<!-- O03 CAMINO COMUN 5 DIAS -->
+<section>
+  <div class="slide-header">
+    <span class="deck-title">FINTEXA MARKETPLACE V2 · ONBOARDING</span>
+    <span class="slide-id">O03 · 2.5 min</span>
+  </div>
+  <h2>Camino comun · 5 dias para estar productivo</h2>
+  <pre><code>SEMANA 1 · DESCUBRIMIENTO (TODOS los roles)
+
+  D1  Validar      /fhelp version + /fhelp pipeline + /frecovery
+  D2  Entender     /fguide soy {tu-rol} y quiero ...
+  D3  Vivir        /fguide pipeline canonico de tu rol
+  D4  Probar       /fguide buenas practicas + /fguide faq
+  D5  Artefacto    primer spec / test / review / dictamen
+
+SEMANA 2 · ADOPCION
+
+  D6-7   Repetir flujo sobre 2-3 tickets reales
+  D8-9   Detectar tips proactivos /fguide como sigo?
+  D10    Cierre formal /fchangelog --format all -> /frelease -> /fretro
+
+KPIs ADOPCION SANA
+
+  Time-to-first-command  <30 min
+  Commands/usuario/dia   >=5
+  Feedback primer flujo  >=4 / 5
+  Skill points detectados >=3 nuevos por usuario</code></pre>
+  <aside class="tts">
+Esto aplica a todos los roles. Dia uno validar que el marketplace responde. Dia dos activar el coach del rol. Dia tres vivir un flujo completo con un senior al lado. Dia cuatro buenas practicas y faq. Dia cinco producir el primer artefacto. Dos semanas para autonomia.
+  </aside>
+  <aside class="notes">
+Esto aplica a todos los roles.
+
+Dia uno: validar que el marketplace responde — /fhelp version. Treinta segundos.
+
+Dia dos: activar el coach de su rol con /fguide soy mas el rol.
+
+Dia tres: vivir un flujo completo con un senior al lado. Pairing.
+
+Dia cuatro: explorar buenas practicas y FAQ — el marketplace tiene cincuenta y tres BPs catalogadas.
+
+Dia cinco: producir su primer artefacto supervisado. Spec, test, review, dictamen — depende del rol.
+
+Dos semanas para autonomia. Si en quince dias alguien no llego al primer comando util, hay un problema de proceso, no de persona.
+  </aside>
+  <div class="slide-footer"><span>Modulo 2 · Onboarding generico</span><span>O03 / 5</span></div>
+</section>
+
+<!-- O19 PLAN 2 SEMANAS + KPIs -->
+<section>
+  <div class="slide-header">
+    <span class="deck-title">FINTEXA MARKETPLACE V2 · ONBOARDING</span>
+    <span class="slide-id">O19 · 2.5 min</span>
+  </div>
+  <h2>Anexo A · Plan comun 2 semanas + KPIs sanos</h2>
+  <pre><code>ANEXO A · PLAN COMUN  (TODOS los roles)
+
+SEMANA 1 · DESCUBRIMIENTO
+  D1  Validar setup        /fhelp version + pipeline + /frecovery
+  D2  Entender mi rol      /fguide soy {tu-rol}
+  D3  Vivir 1 flujo        pipeline canonico
+  D4  Probar referencias   /fguide buenas practicas + /fguide faq
+  D5  Primer artefacto     spec / test / review / dictamen
+
+SEMANA 2 · ADOPCION
+  D6-7   Repetir flujo sobre 2-3 tickets
+  D8-9   Detectar tips proactivos /fguide
+  D10    Cierre formal /fretro
+
+KPIs ADOPCION SANA                  SI TE TRABAS
+
+  TTFC <30 min                       /fcompact + /frecovery
+  Commands/usuario/dia >=5           Drift <80 -> /fdev --fix DRIFT-IDs
+  Feedback primer flujo >=4 / 5      CRITICAL pendiente -> NO avanzar
+  Skill points >=3 nuevos por user   /fX Unknown -> /fhelp primero</code></pre>
+  <aside class="tts">
+Anexo A es el plan comun. Aplica a los quince roles. Diez dias con hitos claros. Cuatro KPIs medibles. Si en quince dias alguien no hizo el primer artefacto, revisar el proceso, no la persona.
+  </aside>
+  <aside class="notes">
+Anexo A es el plan comun — aplica a los quince roles. Diez dias con hitos claros. Cuatro KPIs medibles.
+
+Y cuando alguien se traba, hay seis salidas concretas: /fcompact para preservar contexto, /frecovery para retomar sesion, /fdev fix de drift cuando el score baja de ochenta, y siempre /fhelp antes de inventar slash commands.
+
+Si en quince dias alguien no hizo el primer artefacto, hay que revisar el proceso, no la persona. Esa es la regla.
+
+KPIs claves: tiempo al primer comando menor a treinta minutos, cinco comandos por dia minimo, feedback cuatro o mas sobre cinco, y al menos tres skills nuevas detectadas por usuario por semana.
+  </aside>
+  <div class="slide-footer"><span>Modulo 2 · Onboarding generico</span><span>O19 / 5</span></div>
+</section>
+
+<!-- O20 WAR ROOM vs DEBATE IA + CTA -->
+<section>
+  <div class="slide-header">
+    <span class="deck-title">FINTEXA MARKETPLACE V2 · ONBOARDING</span>
+    <span class="slide-id">O20 · 2.5 min</span>
+  </div>
+  <h2>Anexo B · War Room vs Debate IA + Cierre CTA</h2>
+  <pre><code>ANEXO B · WAR ROOM vs DEBATE IA — DECISION TRANSVERSAL
+
+  /fwarroom                            /fdebate-ia
+  Simulacion multi-stakeholder         Validacion adversarial sobre artefacto
+  103 arquetipos · 7 dimensiones       5 roles fijos panel adversarial
+  Decision estrategica/operativa       Deteccion fallas spec/ADR/decision
+  15-40 min segun preset               5-15 min
+
+  USAR cuando...                       USAR cuando...
+  - Decision cross-team                - Artefacto especifico (spec/ADR)
+  - Multiples angulos requeridos       - Spec ambigua o scope amplio
+  - Defender ante Board                - Sospecha scope creep
+  - Trade-offs no obvios               - Ultimo filtro pre-/fdev
+
+PATRON CROSS-TEAM
+  /fwarroom council -> /fdebate-ia -> /fsign weight >=900 -> audit trail 10 anios
+
+LLAMADO A ACCION · Hoy mismo
+
+  Dia 1   /fhelp actualizar version + /fguide soy {tu-rol}
+  Dia 2   vivir 1 flujo de tu rol con pairing senior
+  Dia 5   primer artefacto supervisado
+  Dia 10  cierre formal /fchangelog -> /frelease -> /fretro
+
+  Materiales: /fguide · /fhelp
+  Marketplace v2026.504.2-beta · Fintexa.tech Ia-Team</code></pre>
+  <aside class="tts">
+Cierre. Anexo B es la decision transversal. War room para decidir el tema macro multi stakeholder. Debate IA para validar el artefacto que sale. Combinados con firma weight novecientos generan audit trail de diez anios para defender ante BCRA. Bienvenidos a Fintexa.
+  </aside>
+  <aside class="notes">
+Cierre del modulo dos.
+
+Anexo B es la decision transversal: war room para decidir el tema macro multi-stakeholder, debate IA para validar el artefacto que sale.
+
+Combinados con /fsign weight novecientos generan audit trail de diez anios — esa es la cadena que defienden ante BCRA cuando audite.
+
+Y la accion concreta para mañana: /fhelp version, /fguide soy su rol, vivir un flujo con pairing senior. Quince dias para autonomia. Bienvenidos a Fintexa.
+
+Si despues quieren profundizar en su rol especifico, el deck completo de onboarding tiene quince slides — uno por rol. Y para casos transversales como decisiones cross-team de board, /fwarroom y /fdebate-ia son las herramientas de defensa.
+  </aside>
+  <div class="slide-footer"><span>Modulo 2 · Onboarding generico</span><span>O20 / 5</span></div>
+</section>
+
+<!-- CIERRE -->
+<section class="cover"
+         data-background-image="imgdeck/init1/Diapositiva2.PNG"
+         data-background-size="cover"
+         data-background-position="center">
+  <div class="subtitle">Fin del modulo 2</div>
+  <h1>Fin Modulo 2</h1>
+  <div class="badge">Onboarding generico completado</div>
+  <div class="meta">
+    <strong>Bienvenidos a Fintexa</strong><br>
+    Proximo paso: aplicar el flujo de tu rol especifico<br>
+    /fguide soy {tu-rol}<br><br>
+    Marketplace v2026.504.2-beta · Fintexa.tech Ia-Team
+  </div>
+  <aside class="tts">
+Cierre del modulo dos. Cubrimos la apertura, las tres reglas universales, el camino comun de cinco dias, el plan completo de dos semanas con KPIs, y los anexos sobre war room y debate IA. Bienvenidos a Fintexa.
+  </aside>
+  <aside class="notes">
+Cierre del modulo dos. En catorce minutos cubrimos los cinco pilares del onboarding generico: la apertura con quince roles y tres comandos universales, las tres reglas inviolables del marketplace, el camino comun de cinco dias para estar productivo, el plan completo de dos semanas con KPIs medibles, y los anexos sobre war room versus debate IA para decisiones transversales.
+
+El siguiente paso del curso es el slide especifico del rol del alumno — uno de los quince. /fguide soy su rol activa el coach contextual con su flujo canonico, sus buenas practicas, y los anti-patrones tipicos.
+
+Bienvenidos a Fintexa. Tienen quince dias para autonomia. Si llegaron hasta aca, ya tienen las reglas del lenguaje compartido — el resto es ejecucion.
+  </aside>
+</section>
+
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/markdown/markdown.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: 'c/t',
+    transition: 'fade',
+    transitionSpeed: 'default',
+    backgroundTransition: 'fade',
+    controls: true,
+    progress: true,
+    center: false,
+    width: 1280,
+    height: 720,
+    margin: 0.04,
+    minScale: 0.2,
+    maxScale: 2.0,
+    plugins: [ RevealNotes, RevealMarkdown ]
+  });
+
+  // ── Narration TTS + visible notes panel ────────────────────────────
+  const btnTts = document.getElementById('btn-tts');
+  const btnNotes = document.getElementById('btn-notes');
+  const panel = document.getElementById('narration-panel');
+  const contentEl = document.getElementById('narration-content');
+  let currentUtterance = null;
+  let panelOpen = false;
+  let speaking = false;
+
+  function getCurrentNotesText() {
+    const slide = Reveal.getCurrentSlide();
+    if (!slide) return '';
+    const notes = slide.querySelector('aside.notes');
+    if (!notes) return '';
+    return notes.textContent.trim();
+  }
+
+  function getCurrentTtsText() {
+    const slide = Reveal.getCurrentSlide();
+    if (!slide) return '';
+    const ttsEl = slide.querySelector('aside.tts');
+    const raw = ttsEl ? ttsEl.textContent.trim() : (slide.querySelector('aside.notes')?.textContent.trim() || '');
+    return sanitizeForTTS(raw);
+  }
+
+  function sanitizeForTTS(text) {
+    if (!text) return '';
+    return text
+      .replace(/\/([a-zA-Z][\w-]*)/g, 'comando $1')
+      .replace(/\s--([a-zA-Z][\w-]*)/g, ' modo $1')
+      .replace(/\{([^}]+)\}/g, '$1')
+      .replace(/>=/g, ' mayor o igual a ')
+      .replace(/<=/g, ' menor o igual a ')
+      .replace(/(\s)>(\s|\d)/g, '$1mayor que $2')
+      .replace(/(\s)<(\s|\d)/g, '$1menor que $2')
+      .replace(/[\\\/]/g, ' ')
+      .replace(/[(){}\[\]]/g, ' ')
+      .replace(/[#@$%^&*+|~`=_]/g, ' ')
+      .replace(/[🔴⚠🔒✓✗⏸▶📝🔊⚪🟢🟡🟠🆕]/g, '')
+      .replace(/-?->/g, ' a ')
+      .replace(/<-?-/g, ' desde ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function getCurrentNotesHTML() {
+    const text = getCurrentNotesText();
+    if (!text) return '<em style="color:var(--text-dim)">Esta slide no tiene narracion adicional.</em>';
+    return text.split(/\n\s*\n/).map(p => `<p>${p.replace(/\n/g, ' ').trim()}</p>`).join('');
+  }
+
+  function updatePanelContent() {
+    const slide = Reveal.getCurrentSlide();
+    const label = document.querySelector('#narration-panel .label');
+    let title = 'Narracion · slide actual';
+    if (slide) {
+      const h2 = slide.querySelector('h2');
+      const h1 = slide.querySelector('h1');
+      const slideId = slide.querySelector('.slide-id');
+      const titleText = h2 ? h2.textContent : (h1 ? h1.textContent : '');
+      const idText = slideId ? slideId.textContent.split('·')[0].trim() : '';
+      title = `Narracion${idText ? ' · ' + idText : ''}${titleText ? ' · ' + titleText : ''}`;
+    }
+    if (label) label.textContent = title;
+    contentEl.innerHTML = getCurrentNotesHTML();
+  }
+
+  function stopTts() {
+    if (window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
+    speaking = false;
+    btnTts.classList.remove('speaking');
+    btnTts.textContent = 'Audio';
+  }
+
+  function speakCurrent() {
+    if (!('speechSynthesis' in window)) {
+      alert('Tu browser no soporta Web Speech API. Usa el boton Notas para leer la narracion.');
+      return;
+    }
+    const text = getCurrentTtsText();
+    if (!text) {
+      alert('Esta slide no tiene narracion para reproducir.');
+      return;
+    }
+    stopTts();
+    currentUtterance = new SpeechSynthesisUtterance(text);
+    const voices = window.speechSynthesis.getVoices();
+    const esVoice = voices.find(v => /es[_-]?(AR|ES|MX|US|CL|419)/i.test(v.lang)) ||
+                    voices.find(v => v.lang.startsWith('es'));
+    if (esVoice) currentUtterance.voice = esVoice;
+    currentUtterance.lang = esVoice ? esVoice.lang : 'es-AR';
+    currentUtterance.rate = 1.25;
+    currentUtterance.pitch = 1.0;
+    currentUtterance.onend = () => {
+      speaking = false;
+      btnTts.classList.remove('speaking');
+      btnTts.textContent = 'Audio';
+    };
+    currentUtterance.onerror = () => {
+      speaking = false;
+      btnTts.classList.remove('speaking');
+      btnTts.textContent = 'Audio';
+    };
+    window.speechSynthesis.speak(currentUtterance);
+    speaking = true;
+    btnTts.classList.add('speaking');
+    btnTts.textContent = 'Detener';
+  }
+
+  btnTts.addEventListener('click', () => {
+    if (speaking) { stopTts(); } else { speakCurrent(); }
+  });
+
+  btnNotes.addEventListener('click', () => {
+    panelOpen = !panelOpen;
+    if (panelOpen) {
+      updatePanelContent();
+      panel.classList.add('open');
+      btnNotes.classList.add('active');
+      btnNotes.textContent = 'Cerrar';
+    } else {
+      panel.classList.remove('open');
+      btnNotes.classList.remove('active');
+      btnNotes.textContent = 'Notas';
+    }
+  });
+
+  Reveal.on('slidechanged', () => {
+    stopTts();
+    if (panelOpen) updatePanelContent();
+  });
+
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.onvoiceschanged = () => { };
+    window.speechSynthesis.getVoices();
+  }
+
+  window.addEventListener('beforeunload', stopTts);
+</script>
+</body>
+</html>
